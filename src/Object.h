@@ -8,7 +8,7 @@
 
 class Object
 {
-private:
+protected:
     Model *model;
     glm::mat4 worldMatrix;
     /* data */
