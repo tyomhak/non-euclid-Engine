@@ -4,7 +4,7 @@
 1. Add glfw3.lib to the /libs  directory
 
 ## ASSIMP ##
-1. Add assimp.lib to the /libs directory
+1. Add assimp.lib to the /libs directory  
 Your file might have a different ending, you can just rename the file if you get cmake error: can't find assimp
 
 2. Add assimp\*.dll file to /libs/dlls  directory (no renaming)
