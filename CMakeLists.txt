@@ -37,7 +37,6 @@ set(LIBS glfw3 opengl32 assimp stb_image glad)
 
 
 file(GLOB_RECURSE sources src/*.cpp src/*.c src/*.h src/*.hpp)
-file(GLOB_RECURSE resources models/*/*)
 file(GLOB_RECURSE data	data/models/*/* data/shaders/*)
 
 
@@ -47,6 +46,10 @@ add_executable(${PROJECT_NAME} ${sources})
 
 target_link_libraries(${PROJECT_NAME} ${LIBS})
 
+add_custom_command(
+	TARGET ${PROJECT_NAME} PRE_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy_directory
+	   ${CMAKE_SOURCE_DIR}/data/ ${CMAKE_BINARY_DIR}/data)
 
 # Copy dlls
 if(WIN32)
@@ -61,6 +64,8 @@ if(WIN32)
 		COMMAND ${CMAKE_COMMAND} -E copy_directory
 			"${PROJECT_SOURCE_DIR}/data"
 			$<TARGET_FILE_DIR:${PROJECT_NAME}>/data)
+			
+
 endif()
 
 #target_link_libraries(${PROJECT_NAME} PRIVATE glad)

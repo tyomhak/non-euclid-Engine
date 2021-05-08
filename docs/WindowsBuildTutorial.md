@@ -23,10 +23,8 @@ Your file might have a different ending, you can just rename the file if you get
 5. Configure (at the bottom)
 6. Generate (at the bottom)
 7. You should have a .sln file in the build folder
-
-
-# CURRENT LIMITATION WITH VS #
-1. Can't use the "Local Windows Debugger"
+8. Open .sln with Visual Studio
+9. Right click NonEuclid -> "Set as Startup Project"
 
 ### To Run The program ###
 1. Build solution
