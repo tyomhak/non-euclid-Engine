@@ -25,7 +25,3 @@ Your file might have a different ending, you can just rename the file if you get
 7. You should have a .sln file in the build folder
 8. Open .sln with Visual Studio
 9. Right click NonEuclid -> "Set as Startup Project"
-
-### To Run The program ###
-1. Build solution
-2. Run the .exe file in the non-euclid-Engine/build/Debug/ directory
