@@ -5,12 +5,6 @@
 #include <string>
 
 
-std::unordered_map<string, string> modelPaths = 
-{
-    {"backpack", "./models/backpack/backpack.obj"},
-    {"treeMinimal", "./models/low_poly_tree/Lowpoly_tree_sample.obj"}
-};
-
 class ObjectHandler
 {
     public:
@@ -23,7 +17,7 @@ class ObjectHandler
         
         if (models.find(type) == models.end())
         {
-            string path = "./models/" + type + "/" + type + ".obj";
+            string path = "./data/models/" + type + "/" + type + ".obj";
             models.emplace(std::make_pair(type, Model(path)));
         }
         return Object(models.at(type), type, worldMatrix);

@@ -8,7 +8,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "stb_image.h"
+#include <stb_image/stb_image.h>
 
 #include "Shader.h"
 #include "Model.h"
@@ -89,7 +89,7 @@ int main()
 
     // Create our shader program
     // -----------------------------------------
-    Shader ourShader("./shaders/vertex.vert", "./shaders/fragment.frag");
+    Shader ourShader("./data/shaders/vertex.vert", "./data/shaders/fragment.frag");
 
     glm::mat4 model = glm::mat4(1.0f);
     glm::mat4 view = glm::mat4(1.0f);
@@ -105,7 +105,13 @@ int main()
     // myLevel.AddObject(objectHandler.GetObject("Lowpoly_tree_sample", glm::translate(model, glm::vec3(-10.0f, 0.0f, 0.0f))));
     // myLevel.AddObject(objectHandler.GetObject("container"));
     // myLevel.AddObject(objectHandler.GetObject("floor"));
-    myLevel.AddObject(objectHandler.GetObject("poleLevel"));
+    for (int i = 0; i < 3; ++i)
+    {
+        glm::mat4 location(1.0f);
+        location = glm::translate(location, glm::vec3(i, 10 * pow(-1, i), 1.0f));
+        myLevel.AddObject(objectHandler.GetObject("backpack", location));
+    }
+    myLevel.AddObject(objectHandler.GetObject("backpack"));
     
     float previousTime = glfwGetTime();
     int frameCount = 0;
