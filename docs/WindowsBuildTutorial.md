@@ -19,7 +19,7 @@ Your file might have a different ending, you can just rename the file if you get
 1. Create a new folder "build" in the root dir
 2. Open CMake GUI
 3. Set the root dir as the source dir
-4. Set the "build" folder as the Build ("Browse Build")
+4. Set the "non-euclid-Engine/build" folder as the Build ("Browse Build") /
 5. Configure (at the bottom)
 6. Generate (at the bottom)
 7. You should have a .sln file in the build folder
