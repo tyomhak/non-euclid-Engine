@@ -4,6 +4,9 @@ SET(sampleName nonEuclid)
 
 project(NonEuclid VERSION 0.1.0 LANGUAGES C CXX)
 
+if(UNIX AND NOT APPLE)
+	set(LINUX TRUE)
+endif()
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
@@ -29,7 +32,14 @@ message(STATUS "Found GLFW3 in ${GLFW3_INCLUDE_DIR}")
 find_package(ASSIMP REQUIRED)
 message(STATUS "Found ASSIMP in ${ASSIMP_INCLUDE_DIR}")
 
-set(LIBS glfw3 opengl32 assimp stb_image glad)
+
+if(LINUX)
+	set(OPEN_GL GL dl pthread X11)
+elseif(WIN32)
+	set(OPEN_GL opengl32)
+endif()
+
+set(LIBS glfw3 ${OPEN_GL} assimp stb_image glad)
 
 
 ###########
