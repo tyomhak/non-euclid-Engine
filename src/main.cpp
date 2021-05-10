@@ -105,13 +105,13 @@ int main()
     // myLevel.AddObject(objectHandler.GetObject("Lowpoly_tree_sample", glm::translate(model, glm::vec3(-10.0f, 0.0f, 0.0f))));
     // myLevel.AddObject(objectHandler.GetObject("container"));
     // myLevel.AddObject(objectHandler.GetObject("floor"));
-    for (int i = 0; i < 3; ++i)
-    {
-        glm::mat4 location(1.0f);
-        location = glm::translate(location, glm::vec3(i, 10 * pow(-1, i), 1.0f));
-        myLevel.AddObject(objectHandler.GetObject("backpack", location));
-    }
-    myLevel.AddObject(objectHandler.GetObject("backpack"));
+    // for (int i = 0; i < 3; ++i)
+    // {
+    //     glm::mat4 location(1.0f);
+    //     location = glm::translate(location, glm::vec3(i, 10 * pow(-1, i), 1.0f));
+    //     myLevel.AddObject(objectHandler.GetObject("backpack", location));
+    // }
+    myLevel.AddObject(objectHandler.GetObject("portal"));
     
     float previousTime = glfwGetTime();
     int frameCount = 0;

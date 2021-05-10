@@ -1,16 +1,22 @@
 #pragma once
 
+#include "Model.h"
 
-#include "Mesh.h"
-
-
-class Portal: public Mesh
+class Portal: public Model
 {
 public:
-    Portal()
-    Mesh(.......)
+    Portal(const std::string &path)
+    :Model(path)
     {} 
 
+    static Portal GetPortal()
+    {
+       vector<Vertex> vertices;
+       vector<unsigned int> indices;
+       vector<Texture> textures; 
+
+       
+    }
 
 private:
     Mesh mesh;
