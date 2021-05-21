@@ -93,7 +93,7 @@ public:
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         objShader.use();
-        glViewport(0, 0, 1024, 1024);
+        glViewport(0, 0, 1024, 768);
     }
 
     
