@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Object.h"
+#include "Portal.h"
 #include <unordered_map>
 #include <string>
 
@@ -21,5 +21,16 @@ class ObjectHandler
             models.emplace(std::make_pair(type, Model(path)));
         }
         return Object(models.at(type), type, worldMatrix);
+    }
+
+    Portal GetPortal(glm::mat4 worldMatrix = glm::mat4(1.0f))
+    {
+        string type = "portal";
+        if (models.find("portal") == models.end())
+        {
+            string path = "./data/models/" + type + "/" + type + ".obj";
+            models.emplace(std::make_pair(type, Model(path)));
+        }
+        return Portal(models.at("portal"), "portal", worldMatrix);
     }
 };

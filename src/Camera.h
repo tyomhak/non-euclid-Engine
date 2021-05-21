@@ -21,7 +21,10 @@ public:
     pitch(_pitch)
     {};
 
-    glm::mat4 GetView() { return glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp); }
+    glm::mat4 GetView() 
+    { 
+        return glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp); 
+    }
 
     glm::vec3 GetPosition() { return cameraPos; }
     glm::vec3 GetFront() { return cameraFront; }
@@ -31,6 +34,7 @@ public:
 
     void SetPosition(glm::vec3 _pos) { cameraPos = _pos; }
     void SetFront(glm::vec3 _front) { cameraFront = _front; }
+    void SetUp(glm::vec3 _up) { cameraUp = _up; }
 
     void Walk(float moveSpeed) {    cameraPos += moveSpeed * cameraFront;  } 
     void Walk() {   return Walk(cameraSpeed);   }

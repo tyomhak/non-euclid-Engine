@@ -25,8 +25,8 @@ int success;
 char infoLog[512];
 
 // settings
-const unsigned int SCR_WIDTH = 1200;
-const unsigned int SCR_HEIGHT = 800;
+const unsigned int SCR_WIDTH = 1024;
+const unsigned int SCR_HEIGHT = 768;
 
 // Camera system
 Camera myCamera;
@@ -81,37 +81,41 @@ int main()
     stbi_set_flip_vertically_on_load(true);
 
     glEnable(GL_DEPTH_TEST);
-
-
     glEnable(GL_CULL_FACE);
     // glCullFace(GL_BACK);
     // glFrontFace(GL_CW); 
 
     // Create our shader program
     // -----------------------------------------
-    Shader ourShader("./data/shaders/vertex.vert", "./data/shaders/fragment.frag");
-
+    Shader objectShader("./data/shaders/object.vert", "./data/shaders/object.frag");
+    std::cout << "Objsd " << std::endl;
+    Shader portalShader("./data/shaders/portal.vert", "./data/shaders/portal.frag");
+    // Shader portalShader = objectShader;
     glm::mat4 model = glm::mat4(1.0f);
     glm::mat4 view = glm::mat4(1.0f);
     glm::mat4 projection = glm::perspective(glm::radians(90.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 
-    unsigned int modelLoc = glGetUniformLocation(ourShader.ID, "model");
-    unsigned int viewLoc  = glGetUniformLocation(ourShader.ID, "view");
-    unsigned int projectionLoc  = glGetUniformLocation(ourShader.ID, "projection");
+    unsigned int modelLoc = glGetUniformLocation(objectShader.ID, "model");
+    unsigned int viewLoc  = glGetUniformLocation(objectShader.ID, "view");
+    unsigned int projectionLoc  = glGetUniformLocation(objectShader.ID, "projection");
 
-    Level myLevel = Level();
+    GLuint projectionPortal = glGetUniformLocation(portalShader.ID, "projection");
+    glUniformMatrix4fv(projectionPortal, 1, GL_FALSE, &projection[0][0]);
 
-    // Level myLevel = levelHandler.ReadLevel("./Alternative.lev", objectHandler, myCamera);
-    // myLevel.AddObject(objectHandler.GetObject("Lowpoly_tree_sample", glm::translate(model, glm::vec3(-10.0f, 0.0f, 0.0f))));
-    // myLevel.AddObject(objectHandler.GetObject("container"));
-    // myLevel.AddObject(objectHandler.GetObject("floor"));
-    // for (int i = 0; i < 3; ++i)
-    // {
-    //     glm::mat4 location(1.0f);
-    //     location = glm::translate(location, glm::vec3(i, 10 * pow(-1, i), 1.0f));
-    //     myLevel.AddObject(objectHandler.GetObject("backpack", location));
-    // }
-    myLevel.AddObject(objectHandler.GetObject("portal"));
+    Level myLevel = Level(portalShader, objectShader);
+
+    glm::mat4 location(1.0f);
+    location = glm::translate(location, glm::vec3(0.0f, 0.0f, 0.0f));
+    myLevel.AddObject(objectHandler.GetObject("backpack", location));
+    
+    location = glm::translate(location, glm::vec3(-10.0f, 0.0f, 0.0f));
+    Portal first = objectHandler.GetPortal(location);
+    location = glm::translate(location, glm::vec3(10.0f, 0.0f, 0.0f));
+    Portal second = objectHandler.GetPortal(location);
+
+    first.Move(glm::vec3(-10.0f, 0.0f, 0.0f));
+    second.Move(glm::vec3(10.0f, 0.0f, 0.0f));
+    myLevel.AddPortalPair(first, second);
     
     float previousTime = glfwGetTime();
     int frameCount = 0;
@@ -128,7 +132,7 @@ int main()
         float currentTime = glfwGetTime();
         if (currentTime - previousTime >= 1.0f)
         {
-            std::cout << frameCount << std::endl;
+            // std::cout << frameCount << std::endl;
             frameCount = 0;
             previousTime = currentTime;
         }
@@ -144,13 +148,12 @@ int main()
         // -----
         processInput(window);
 
-
         // render
         // -----
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        ourShader.use();
+        objectShader.use();
         
         view = myCamera.GetView();
 
@@ -162,10 +165,10 @@ int main()
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
         glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, &projection[0][0]);
 
-        // myModel.Draw(ourShader);
-        // backPack_01.Draw(ourShader);
-        // backPack_02.Draw(ourShader);
-        myLevel.Draw(ourShader);
+        // myModel.Draw(objectShader);
+        // backPack_01.Draw(objectShader);
+        // backPack_02.Draw(objectShader);
+        myLevel.Draw(nullptr, 0, myCamera);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------

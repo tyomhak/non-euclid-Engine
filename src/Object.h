@@ -31,7 +31,7 @@ public:
        model->Draw(shader, glm::translate(worldMatrix, translate));
    }
 
-    void move(glm::vec3 &translate)
+    void Move(glm::vec3 translate)
     {
         worldMatrix = glm::translate(worldMatrix, translate);
     }
