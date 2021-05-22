@@ -2,8 +2,10 @@
 
 #include "Object.h"
 
-uint texture_width = 2048;
-uint texture_height = 2048;
+uint texture_width = 1024;
+uint texture_height = 768;
+
+uint max_depth = 2;
 
 
 class Portal: public Object 
@@ -35,17 +37,22 @@ public:
     Portal *GetPairPtr() { return pair_portal; }
     glm::mat4 GetWorldMat() { return worldMatrix; }
 
-    void Draw(Camera &mainCamera, vector<Object> &objs, vector<Portal> &ports)
+    void Draw(  Camera &mainCamera, 
+                vector<Object> &objs, 
+                vector<Portal> &ports,
+                uint depth = 0
+            )
     {
-        Draw(*objectShader, *portalShader, mainCamera, objs, ports);
+        Draw(*objectShader, *portalShader, mainCamera, objs, ports, depth);
     }
 
     void Draw(  Shader &objShader, 
                 Shader &portShader, 
                 Camera &mainCamera, 
                 vector<Object> &objs, 
-                vector<Portal> &ports
-             )
+                vector<Portal> &ports,
+                uint depth = 0
+            )
     {
         glDisable(GL_DEPTH_TEST);
         glViewport(0, 0, texture_width, texture_height);
@@ -61,19 +68,31 @@ public:
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
 
         glBindFramebuffer(GL_FRAMEBUFFER, portalFramebuffer);
-        glClearColor(0.3, 0.7, 0.3, 1.0);
+        glClearColor(0.3f, 0.8f,  1.0f , 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glEnable(GL_DEPTH_TEST);
+
+        if (depth < max_depth)
+        {
+            for (auto &portal : ports)
+            {
+                if (&portal != pair_portal)
+                    portal.Draw(objShader, portShader, mainCamera, objs, ports, depth + 1);
+            }
+        }
 
         for (auto obj : objs)
         {
             obj.Draw(currShader);
         }
 
-        glEnable(GL_DEPTH_TEST);
-        glViewport(0, 0, 1024, 768);
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        if (depth == 0)
+        {
+            glEnable(GL_DEPTH_TEST);
+            glViewport(0, 0, 1024, 768);
 
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        }
         currShader = objShader;
         currShader.use();
 
@@ -91,9 +110,9 @@ public:
             glDrawElements(GL_TRIANGLES, mesh.indices.size(), GL_UNSIGNED_INT, 0);
         }
 
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        objShader.use();
-        glViewport(0, 0, 1024, 768);
+        // glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        // objShader.use();
+        // glViewport(0, 0, 1024, 768);
     }
 
     
