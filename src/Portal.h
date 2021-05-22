@@ -109,13 +109,7 @@ public:
             glBindTexture(GL_TEXTURE_2D, renderedTexture);
             glDrawElements(GL_TRIANGLES, mesh.indices.size(), GL_UNSIGNED_INT, 0);
         }
-
-        // glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        // objShader.use();
-        // glViewport(0, 0, 1024, 768);
     }
-
-    
 
 
 private:
@@ -132,7 +126,6 @@ private:
     {
         glGenFramebuffers(1, &portalFramebuffer);
         glBindFramebuffer(GL_FRAMEBUFFER, portalFramebuffer);
-        // generate framebuffer
 
         glGenTextures(1, &renderedTexture);
         glBindTexture(GL_TEXTURE_2D, renderedTexture);
@@ -144,24 +137,13 @@ private:
 
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderedTexture, 0);
 
-        // glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        // glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        // glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
-        // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
-        
         glGenRenderbuffers(1, &depthrenderbuffer); // changed 2 to 1. Maybe needs to be undone?
         glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer);
         glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, texture_width, texture_height);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthrenderbuffer);
 
-
-        // glDrawBuffers(1, DrawBuffers);
-        // glDrawBuffer(GL_COLOR_ATTACHMENT0);
-        // glReadBuffer(GL_NONE);
-
         if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
             std::cout << "Portal frame buffer error" << std::endl;
-
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glBindRenderbuffer(GL_RENDERBUFFER, 0);
