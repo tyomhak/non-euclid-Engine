@@ -2,10 +2,10 @@
 
 #include "Object.h"
 
-uint texture_width = 1024;
-uint texture_height = 768;
+unsigned int texture_width = 1024;
+unsigned int texture_height = 768;
 
-uint max_depth = 2;
+unsigned int max_depth = 2;
 
 
 class Portal: public Object 
@@ -40,7 +40,7 @@ public:
     void Draw(  Camera &mainCamera, 
                 vector<Object> &objs, 
                 vector<Portal> &ports,
-                uint depth = 0
+                GLuint depth = 0
             )
     {
         Draw(*objectShader, *portalShader, mainCamera, objs, ports, depth);
@@ -51,7 +51,7 @@ public:
                 Camera &mainCamera, 
                 vector<Object> &objs, 
                 vector<Portal> &ports,
-                uint depth = 0
+                GLuint depth = 0
             )
     {
         glDisable(GL_DEPTH_TEST);
