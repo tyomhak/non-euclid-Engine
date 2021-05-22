@@ -118,7 +118,7 @@ private:
         glGenTextures(1, &renderedTexture);
         glBindTexture(GL_TEXTURE_2D, renderedTexture);
 
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2024, 2024, 0, GL_RGB,  GL_UNSIGNED_BYTE, 0);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture_width, texture_height, 0, GL_RGB,  GL_UNSIGNED_BYTE, 0);
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -132,7 +132,7 @@ private:
         
         glGenRenderbuffers(1, &depthrenderbuffer); // changed 2 to 1. Maybe needs to be undone?
         glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 2024, 2024);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, texture_width, texture_height);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthrenderbuffer);
 
 
