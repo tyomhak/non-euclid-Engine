@@ -57,22 +57,18 @@ class Level
             }
         }
 
-        void Draw(Portal *portalToSkip = nullptr, int depth = 0, Camera mainCamera = Camera()) 
+        void Draw(Camera mainCamera = Camera()) 
         {
-            if (depth < 4)
-                DrawPortals(mainCamera, portalToSkip, depth + 1);
+            DrawPortals(mainCamera);
             // DrawPortalsObj();
             DrawObjects(mainCamera, portalShader);
         }
 
-        void DrawPortals(Camera &camera, Portal *portalToSkip = nullptr, int depth = 0)
+        void DrawPortals(Camera &camera)
         {
-            for (int i = 0; i < levelPortals.size(); ++i)
+            for (auto &portal : levelPortals)
             {
-                if (&levelPortals[i] == portalToSkip)
-                    continue;
-
-                levelPortals[i].Draw(*objectShader, *portalShader, camera, levelObjects, levelPortals);
+                portal.Draw(*objectShader, *portalShader, camera, levelObjects, levelPortals);
             }
         }
 

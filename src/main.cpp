@@ -168,7 +168,7 @@ int main()
         // myModel.Draw(objectShader);
         // backPack_01.Draw(objectShader);
         // backPack_02.Draw(objectShader);
-        myLevel.Draw(nullptr, 0, myCamera);
+        myLevel.Draw(myCamera);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
