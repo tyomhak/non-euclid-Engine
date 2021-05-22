@@ -62,7 +62,7 @@ public:
 
         Camera tempCamera = Camera();
         glm::mat4 view = glm::mat4(1.0f);
-        view = mainCamera.GetView();
+        view = mainCamera.getViewMatrix();
 
         GLuint viewLoc = glGetUniformLocation(currShader.ID, "view");
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
@@ -96,7 +96,7 @@ public:
         currShader = objShader;
         currShader.use();
 
-        view = mainCamera.GetView();
+        view = mainCamera.getViewMatrix();
         viewLoc = glGetUniformLocation(currShader.ID, "view");
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
 

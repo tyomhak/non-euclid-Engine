@@ -155,7 +155,7 @@ int main()
 
         objectShader.use();
         
-        view = myCamera.GetView();
+        view = myCamera.getViewMatrix();
 
 
         model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
@@ -194,13 +194,17 @@ void processInput(GLFWwindow *window)
         if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
             deltaTime *= 2.0f;
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-            myCamera.Walk(myCamera.GetCameraSpeed() * deltaTime);
+            myCamera.ProcessKeyboard(FORWARD, deltaTime);
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-           myCamera.WalkBack(myCamera.GetCameraSpeed() * deltaTime);
+            myCamera.ProcessKeyboard(BACKWARD, deltaTime);
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-            myCamera.StrafeLeft(myCamera.GetCameraSpeed() * deltaTime);
+            myCamera.ProcessKeyboard(LEFT, deltaTime);
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-            myCamera.StrafeRight(myCamera.GetCameraSpeed() * deltaTime);
+            myCamera.ProcessKeyboard(RIGHT, deltaTime);
+        if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+            myCamera.ProcessKeyboard(UPWARD, deltaTime);
+        if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+            myCamera.ProcessKeyboard(DOWNWARD, deltaTime);
 
         // switch polygon mode to LINE
         if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
@@ -235,14 +239,14 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 void mouse_callback(GLFWwindow *window, double xpos, double ypos)
 {
-    float xoffset = xpos - lastX;
+    float xoffset = lastX - xpos;
     float yoffset = lastY - ypos; // reversed since y-coordinates range from bottom to top
     lastX = xpos;
     lastY = ypos;
 
-    const float sensitivity = 0.1f;
-    xoffset *= sensitivity;
-    yoffset *= sensitivity;
+    //const float sensitivity = 0.1f;
+    //xoffset *= sensitivity;
+    //yoffset *= sensitivity;
 
-    myCamera.MoveMouse(xoffset, yoffset);
+    myCamera.ProcessMouseMovement(xoffset, yoffset);
 }
