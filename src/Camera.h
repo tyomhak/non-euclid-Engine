@@ -44,6 +44,12 @@ public:
     void StrafeLeft(float moveSpeed) { StrafeRight(-moveSpeed); }
     void StrafeLeft() { return StrafeLeft(cameraSpeed); }
 
+    void MoveUp(float moveSpeed) { cameraPos += moveSpeed * cameraUp;}
+    void MoveUp() { return MoveUp(cameraSpeed); }
+
+    void MoveDown(float moveSpeed) { return MoveUp(-moveSpeed); }
+    void MoveDown() { return MoveDown(cameraSpeed); }
+
     float GetCameraSpeed() { return cameraSpeed; }
     void SetCameraSpeed(float newSpeed) { cameraSpeed = newSpeed; }
 

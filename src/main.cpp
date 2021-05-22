@@ -198,6 +198,11 @@ void processInput(GLFWwindow *window)
             myCamera.StrafeLeft(myCamera.GetCameraSpeed() * deltaTime);
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
             myCamera.StrafeRight(myCamera.GetCameraSpeed() * deltaTime);
+        if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+            myCamera.MoveUp(myCamera.GetCameraSpeed() * deltaTime);
+        if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+            myCamera.MoveDown(myCamera.GetCameraSpeed() * deltaTime);
+
 
         // switch polygon mode to LINE
         if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
