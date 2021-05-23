@@ -20,7 +20,8 @@ class ObjectHandler
             string path = "./data/models/" + type + "/" + type + ".obj";
             models.emplace(std::make_pair(type, Model(path)));
         }
-        return Object(models.at(type), type, worldMatrix);
+        id += 1;
+        return Object(models.at(type), type , type + std::to_string(id), worldMatrix);
     }
 
     Portal GetPortal(glm::mat4 worldMatrix = glm::mat4(1.0f))
@@ -31,6 +32,12 @@ class ObjectHandler
             string path = "./data/models/" + type + "/" + type + ".obj";
             models.emplace(std::make_pair(type, Model(path)));
         }
-        return Portal(models.at("portal"), "portal", worldMatrix);
+        id += 1;
+        return Portal(models.at("portal"), "portal", "portal" + std::to_string(id), worldMatrix);
     }
+
+private:
+    static int id;
 };
+
+int ObjectHandler::id = 0;

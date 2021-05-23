@@ -11,15 +11,20 @@ class Object
 protected:
     Model *model;
     glm::mat4 worldMatrix;
+    std::string ID;
     /* data */
 
 
 public:
     const string modelType;
-    Object (Model &_model, string _modelType, glm::mat4 _worldMatrix = glm::mat4(1.0f));
+    Object (Model &_model, string _modelType, std::string id, glm::mat4 _worldMatrix = glm::mat4(1.0f));
 
     ~Object
    ();
+
+    std::string getId() {
+        return ID;
+   }
 
    void Draw(Shader &shader)
    {
@@ -39,9 +44,10 @@ public:
     const glm::mat4 GetWorldMat() const { return worldMatrix; }
 };
 
-Object::Object(Model &_model, string _modelType, glm::mat4 _worldMatrix) : 
+Object::Object(Model &_model, string _modelType, std::string id, glm::mat4 _worldMatrix) :
 modelType(_modelType),
 worldMatrix(_worldMatrix),
+ID(id),
 model(&_model)
 {
 }

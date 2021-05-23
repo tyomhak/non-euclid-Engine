@@ -7,10 +7,12 @@
 #include "Level.h"
 #include "ObjHandler.h"
 
+#include <map>
+
 class Level
 {
     private:
-        std::vector<Object> levelObjects; // maybe change this to a map, with IDs?
+        mutable std::map<std::string /* object ID */, Object> levelObjects;
         std::vector<Portal> levelPortals;
         Shader *portalShader;
         Shader *objectShader; 
@@ -33,18 +35,14 @@ class Level
             unsigned int viewLoc  = glGetUniformLocation(shader->ID, "view");
             glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
 
-
-            for (int i = 0; i < levelObjects.size(); ++i)
-            {
-                levelObjects.at(i).Draw(*objectShader);
-            }
+            DrawObjects(shader);
         }
 
         void DrawObjects(Shader *shader)
         {
-            for (int i = 0; i < levelObjects.size(); ++i)
+            for (auto it = levelObjects.begin(); it != levelObjects.end(); it++)
             {
-                levelObjects.at(i).Draw(*objectShader);
+                it->second.Draw(*objectShader);
             }
         }
 
@@ -74,7 +72,7 @@ class Level
 
         void AddObject(Object obj)
         {
-            levelObjects.push_back(obj);
+            levelObjects.emplace(obj.getId(), obj);
         }
 
         void AddPortalPair(Portal &first, Portal &second)
@@ -85,7 +83,7 @@ class Level
             levelPortals.push_back(second);
         }
 
-        const std::vector<Object> GetObjects() { return levelObjects; }
+        std::map<std::string /* object Id */, Object>& GetObjects() { return levelObjects; }
 
         Camera GetCamera() const { return camera; }
         void SetCamera(Camera _camera) { camera = _camera; }
@@ -169,10 +167,10 @@ class LevelHandler
             newLevel << std::to_string(myCamera.GetPitch()) + "\n";
 
 
-            for (Object const& obj : level.GetObjects())
+            for (std::pair<std::string, Object> const& obj : level.GetObjects())
             {
-                newLevel << "o:" + obj.modelType + "\n";
-                const glm::mat4 matrix = obj.GetWorldMat();
+                newLevel << "o:" + obj.second.modelType + "\n";
+                const glm::mat4 matrix = obj.second.GetWorldMat();
                 for (int i = 0; i < 4; ++i)
                 {
                     for (int j = 0; j < 4; ++j)

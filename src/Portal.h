@@ -11,8 +11,8 @@ unsigned int max_depth = 2;
 class Portal: public Object 
 {
 public:
-    Portal(Model &_model, string _modelType, glm::mat4 _worldMatrix = glm::mat4(1.0f)):
-    Object(_model, _modelType, _worldMatrix)
+    Portal(Model &_model, string _modelType, std::string id, glm::mat4 _worldMatrix = glm::mat4(1.0f)):
+    Object(_model, _modelType, id, _worldMatrix)
     {
         SetupPortal();
     }
@@ -38,7 +38,7 @@ public:
     glm::mat4 GetWorldMat() { return worldMatrix; }
 
     void Draw(  Camera &mainCamera, 
-                vector<Object> &objs, 
+                std::map<std::string /* object Id */, Object> &objs,
                 vector<Portal> &ports,
                 GLuint depth = 0
             )
@@ -49,7 +49,7 @@ public:
     void Draw(  Shader &objShader, 
                 Shader &portShader, 
                 Camera &mainCamera, 
-                vector<Object> &objs, 
+                std::map<std::string /* object Id */, Object> &objs, 
                 vector<Portal> &ports,
                 GLuint depth = 0
             )
@@ -83,7 +83,7 @@ public:
 
         for (auto obj : objs)
         {
-            obj.Draw(currShader);
+            obj.second.Draw(currShader);
         }
 
         if (depth == 0)
