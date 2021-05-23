@@ -44,17 +44,6 @@ public:
 
 public:
 
-    glm::vec3 getPosition() 
-    {
-        return Position;
-    }
-
-    glm::vec3 getFront() 
-    {
-        return Front;
-    }
-
-
     // constructor with vectors
     Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 3.0f),
                                 glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f),
@@ -78,10 +67,22 @@ public:
     }
 
     // returns the view matrix calculated using Euler Angles and the LookAt Matrix
-    glm::mat4 getViewMatrix()
+    glm::mat4 getViewMatrix() const
     {
         return lookAt(Position, Position + Front, Up);
     }
+
+    glm::vec3 getPosition() const
+    {
+        return Position;
+    }
+
+    glm::vec3 getFront() const
+    {
+        return Front;
+    }
+
+
 
     // processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
     void ProcessKeyboard(Camera_Movement direction, float deltaTime)

@@ -24,10 +24,11 @@ class Level
         {}
         
 
+
         Shader *GetPortalShaderPtr() { return portalShader; }
         Shader *GetObjectShaderPtr() { return objectShader; }
         
-        void DrawObjects(Camera mainCamera, Shader *shader)
+        void DrawObjects(Camera &mainCamera, Shader *shader)
         {
             glm::mat4 view = mainCamera.getViewMatrix();
             unsigned int viewLoc  = glGetUniformLocation(shader->ID, "view");
@@ -57,7 +58,7 @@ class Level
             }
         }
 
-        void Draw(Camera mainCamera = Camera()) 
+        void Draw(Camera &mainCamera = Camera()) 
         {
             DrawPortals(mainCamera);
             // DrawPortalsObj();
@@ -154,7 +155,7 @@ class LevelHandler
             return myLevel;
         }
 
-        void WriteLevel(string fileName, Level &level, Camera myCamera)
+        void static WriteLevel(string fileName, Level &level, Camera myCamera)
         {
             ofstream newLevel(fileName + ".lev");
 
