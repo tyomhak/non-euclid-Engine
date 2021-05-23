@@ -107,7 +107,7 @@ public:
         {
             glBindVertexArray(mesh.VAO);
             glBindTexture(GL_TEXTURE_2D, renderedTexture);
-            glDrawElements(GL_TRIANGLES, mesh.indices.size(), GL_UNSIGNED_INT, 0);
+            glDrawElements(GL_TRIANGLES, (GLsizei)mesh.indices.size(), GL_UNSIGNED_INT, 0);
         }
     }
 

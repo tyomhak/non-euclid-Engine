@@ -13,33 +13,7 @@
 class AABB {
 public:
     AABB() {};
-    static void calculate_min_max_points(Object object)
-    {
-        p_min.x = INT_MAX;
-        p_min.y = INT_MAX;
-        p_min.z = INT_MAX;
 
-        p_max.x = INT_MIN;
-        p_max.y = INT_MIN;
-        p_max.z = INT_MIN;
-
-        long meshes_quantity = object.model->meshes.size();
-        for(int i{0}; i < meshes_quantity; ++i)
-        {
-            int amount = object.model->meshes[i].vertices.size();
-            for (int j{ 0 }; j < amount; ++j)
-            {
-                // min point assigning
-                if (object.model->meshes[i].vertices[j].Position.x < p_min.x) { p_min.x = object.model->meshes[i].vertices[j].Position.x; }
-                if (object.model->meshes[i].vertices[j].Position.y < p_min.y) { p_min.y = object.model->meshes[i].vertices[j].Position.y; }
-                if (object.model->meshes[i].vertices[j].Position.z < p_min.z) { p_min.z = object.model->meshes[i].vertices[j].Position.z; }
-                // max point assigning
-                if (object.model->meshes[i].vertices[j].Position.x > p_max.x) { p_max.x = object.model->meshes[i].vertices[j].Position.x; }
-                if (object.model->meshes[i].vertices[j].Position.y > p_max.y) { p_max.y = object.model->meshes[i].vertices[j].Position.y; }
-                if (object.model->meshes[i].vertices[j].Position.z > p_max.z) { p_max.z = object.model->meshes[i].vertices[j].Position.z; }
-            }
-        }
-    }
     // set min and max points for aabb
     void set_aabb_p(const glm::vec3 min, const glm::vec3 max)
     {
@@ -49,22 +23,22 @@ public:
     // intersection check of aabb with point
     static bool intersect(const Camera camera, const Object object)
     {
-        calculate_min_max_points(object);   // calcuate the min and max points before intersection check
+        //calculate_min_max_points(object);   // calcuate the min and max points before intersection check
 
         //std::cout << "[" << camera.Position.x << "," << camera.Position.y << "," << camera.Position.z << "] "
         //    << "[" << p_min.x << "," << p_min.y << "," << p_min.z << "] "
         //    << "[" << p_max.x << "," << p_max.y << "," << p_max.z << "] " << std::endl;
 
-        return (camera.Position.x >= p_min.x && camera.Position.x <= p_max.x)
-            && (camera.Position.y >= p_min.y && camera.Position.y <= p_max.y)
-            && (camera.Position.z >= p_min.z && camera.Position.z <= p_max.z);
+        return (camera.Position.x >= object.get_min_p().x && camera.Position.x <= object.get_max_p().x)
+            && (camera.Position.y >= object.get_min_p().y && camera.Position.y <= object.get_max_p().y)
+            && (camera.Position.z >= object.get_min_p().z && camera.Position.z <= object.get_max_p().z);
     }
     // intersection check of aabb with aabb
     static bool intersect(const Object object1, const Object object2)
     {
-        //return (object1.p_min.x <= object2.p_max.x && object1.p_max.x >= object2.p_min.x)
-        //    && (object1.p_min.y <= object2.p_max.y && object1.p_max.y >= object2.p_min.y)
-        //    && (object1.p_min.z <= object2.p_min.z && object1.p_max.z >= object2.p_min.z);
+        return (object1.get_min_p().x <= object2.get_max_p().x && object1.get_max_p().x >= object2.get_min_p().x)
+            && (object1.get_min_p().y <= object2.get_max_p().y && object1.get_max_p().y >= object2.get_min_p().y)
+            && (object1.get_min_p().z <= object2.get_max_p().z && object1.get_max_p().z >= object2.get_min_p().z);
     }
 
 private:

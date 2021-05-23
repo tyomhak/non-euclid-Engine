@@ -28,7 +28,7 @@ public:
 
 	void render()
 	{
-		float previousTime = glfwGetTime();
+		float previousTime = (float)glfwGetTime();
 		int frameCount = 0;
 
 		float lastFrameTime = previousTime;
@@ -40,7 +40,7 @@ public:
 		while (!glfwWindowShouldClose(window.get_window()))
 		{
 			// Frame Counter
-			float currentTime = glfwGetTime();
+			float currentTime = (float)glfwGetTime();
 			if (currentTime - previousTime >= 1.0f)
 			{
 				// std::cout << frameCount << std::endl;
