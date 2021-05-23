@@ -26,12 +26,13 @@ class Level
         {}
         
 
+
         Shader *GetPortalShaderPtr() { return portalShader; }
         Shader *GetObjectShaderPtr() { return objectShader; }
         
-        void DrawObjects(Camera mainCamera, Shader *shader)
+        void DrawObjects(Camera &mainCamera, Shader *shader)
         {
-            glm::mat4 view = mainCamera.GetView();
+            glm::mat4 view = mainCamera.getViewMatrix();
             unsigned int viewLoc  = glGetUniformLocation(shader->ID, "view");
             glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
 
@@ -51,11 +52,11 @@ class Level
             std::cout << "Not implemented. Line 97, Level.h" << std::endl;
             for (int i = 0; i < levelPortals.size(); ++i)
             {
-                // levelPortals.at(i).Draw(*objectShader);
+               //  levelPortals.at(i).Draw(*objectShader);
             }
         }
 
-        void Draw(Camera mainCamera = Camera()) 
+        void Draw(Camera &mainCamera = Camera()) 
         {
             DrawPortals(mainCamera);
             // DrawPortalsObj();
@@ -152,19 +153,19 @@ class LevelHandler
             return myLevel;
         }
 
-        void WriteLevel(string fileName, Level &level, Camera myCamera)
+        void static WriteLevel(string fileName, Level &level, Camera myCamera)
         {
             ofstream newLevel(fileName + ".lev");
 
             newLevel << "camera\n";
             for (int i = 0; i < 3; ++i)
-                newLevel << std::to_string(myCamera.GetPosition()[i]) + "\n";
+                newLevel << std::to_string(myCamera.getPosition()[i]) + "\n";
 
             for (int i = 0; i < 3; ++i)
-                newLevel << std::to_string(myCamera.GetFront()[i]) + "\n";
+                newLevel << std::to_string(myCamera.getFront()[i]) + "\n";
 
-            newLevel << std::to_string(myCamera.GetYaw()) + "\n";
-            newLevel << std::to_string(myCamera.GetPitch()) + "\n";
+            newLevel << std::to_string(YAW) + "\n";
+            newLevel << std::to_string(PITCH) + "\n";
 
 
             for (std::pair<std::string, Object> const& obj : level.GetObjects())

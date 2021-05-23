@@ -32,9 +32,12 @@ public:
 		float lastFrameTime = previousTime;
 		float deltaTime = 0.0f;
 
+<<<<<<< HEAD
 		glm::vec3 moveRight = glm::vec3(0.01f, 0.0f, 0.0f);
 		glm::vec3 moveLeft = glm::vec3(-0.01f, 0.0f, 0.0f);
 
+=======
+>>>>>>> Refactoring
 		while (!glfwWindowShouldClose(window.get_window()))
 		{
 			// Frame Counter
@@ -47,9 +50,12 @@ public:
 			}
 			++frameCount;
 
+<<<<<<< HEAD
 			moveObject(moveRight, "cube1");
 			moveObject(moveLeft, "cube2");
 
+=======
+>>>>>>> Refactoring
 			// Smooth Movement
 			// ---------------
 			deltaTime = currentTime - lastFrameTime;
@@ -76,12 +82,17 @@ public:
 		glfwTerminate();
 	}
 
+<<<<<<< HEAD
 	void addObject(std::string objectName, glm::mat4 location) 
 	{
+=======
+	void addObject(std::string objectName, glm::mat4 location) {
+>>>>>>> Refactoring
 		location = glm::translate(location, glm::vec3(0.0f, 0.0f, 0.0f));
 		level.AddObject(objectHandler.GetObject(objectName, location));
 	}
 
+<<<<<<< HEAD
 	void addPortal(Portal first, Portal second) 
 	{
 		level.AddPortalPair(first, second);
@@ -89,6 +100,13 @@ public:
 
 	void addPortal(glm::mat4 locationFirst, glm::mat4 locationSecond)
 	{
+=======
+	void addPortal(Portal first, Portal second) {
+		level.AddPortalPair(first, second);
+	}
+
+	void addPortal(glm::mat4 locationFirst, glm::mat4 locationSecond) {
+>>>>>>> Refactoring
 		Portal first = objectHandler.GetPortal(locationFirst);
 		Portal second = objectHandler.GetPortal(locationSecond);
 
@@ -97,6 +115,7 @@ public:
 		level.AddPortalPair(first, second);
 	}
 
+<<<<<<< HEAD
 	void moveObject(glm::vec3 direction, std::string id) 
 	{
 		Object* objectToMove = findObjectById(id);
@@ -110,6 +129,11 @@ private:
 		return &level.GetObjects().at(id);
 	}
 
+=======
+
+private:
+
+>>>>>>> Refactoring
 	void checkSave() {
 		if (glfwGetKey(window.get_window(), GLFW_KEY_P) == GLFW_PRESS)
 		{
