@@ -5,16 +5,18 @@
 #include "Shader.h"
 #include "Level.h"
 
+#include "AABB.h"
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 class Engine {
-public:	
+public:
 	Engine() : window(),
 		camera(),
 		eventHandler(&camera, window.get_window(),
-					window.get_width()/2, window.get_height()/2),
+			window.get_width() / 2, window.get_height() / 2),
 		level(portalShader, objectShader),
 		objectShader("./data/shaders/Object_Vertex.shader", "./data/shaders/Object_Fragment.shader"),
 		portalShader("./data/shaders/Portal_Vertex.shader", "./data/shaders/Portal_Fragment.shader")
@@ -47,9 +49,16 @@ public:
 			}
 			++frameCount;
 
-			moveObject(moveRight, "cube1");
-			moveObject(moveLeft, "cube2");
+			//moveObject(moveRight, "cube1");
+			//moveObject(moveLeft, "cube2");
 
+			
+			// Collision check: camera with objects
+			// ----------------------
+			std::cout << "cube1 : " << check_collision("cube1")
+				<< "\tcube2 : " << check_collision("cube2") << std::endl;
+			
+			
 			// Smooth Movement
 			// ---------------
 			deltaTime = currentTime - lastFrameTime;
@@ -77,16 +86,19 @@ public:
 	}
 
 
-	void addObject(std::string objectName, glm::mat4 location) {
+	void addObject(std::string objectName, glm::mat4 location)
+	{
 		location = glm::translate(location, glm::vec3(0.0f, 0.0f, 0.0f));
 		level.AddObject(objectHandler.GetObject(objectName, location));
 	}
 
-	void addPortal(Portal first, Portal second) {
+	void addPortal(Portal first, Portal second)
+	{
 		level.AddPortalPair(first, second);
 	}
 
-	void addPortal(glm::mat4 locationFirst, glm::mat4 locationSecond) {
+	void addPortal(glm::mat4 locationFirst, glm::mat4 locationSecond)
+	{
 		Portal first = objectHandler.GetPortal(locationFirst);
 		Portal second = objectHandler.GetPortal(locationSecond);
 
@@ -95,33 +107,41 @@ public:
 		level.AddPortalPair(first, second);
 	}
 
-	void moveObject(glm::vec3 direction, std::string id) 
+	void moveObject(glm::vec3 direction, std::string id)
 	{
 		Object* objectToMove = findObjectById(id);
 		objectToMove->move(direction);
 	}
 
+	bool check_collision(const std::string id)
+	{
+		return AABB::intersect(camera, level.GetObjects().at(id));
+	}
 
 private:
 
-	Object* findObjectById(std::string id) {
+	Object* findObjectById(std::string id)
+	{
 		return &level.GetObjects().at(id);
 	}
 
 private:
 
-	void checkSave() {
+	void checkSave()
+	{
 		if (glfwGetKey(window.get_window(), GLFW_KEY_P) == GLFW_PRESS)
 		{
 			saveWorld();
 		}
 	}
 
-	void saveWorld() {
+	void saveWorld()
+	{
 		LevelHandler::WriteLevel("./Alternative", level, camera);
 	}
 
-	void setupShaders() {
+	void setupShaders()
+	{
 		glm::mat4 model = glm::mat4(1.0f);
 		glm::mat4 view = glm::mat4(1.0f);
 		glm::mat4 projection = glm::perspective(glm::radians(90.0f), window.get_width() / window.get_height(), 0.1f, 100.0f);
@@ -134,7 +154,7 @@ private:
 		glUniformMatrix4fv(projectionPortal, 1, GL_FALSE, &projection[0][0]);
 	}
 
-	void updateShaders() 
+	void updateShaders()
 	{
 		glm::mat4 model = glm::mat4(1.0f);
 		glm::mat4 view = glm::mat4(1.0f);
@@ -160,7 +180,8 @@ private:
 		return mvp;
 	}
 
-	void setupWindow() {
+	void setupWindow()
+	{
 		glfwMakeContextCurrent(window.get_window());
 		// resizing controls
 		glfwSetFramebufferSizeCallback(window.get_window(), EventHandler::framebuffer_size_callback);
@@ -175,10 +196,9 @@ private:
 	Window window;
 	Camera camera;
 
-	ObjectHandler objectHandler;
-
 	Level level;
-
+	
+	ObjectHandler objectHandler;
 	EventHandler eventHandler;
 
 	Shader objectShader;

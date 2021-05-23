@@ -9,13 +9,13 @@
 class Object
 {
 protected:
-    Model *model;
     glm::mat4 worldMatrix;
     std::string ID;
     /* data */
 
 
 public:
+    Model* model;
     const string modelType;
     Object (Model &_model, string _modelType, std::string id, glm::mat4 _worldMatrix = glm::mat4(1.0f));
 
