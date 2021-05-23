@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Object.h"
+#include "Camera.h"
 
 unsigned int texture_width = 1024;
 unsigned int texture_height = 768;
@@ -57,35 +58,41 @@ public:
         glDisable(GL_DEPTH_TEST);
         glViewport(0, 0, texture_width, texture_height);
 
+        
         Shader &currShader = portShader;        
         currShader.use();
 
+        // Set the view (what you'll in the portal)
         Camera tempCamera = Camera();
         glm::mat4 view = glm::mat4(1.0f);
         view = mainCamera.GetView();
-
         GLuint viewLoc = glGetUniformLocation(currShader.ID, "view");
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
 
+        // change the drawing location to portal framebuffer/texture, instead of the screen
         glBindFramebuffer(GL_FRAMEBUFFER, portalFramebuffer);
         glClearColor(0.3f, 0.8f,  1.0f , 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glEnable(GL_DEPTH_TEST);
 
+        // stop from drawing an infinite loop of portals
         if (depth < max_depth)
         {
             for (auto &portal : ports)
             {
+                // don't draw the pair portal, since you must draw what's behind it.
                 if (&portal != pair_portal)
                     portal.Draw(objShader, portShader, mainCamera, objs, ports, depth + 1);
             }
         }
 
+        // draw objects onto the portal texture
         for (auto obj : objs)
         {
             obj.Draw(currShader);
         }
 
+        // move back to drawing on screen, instead of drawing on portal texture
         if (depth == 0)
         {
             glEnable(GL_DEPTH_TEST);
@@ -96,13 +103,14 @@ public:
         currShader = objShader;
         currShader.use();
 
+        // change the view to the main camera (player camera)
         view = mainCamera.GetView();
         viewLoc = glGetUniformLocation(currShader.ID, "view");
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
 
+        // draw the portal (with its texture) on screen
         GLuint modelLoc = glGetUniformLocation(currShader.ID, "model");
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, &worldMatrix[0][0]);
-        
         for (auto &mesh : model->meshes)
         {
             glBindVertexArray(mesh.VAO);
