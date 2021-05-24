@@ -56,6 +56,20 @@ public:
         worldMatrix = glm::translate(worldMatrix, translate);
     }
 
+    vector<glm::vec3> ReturnVertices()
+    {
+        vector<glm::vec3> all_vertices;
+        for (auto &mesh : model->meshes)
+        {
+            for (auto &point : mesh.vertices)
+            {
+                all_vertices.push_back(point.Position);
+            }
+        }
+
+        return all_vertices;
+    }
+
     void calculate_min_max_points() {
         obj_min_p.x = INT_MAX;
         obj_min_p.y = INT_MAX;
