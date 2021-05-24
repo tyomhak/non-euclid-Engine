@@ -52,6 +52,7 @@ int main()
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
+
     // glfw window creation
     // --------------------
     GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
@@ -63,6 +64,7 @@ int main()
     }
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
 
     // Mouse controls
     // --------------
@@ -77,6 +79,7 @@ int main()
         return -1;
     }
 
+
     // flip textures on y-axis
     stbi_set_flip_vertically_on_load(true);
 
@@ -85,15 +88,18 @@ int main()
     // glCullFace(GL_BACK);
     // glFrontFace(GL_CW); 
 
-    // Create our shader program
-    // -----------------------------------------
+
+
+    // SHADERS //
+    /////////////
     Shader objectShader("./data/shaders/object.vert", "./data/shaders/object.frag");
     Shader portalShader("./data/shaders/portal.vert", "./data/shaders/portal.frag");
-
+    // Shader portalShader = objectShader;
     std::cout << &objectShader << " : " << &portalShader << std::endl;
     std::cout << "Oxxxxxasdbjsd " << std::endl;
+    // ------------------ // 
 
-     //Shader portalShader = objectShader;
+
     glm::mat4 model = glm::mat4(1.0f);
     glm::mat4 view = glm::mat4(1.0f);
     glm::mat4 projection = glm::perspective(glm::radians(90.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
@@ -105,30 +111,30 @@ int main()
     GLuint projectionPortal = glGetUniformLocation(portalShader.ID, "projection");
     glUniformMatrix4fv(projectionPortal, 1, GL_FALSE, &projection[0][0]);
 
-    Level myLevel = Level(portalShader, objectShader);
 
-    glm::mat4 location(1.0f);
-    location = glm::translate(location, glm::vec3(0.0f, 0.0f, 0.0f));
-    myLevel.AddObject(objectHandler.GetObject("backpack", location));
+
+    Level myLevel = Level(portalShader, objectShader);
+    activeLevel = &myLevel;
+    myLevel.AddObject(objectHandler.GetObject("backpack"));
     
+
     Portal first = objectHandler.GetPortal();
     Portal second = objectHandler.GetPortal();
-
     first.Move(glm::vec3(-10.0f, 0.0f, 0.0f));
     second.Move(glm::vec3(10.0f, 0.0f, 10.0f));
-
     first.RotateHoriz(90.0f);
     second.SetYaw(-90.0f);
 
     myLevel.AddPortalPair(first, second);
     
+
+
+
     float previousTime = glfwGetTime();
     int frameCount = 0;
-
     float lastFrameTime = previousTime;
 
 
-    activeLevel = &myLevel;
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -173,7 +179,7 @@ int main()
         // myModel.Draw(objectShader);
         // backPack_01.Draw(objectShader);
         // backPack_02.Draw(objectShader);
-        myLevel.Draw(myCamera);
+        activeLevel->Draw(myCamera);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
