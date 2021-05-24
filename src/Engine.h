@@ -110,7 +110,7 @@ public:
 	void moveObject(glm::vec3 direction, std::string id)
 	{
 		Object* objectToMove = findObjectById(id);
-		objectToMove->move(direction);
+		objectToMove->Move(direction);
 	}
 
 	bool check_collision(const std::string id)
