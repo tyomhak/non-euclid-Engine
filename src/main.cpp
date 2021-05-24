@@ -88,9 +88,12 @@ int main()
     // Create our shader program
     // -----------------------------------------
     Shader objectShader("./data/shaders/object.vert", "./data/shaders/object.frag");
-    std::cout << "Objsd " << std::endl;
     Shader portalShader("./data/shaders/portal.vert", "./data/shaders/portal.frag");
-    // Shader portalShader = objectShader;
+
+    std::cout << &objectShader << " : " << &portalShader << std::endl;
+    std::cout << "Oxxxxxasdbjsd " << std::endl;
+
+     //Shader portalShader = objectShader;
     glm::mat4 model = glm::mat4(1.0f);
     glm::mat4 view = glm::mat4(1.0f);
     glm::mat4 projection = glm::perspective(glm::radians(90.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
@@ -108,13 +111,15 @@ int main()
     location = glm::translate(location, glm::vec3(0.0f, 0.0f, 0.0f));
     myLevel.AddObject(objectHandler.GetObject("backpack", location));
     
-    location = glm::translate(location, glm::vec3(-10.0f, 0.0f, 0.0f));
-    Portal first = objectHandler.GetPortal(location);
-    location = glm::translate(location, glm::vec3(10.0f, 0.0f, 0.0f));
-    Portal second = objectHandler.GetPortal(location);
+    Portal first = objectHandler.GetPortal();
+    Portal second = objectHandler.GetPortal();
 
     first.Move(glm::vec3(-10.0f, 0.0f, 0.0f));
-    second.Move(glm::vec3(10.0f, 0.0f, 0.0f));
+    second.Move(glm::vec3(10.0f, 0.0f, 10.0f));
+
+    first.RotateHoriz(90.0f);
+    second.SetYaw(-90.0f);
+
     myLevel.AddPortalPair(first, second);
     
     float previousTime = glfwGetTime();
