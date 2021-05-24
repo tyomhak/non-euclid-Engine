@@ -15,12 +15,12 @@ public:
 		width(1024),
 		height(768)
 	{
-		initialize_window(width, height);
+		initialize_window((int)width, (int)height);
 	}
 
 	Window(int wid, int hei) :
-		width(wid),
-		height(hei)
+		width((float)wid),
+		height((float)hei)
 	{
 		initialize_window(wid, hei);
 	}

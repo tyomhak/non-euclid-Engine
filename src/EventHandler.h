@@ -76,10 +76,10 @@ private:
         // gets mouse x and y positions
         glfwGetCursorPos(window, &xpos, &ypos);
 
-        float xoffset = lastMouseX - xpos;
-        float yoffset = lastMouseY - ypos; // reversed since y-coordinates range from bottom to top
-        lastMouseX = xpos;
-        lastMouseY = ypos;
+        float xoffset = (float)(lastMouseX - xpos);
+        float yoffset = (float)(lastMouseY - ypos); // reversed since y-coordinates range from bottom to top
+        lastMouseX = (float)xpos;
+        lastMouseY = (float)ypos;
 
         //const float sensitivity = 0.1f;
         //xoffset *= sensitivity;
