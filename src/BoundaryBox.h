@@ -1,7 +1,6 @@
 #pragma once
 
-#include <glm/glm.hpp>
-
+#include "Move.h"
 
 class BoundaryBox 
 {
@@ -21,8 +20,41 @@ public:
 
 	void Move(glm::vec3 translate) 
 	{
-		setMinPoint(getMinPoint() + glm::vec3(translate[0], translate[1], translate[2]));
-		setMaxPoint(getMaxPoint() + glm::vec3(translate[0], translate[1], translate[2]));
+		minPoint += translate;
+		maxPoint += translate;
+	}
+
+	void Move(MoveDirection direction, float speed)
+	{
+		switch(direction)
+		{
+		case FORWARD:
+			Move::moveFORWARD(minPoint, speed);
+			Move::moveFORWARD(maxPoint, speed);
+			break;
+		case BACKWARD:
+			Move::moveBACKWARD(minPoint, speed);
+			Move::moveBACKWARD(maxPoint, speed);
+			break;
+		case UPWARD:
+			Move::moveUPWARD(minPoint, speed);
+			Move::moveUPWARD(maxPoint, speed);
+			break;
+		case DOWNWARD:
+			Move::moveDOWNWARD(minPoint, speed);
+			Move::moveDOWNWARD(maxPoint, speed);
+			break;
+		case STRAFELEFT:
+			Move::moveLEFT(minPoint, speed);
+			Move::moveLEFT(maxPoint, speed);
+			break;
+		case STRAFERIGHT:
+			Move::moveRIGHT(minPoint, speed);
+			Move::moveRIGHT(maxPoint, speed);
+			break;
+		default:
+			return;
+		}
 	}
 
 	glm::vec3 getMinPoint() const 
@@ -33,6 +65,11 @@ public:
 	glm::vec3 getMaxPoint() const
 	{
 		return maxPoint;
+	}
+
+	glm::vec3 getCenterPoint() const
+	{
+		return (maxPoint + minPoint) / 2.0f;
 	}
 
 	void setMinPoint(glm::vec3 minPoint_)

@@ -3,11 +3,18 @@
 
 #include "Camera.h"
 #include "IncludeHeaders.h"
+#include "Player.h"
+#include "Level.h"
 
 // Before Using Set the camera and the lastX lastY position of the mouse!
 static class EventHandler {
 public:
-    EventHandler(Camera* camera_, GLFWwindow* window_, float lastX, float lastY) : camera(camera_), window(window_), lastMouseX(lastX), lastMouseY(lastY)
+    EventHandler(Player* player_, Level level_,  GLFWwindow* window_, float lastX, float lastY) :
+        player(player_), 
+        window(window_),
+        level(level_),
+        lastMouseX(lastX), 
+        lastMouseY(lastY)
     {
 
     }
@@ -28,7 +35,6 @@ public:
         glViewport(0, 0, width, height);
     }
 
-
 private:
     // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
@@ -41,17 +47,17 @@ private:
             if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
                 deltaTime *= 2.0f;
             if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-                camera->ProcessKeyboard(FORWARD, deltaTime);
+                player->move(FORWARD, deltaTime);
             if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-                camera->ProcessKeyboard(BACKWARD, deltaTime);
+                player->move(BACKWARD, deltaTime);
             if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-                camera->ProcessKeyboard(LEFT, deltaTime);
+                player->move(STRAFELEFT, deltaTime);
             if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-                camera->ProcessKeyboard(RIGHT, deltaTime);
+                player->move(STRAFERIGHT, deltaTime);
             if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-                camera->ProcessKeyboard(UPWARD, deltaTime);
+                player->move(UPWARD, deltaTime);
             if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
-                camera->ProcessKeyboard(DOWNWARD, deltaTime);
+                player->move(DOWNWARD, deltaTime);
 
             // switch polygon mode to LINE
             if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
@@ -68,6 +74,11 @@ private:
 
     }
 
+    void checkMovement(MoveDirection direction, float deltaTime) 
+    {
+        BoundaryBox box = player->getBoundaryBox();
+    }
+
     void mouse_callback()
     {
         double xpos;
@@ -81,16 +92,12 @@ private:
         lastMouseX = (float)xpos;
         lastMouseY = (float)ypos;
 
-        //const float sensitivity = 0.1f;
-        //xoffset *= sensitivity;
-        //yoffset *= sensitivity;
-        //std::cout << "X: " << lastMouseX << "\t" << "Y: " << lastMouseY << std::endl;
-
-        camera->ProcessMouseMovement(xoffset, yoffset);
+        player->getCamera().ProcessMouseMovement(xoffset, yoffset);
     }
 
     float lastMouseX;
     float lastMouseY;
     GLFWwindow* window;
-    Camera* camera;
+    Level level;
+    Player* player;
 };

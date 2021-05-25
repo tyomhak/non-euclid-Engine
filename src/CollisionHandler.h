@@ -8,6 +8,7 @@
 
 #include "Camera.h"
 #include "Object.h"
+#include "Player.h"
 
 class CollisionHandler {
 public:
@@ -27,6 +28,11 @@ public:
         return check_collision(camera, object.getBoundaryBox());
     }
 
+    // intersection check of aabb with point
+    static bool check_collision(const Player player, const Object object)
+    {
+        return check_collision(player.getBoundaryBox(), object.getBoundaryBox());
+    }
 
     // intersection check of aabb with aabb
     static bool check_collision(const BoundaryBox box1, const BoundaryBox box2)
