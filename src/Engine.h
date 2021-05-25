@@ -5,7 +5,7 @@
 #include "Shader.h"
 #include "Level.h"
 
-#include "AABB.h"
+#include "CollisionHandler.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -34,8 +34,6 @@ public:
 		float lastFrameTime = previousTime;
 		float deltaTime = 0.0f;
 
-		glm::vec3 moveRight = glm::vec3(0.01f, 0.0f, 0.0f);
-		glm::vec3 moveLeft = glm::vec3(-0.01f, 0.0f, 0.0f);
 
 		while (!glfwWindowShouldClose(window.get_window()))
 		{
@@ -49,16 +47,8 @@ public:
 			}
 			++frameCount;
 
-			//moveObject(moveRight, "cube1");
-			//moveObject(moveLeft, "cube2");
+			tempTest();
 
-			
-			// Collision check: camera with objects
-			// ----------------------
-			std::cout << "cube1 : " << check_collision("cube1")
-				<< "\tcube2 : " << check_collision("cube2") << std::endl;
-			
-			
 			// Smooth Movement
 			// ---------------
 			deltaTime = currentTime - lastFrameTime;
@@ -85,6 +75,50 @@ public:
 		glfwTerminate();
 	}
 
+	// temporary function for testing stuff
+	// made with purpose to not clutter the render loop
+	// to be deleted later
+	void tempTest() 
+	{
+		bool objects_collision = false;
+		bool camera_collision = false;
+
+		static glm::vec3 moveRight = glm::vec3(0.04f, 0.0f, 0.0f);
+		static glm::vec3 moveLeft = glm::vec3(-0.04f, 0.0f, 0.0f);
+		static glm::vec3 moveUp = glm::vec3(0.0f, 0.0075f, 0.0f);
+
+		// objects collision check
+		objects_collision = check_cube_collision("backpack1", "cube2");
+
+		if (objects_collision == false)	// move objects only if they did not collide
+		{
+			moveObject(moveRight, "backpack1");
+			//moveObject(moveLeft, "cube2");
+			moveObject(moveLeft, "cube2");
+		}
+
+		// camera collision check
+		camera_collision = check_camera_collision("backpack1");
+
+		if (camera_collision == true)
+		{
+
+		}
+
+		//if (objects_collision == false)
+		//{
+		//	moveObject(moveRight, "cube1");
+		//	rotateObject(glm::vec3(0.1f, 0.0f, 0.1f), 0.01f, "cube1");
+		//}
+
+		// Collision check: camera with objects
+		/*std::cout << "cube1 : " << check_camera_collision("cube1")
+			<< "\tcube2 : " << check_camera_collision("cube2") << std::endl;*/
+
+			// Collision check: object with object
+			/*std::cout << "collision : " << objects_collision << std::endl;*/
+
+	}
 
 	void addObject(std::string objectName, glm::mat4 location)
 	{
@@ -113,9 +147,20 @@ public:
 		objectToMove->Move(direction);
 	}
 
-	bool check_collision(const std::string id)
+	void rotateObject(glm::vec3 direction, float angle, std::string id)
 	{
-		return AABB::intersect(camera, level.GetObjects().at(id));
+		Object* objectToMove = findObjectById(id);
+		objectToMove->rotate(angle, direction);
+	}
+
+	bool check_camera_collision(const std::string id)
+	{
+		return CollisionHandler::check_collision(camera, level.GetObjects().at(id));
+	}
+	bool check_cube_collision(const std::string id1, const std::string id2)
+	{
+		// TODO: handle case when element was not found in the map by ID
+		return CollisionHandler::check_collision(level.GetObjects().at(id1), level.GetObjects().at(id2));
 	}
 
 private:

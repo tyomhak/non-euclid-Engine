@@ -1,6 +1,7 @@
 #pragma once
 #include "Model.h"
 #include "Shader.h"
+#include "BoundaryBox.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -8,17 +9,13 @@
 
 class Object
 {
-    
 
-private:
-    glm::vec3 obj_min_p;
-    glm::vec3 obj_max_p;
 
 protected:
     glm::mat4 worldMatrix;
     std::string ID;
+    BoundaryBox boundaryBox;
     /* data */
-
 
 public:
     Model* model;
@@ -32,14 +29,11 @@ public:
         return ID;
     }
 
-    const glm::vec3 get_min_p() const
+    BoundaryBox getBoundaryBox() const 
     {
-        return obj_min_p;
+        return boundaryBox;
     }
-    const glm::vec3 get_max_p() const
-    {
-        return obj_max_p;
-    }
+
 
    void Draw(Shader &shader)
    {
@@ -54,6 +48,27 @@ public:
     void Move(glm::vec3 translate)
     {
         worldMatrix = glm::translate(worldMatrix, translate);
+        boundaryBox.Move(translate);
+    }
+
+    void rotate(const float angle, glm::vec3 translate)
+    {
+        worldMatrix = glm::rotate_slow(worldMatrix, angle, translate);
+        // TODO: update min and max values of AABB in case of rotation
+    }
+
+    vector<glm::vec3> get_vertices_in_world_space()
+    {
+        vector<glm::vec3> all_vertices;
+        for (auto& mesh : model->meshes)
+        {
+            for (auto& point : mesh.vertices)
+            {
+                all_vertices.push_back(glm::vec4(point.Position, 1.0f) * worldMatrix);
+            }
+        }
+
+        return all_vertices;
     }
 
     vector<glm::vec3> GetVertices()
@@ -63,21 +78,25 @@ public:
         {
             for (auto &point : mesh.vertices)
             {
-                all_vertices.push_back(point.Position);
+                all_vertices.push_back(glm::vec4(point.Position, 1.0f) * worldMatrix);
             }
         }
 
         return all_vertices;
     }
 
-    void calculate_min_max_points() {
-        obj_min_p.x = INT_MAX;
-        obj_min_p.y = INT_MAX;
-        obj_min_p.z = INT_MAX;
+    const glm::mat4 GetWorldMat() const { return worldMatrix; }
 
-        obj_max_p.x = INT_MIN;
-        obj_max_p.y = INT_MIN;
-        obj_max_p.z = INT_MIN;
+private:
+
+    void updateBoundaryBox() {
+        float minX = FLT_MAX;
+        float minY = FLT_MAX;
+        float minZ = FLT_MAX;
+
+        float maxX = FLT_MIN;
+        float maxY = FLT_MIN;
+        float maxZ = FLT_MIN;
 
         long meshes_quantity = (long)this->model->meshes.size();
         for (int i{ 0 }; i < meshes_quantity; ++i)
@@ -86,18 +105,21 @@ public:
             for (int j{ 0 }; j < amount; ++j)
             {
                 // min point assigning
-                if (this->model->meshes[i].vertices[j].Position.x < obj_min_p.x) { obj_min_p.x = this->model->meshes[i].vertices[j].Position.x; }
-                if (this->model->meshes[i].vertices[j].Position.y < obj_min_p.y) { obj_min_p.y = this->model->meshes[i].vertices[j].Position.y; }
-                if (this->model->meshes[i].vertices[j].Position.z < obj_min_p.z) { obj_min_p.z = this->model->meshes[i].vertices[j].Position.z; }
+                if (this->model->meshes[i].vertices[j].Position.x < minX) { minX = this->model->meshes[i].vertices[j].Position.x; }
+                if (this->model->meshes[i].vertices[j].Position.y < minY) { minY = this->model->meshes[i].vertices[j].Position.y; }
+                if (this->model->meshes[i].vertices[j].Position.z < minZ) { minZ = this->model->meshes[i].vertices[j].Position.z; }
+                
                 // max point assigning
-                if (this->model->meshes[i].vertices[j].Position.x > obj_max_p.x) { obj_max_p.x = this->model->meshes[i].vertices[j].Position.x; }
-                if (this->model->meshes[i].vertices[j].Position.y > obj_max_p.y) { obj_max_p.y = this->model->meshes[i].vertices[j].Position.y; }
-                if (this->model->meshes[i].vertices[j].Position.z > obj_max_p.z) { obj_max_p.z = this->model->meshes[i].vertices[j].Position.z; }
+                if (this->model->meshes[i].vertices[j].Position.x > maxX) { maxX = this->model->meshes[i].vertices[j].Position.x; }
+                if (this->model->meshes[i].vertices[j].Position.y > maxY) { maxY = this->model->meshes[i].vertices[j].Position.y; }
+                if (this->model->meshes[i].vertices[j].Position.z > maxZ) { maxZ = this->model->meshes[i].vertices[j].Position.z; }
+                
             }
         }
+        // update min and max of AABB
+        boundaryBox.setMinPoint(glm::vec3(minX, minY, minZ));
+        boundaryBox.setMaxPoint(glm::vec3(maxX, maxY, maxZ));
     }
-
-    const glm::mat4 GetWorldMat() const { return worldMatrix; }
 };
 
 Object::Object(Model &_model, string _modelType, std::string id, glm::mat4 _worldMatrix) :
@@ -106,7 +128,8 @@ worldMatrix(_worldMatrix),
 ID(id),
 model(&_model)
 {
-    calculate_min_max_points();
+    updateBoundaryBox();
+    boundaryBox.Move(glm::vec3(_worldMatrix[3][0], _worldMatrix[3][1], _worldMatrix[3][2]));
 }
 
 Object::~Object()
