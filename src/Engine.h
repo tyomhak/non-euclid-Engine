@@ -55,9 +55,9 @@ public:
 			
 			// Collision check: camera with objects
 			// ----------------------
-			std::cout << "cube1 : " << check_collision("cube1")
-				<< "\tcube2 : " << check_collision("cube2") << std::endl;
-			
+			//std::cout << "cube1 : " << check_collision("cube1")
+			//	<< "\tcube2 : " << check_collision("cube2") << std::endl;
+			//
 			
 			// Smooth Movement
 			// ---------------
