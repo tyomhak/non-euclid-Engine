@@ -11,6 +11,7 @@ public:
 
 	Player() : camera(), boundaryBox()
 	{
+		updateBoundaryBox();
 	}
 
 	Player(Camera camera_) : camera(camera_), boundaryBox()
