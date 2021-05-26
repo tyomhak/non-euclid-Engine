@@ -5,7 +5,7 @@
 #include "IncludeHeaders.h"
 
 // Before Using Set the camera and the lastX lastY position of the mouse!
-static class EventHandler {
+class EventHandler {
 public:
     EventHandler(Camera* camera_, GLFWwindow* window_, float lastX, float lastY) : camera(camera_), window(window_), lastMouseX(lastX), lastMouseY(lastY)
     {

@@ -7,7 +7,7 @@
 
 
 // Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
-static enum Camera_Movement {
+enum Camera_Movement {
     FORWARD,
     BACKWARD,
     UPWARD,
@@ -146,6 +146,7 @@ public:
 
     glm::mat4 GetInvertedCamera(float y) {
         // returns the inverted camera matrix
+        return glm::mat4(1.0f);
     }
 
 private:
