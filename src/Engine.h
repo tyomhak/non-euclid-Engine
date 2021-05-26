@@ -22,6 +22,7 @@ public:
 		portalShader("./data/shaders/Portal_Vertex.shader", "./data/shaders/Portal_Fragment.shader")
 	{
 		setupWindow();
+
 	}
 
 public:
@@ -72,9 +73,11 @@ public:
 			glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			objectShader.use();
-
+			portalShader.use();
 			updateShaders();
+			objectShader.use();
+			updateShaders();
+
 			level.Draw(camera);
 
 			// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
