@@ -3,7 +3,7 @@
 #include <glm/glm.hpp>
 
 // Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
-static enum MoveDirection {
+enum MoveDirection {
     FORWARD,
     BACKWARD,
     UPWARD,
@@ -13,7 +13,7 @@ static enum MoveDirection {
 };
 
 
-static class Move {
+class Move {
 public:
     void static moveDOWNWARD(glm::vec3& position, float speed)
     {

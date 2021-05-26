@@ -18,9 +18,9 @@ public:
 		updateBoundaryBox();
 	}
 
-	Player(Player& const) {
+	// Player(Player& const) {
 
-	}
+	// }
 
 	void move(MoveDirection direction, float deltaTime ) 
 	{
