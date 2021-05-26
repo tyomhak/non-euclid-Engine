@@ -137,6 +137,7 @@ public:
 
     glm::mat4 GetInvertedCamera(float y) {
         // returns the inverted camera matrix
+        return glm::mat4(1.0f);
     }
 
 private:

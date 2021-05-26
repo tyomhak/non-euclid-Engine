@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Object.h"
+#include "Camera.h"
 
 unsigned int texture_width = 1024;
 unsigned int texture_height = 768;
@@ -55,54 +56,60 @@ public:
             )
     {
         glDisable(GL_DEPTH_TEST);
-        glViewport(0, 0, texture_width, texture_height);
+        //glViewport(0, 0, texture_width, texture_height);
 
-        Shader &currShader = portShader;        
-        currShader.use();
+        
+        Shader *currShader = &portShader;        
+        currShader->use();
 
+        // Set the view (what you'll in the portal)
         Camera tempCamera = Camera();
         glm::mat4 view = glm::mat4(1.0f);
         view = mainCamera.getViewMatrix();
-
-        GLuint viewLoc = glGetUniformLocation(currShader.ID, "view");
+        GLuint viewLoc = glGetUniformLocation(currShader->ID, "view");
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
 
+        // change the drawing location to portal framebuffer/texture, instead of the screen
         glBindFramebuffer(GL_FRAMEBUFFER, portalFramebuffer);
         glClearColor(0.3f, 0.8f,  1.0f , 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glEnable(GL_DEPTH_TEST);
 
+        // stop from drawing an infinite loop of portals
         if (depth < max_depth)
         {
             for (auto &portal : ports)
             {
+                // don't draw the pair portal, since you must draw what's behind it.
                 if (&portal != pair_portal)
                     portal.Draw(objShader, portShader, mainCamera, objs, ports, depth + 1);
             }
         }
 
+        // draw objects onto the portal texture
         for (auto obj : objs)
         {
-            obj.second.Draw(currShader);
+            obj.second.Draw(*currShader);
         }
 
+        // move back to drawing on screen, instead of drawing on portal texture
         if (depth == 0)
         {
             glEnable(GL_DEPTH_TEST);
-            glViewport(0, 0, 1024, 768);
+            //glViewport(0, 0, 1024, 768);
 
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
         }
-        currShader = objShader;
-        currShader.use();
+        currShader = &objShader;
+        currShader->use();
 
         view = mainCamera.getViewMatrix();
-        viewLoc = glGetUniformLocation(currShader.ID, "view");
+        viewLoc = glGetUniformLocation(currShader->ID, "view");
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
 
-        GLuint modelLoc = glGetUniformLocation(currShader.ID, "model");
+        // draw the portal (with its texture) on screen
+        GLuint modelLoc = glGetUniformLocation(currShader->ID, "model");
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, &worldMatrix[0][0]);
-        
         for (auto &mesh : model->meshes)
         {
             glBindVertexArray(mesh.VAO);

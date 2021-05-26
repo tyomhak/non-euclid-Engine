@@ -56,7 +56,7 @@ class Level
             }
         }
 
-        void Draw(Camera &mainCamera = Camera()) 
+        void Draw(Camera &mainCamera) 
         {
             DrawPortals(mainCamera);
             // DrawPortalsObj();

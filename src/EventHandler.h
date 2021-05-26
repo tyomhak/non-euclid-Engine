@@ -7,7 +7,7 @@
 #include "Level.h"
 
 // Before Using Set the camera and the lastX lastY position of the mouse!
-static class EventHandler {
+class EventHandler {
 public:
     EventHandler(Player* player_, Level level_,  GLFWwindow* window_, float lastX, float lastY) :
         player(player_), 
