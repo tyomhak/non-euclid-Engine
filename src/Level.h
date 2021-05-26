@@ -59,8 +59,12 @@ class Level
         void Draw(Camera &mainCamera) 
         {
             DrawPortals(mainCamera);
+            objectShader->use();
+
+            // glm::mat4 view = mainCamera.getViewMatrix();
+
             // DrawPortalsObj();
-            DrawObjects(mainCamera, portalShader);
+            DrawObjects(mainCamera, objectShader);
         }
 
         void DrawPortals(Camera &camera)

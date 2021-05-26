@@ -59,13 +59,17 @@ public:
         //glViewport(0, 0, texture_width, texture_height);
 
         
-        Shader *currShader = &portShader;        
+        Shader *currShader = &objShader;        
         currShader->use();
 
         // Set the view (what you'll in the portal)
         Camera tempCamera = Camera();
+
         glm::mat4 view = glm::mat4(1.0f);
-        view = mainCamera.getViewMatrix();
+        view = tempCamera.getViewMatrix();
+        
+        // view = pair_portal->GetWorldMat() * glm::inverse(GetWorldMat()) * glm::inverse(view);
+
         GLuint viewLoc = glGetUniformLocation(currShader->ID, "view");
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
 
@@ -100,7 +104,7 @@ public:
 
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
         }
-        currShader = &objShader;
+        currShader = &portShader;
         currShader->use();
 
         view = mainCamera.getViewMatrix();
