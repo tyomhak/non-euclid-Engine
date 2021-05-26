@@ -16,7 +16,7 @@ public:
 	Engine() : window(),
 		camera(),
 		eventHandler(&camera, window.get_window(),
-			window.get_width() / 2, window.get_height() / 2),
+		window.get_width() / 2, window.get_height() / 2),
 		level(portalShader, objectShader),
 		objectShader("./data/shaders/Object_Vertex.shader", "./data/shaders/Object_Fragment.shader"),
 		portalShader("./data/shaders/Portal_Vertex.shader", "./data/shaders/Portal_Fragment.shader")
@@ -89,9 +89,8 @@ public:
 	}
 
 
-	void addObject(std::string objectName, glm::mat4 location)
+	void addObject(std::string objectName, glm::mat4 location = glm::mat4(1.0f))
 	{
-		location = glm::translate(location, glm::vec3(0.0f, 0.0f, 0.0f));
 		level.AddObject(objectHandler.GetObject(objectName, location));
 	}
 
@@ -105,8 +104,6 @@ public:
 		Portal first = objectHandler.GetPortal(locationFirst);
 		Portal second = objectHandler.GetPortal(locationSecond);
 
-		first.Move(glm::vec3(-10.0f, 0.0f, 0.0f));
-		second.Move(glm::vec3(10.0f, 0.0f, 0.0f));
 		level.AddPortalPair(first, second);
 	}
 
