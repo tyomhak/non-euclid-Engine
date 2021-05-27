@@ -48,6 +48,18 @@ public:
         return check_collision(object1.getBoundaryBox(), object2.getBoundaryBox());
     }
 
+
+private:
+    // deprecated
+    static bool check_radius_collision(const Player player, const Object object) 
+    {
+        float distance_from_centers = glm::distance(player.getBoundaryBox().getCenterPoint(), object.getBoundaryBox().getCenterPoint());
+        float distance_from_edges = distance_from_centers
+                                        - (distance(player.getBoundaryBox().getMinPoint(), player.getBoundaryBox().getMaxPoint()) / 2)
+                                        - (distance(object.getBoundaryBox().getMinPoint(), object.getBoundaryBox().getMaxPoint()) / 2);
+
+        return player.getRadius() > distance_from_edges;
+    }
 };
 
 #endif  //!AABB_COLLISION
