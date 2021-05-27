@@ -3,13 +3,14 @@
 
 #include "Camera.h"
 #include "IncludeHeaders.h"
+#include "CollisionHandler.h"
 #include "Player.h"
 #include "Level.h"
 
 // Before Using Set the camera and the lastX lastY position of the mouse!
 class EventHandler {
 public:
-    EventHandler(Player* player_, Level level_,  GLFWwindow* window_, float lastX, float lastY) :
+    EventHandler(Player* player_, const Level const * level_,  GLFWwindow* window_, float lastX, float lastY) :
         player(player_), 
         window(window_),
         level(level_),
@@ -44,20 +45,57 @@ private:
             glfwSetWindowShouldClose(window, true);
         else
         {
+            Player dummy_player = player->getCopy();
             if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
                 deltaTime *= 2.0f;
             if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-                player->move(FORWARD, deltaTime);
+            {
+                dummy_player.move(FORWARD, deltaTime);
+                if (!checkMovement(dummy_player)) 
+                {
+                    player->move(FORWARD, deltaTime);
+                }
+            }
             if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-                player->move(BACKWARD, deltaTime);
+            {
+                dummy_player.move(BACKWARD, deltaTime);
+                if (!checkMovement(dummy_player))
+                {
+                    player->move(BACKWARD, deltaTime);
+                }
+            }
             if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-                player->move(STRAFELEFT, deltaTime);
+            {
+                dummy_player.move(STRAFELEFT, deltaTime);
+                if(!checkMovement(dummy_player))
+                {
+                    player->move(STRAFELEFT, deltaTime);
+                }
+            }
             if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-                player->move(STRAFERIGHT, deltaTime);
+            {
+                dummy_player.move(STRAFERIGHT, deltaTime);
+                if (!checkMovement(dummy_player))
+                {
+                    player->move(STRAFERIGHT, deltaTime);
+                }
+            }
             if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-                player->move(UPWARD, deltaTime);
+            {
+                dummy_player.move(UPWARD, deltaTime);
+                if (!checkMovement(dummy_player))
+                {
+                    player->move(UPWARD, deltaTime);
+                }
+            }
             if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
-                player->move(DOWNWARD, deltaTime);
+            {
+                dummy_player.move(DOWNWARD, deltaTime);
+                if (!checkMovement(dummy_player))
+                {
+                    player->move(DOWNWARD, deltaTime);
+                }
+            }
 
             // switch polygon mode to LINE
             if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
@@ -74,9 +112,17 @@ private:
 
     }
 
-    void checkMovement(MoveDirection direction, float deltaTime) 
+    bool checkMovement(Player dummy_player) const
     {
-        BoundaryBox box = player->getBoundaryBox();
+        const std::map<std::string /* object ID */, Object> objects = level->getObjects();
+        for (auto const& it : objects)
+        {
+            if (CollisionHandler::check_collision(dummy_player, it.second))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     void mouse_callback()
@@ -98,6 +144,6 @@ private:
     float lastMouseX;
     float lastMouseY;
     GLFWwindow* window;
-    Level level;
+    const Level const * level;
     Player* player;
 };

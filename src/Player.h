@@ -19,14 +19,15 @@ public:
 		updateBoundaryBox();
 	}
 
-	// Player(Player& const) {
-
-	// }
-
 	void move(MoveDirection direction, float deltaTime ) 
 	{
 		camera.ProcessKeyboard(direction, deltaTime);
 		updateBoundaryBox();
+	}
+
+	Player getCopy() const 
+	{
+		return Player(camera);
 	}
 
 	BoundaryBox getBoundaryBox() const
@@ -70,7 +71,5 @@ private:
 private:
 	Camera camera;
 	BoundaryBox boundaryBox;
-	float width = 0.5f;
-	float height = 1.5f;
-
+	float height = 3.5f;
 };

@@ -17,9 +17,9 @@ public:
     // intersection check of aabb with point
     static bool check_collision(const Camera camera, const BoundaryBox box)
     {
-        return (camera.Position.x >= box.getMinPoint().x && camera.Position.x <= box.getMaxPoint().x)
-            && (camera.Position.y >= box.getMinPoint().y && camera.Position.y <= box.getMaxPoint().y)
-            && (camera.Position.z >= box.getMinPoint().z && camera.Position.z <= box.getMaxPoint().z);
+        return (camera.getPosition().x >= box.getMinPoint().x && camera.getPosition().x <= box.getMaxPoint().x)
+            && (camera.getPosition().y >= box.getMinPoint().y && camera.getPosition().y <= box.getMaxPoint().y)
+            && (camera.getPosition().z >= box.getMinPoint().z && camera.getPosition().z <= box.getMaxPoint().z);
     }
 
     // intersection check of aabb with point

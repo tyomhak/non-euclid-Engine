@@ -15,7 +15,7 @@ class Engine {
 public:
 	Engine() : window(),
 		player(),
-		eventHandler(&player, level, window.get_window(),
+		eventHandler(&player, &level, window.get_window(),
 			window.get_width() / 2, window.get_height() / 2),
 		level(portalShader, objectShader),
 		objectShader("./data/shaders/Object_Vertex.shader", "./data/shaders/Object_Fragment.shader"),

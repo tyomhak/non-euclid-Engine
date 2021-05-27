@@ -79,25 +79,31 @@ public:
     void ProcessKeyboard(MoveDirection direction, float deltaTime)
     {
         float velocity = MovementSpeed * deltaTime / 2;
+        float y = Position.y;
         switch (direction) {
         case FORWARD:
-            Move::moveFORWARD(Position, velocity);
+            Position += Front * velocity;
+            Position.y = y;
             break;
         case BACKWARD:
-            Move::moveBACKWARD(Position, velocity);
+            Position -= Front * velocity;
+            Position.y = y;
             break;
         case UPWARD:
+            Position[1] += velocity / 2;
             Move::moveUPWARD(Position, velocity);
             break;
         case DOWNWARD:
+            Position[1] -= velocity / 2;
             Move::moveDOWNWARD(Position, velocity);
             break;
-        case STRAFELEFT: 
-            Move::moveLEFT(Position, velocity);
+        case STRAFELEFT:
+            Position -= Right * velocity;
+            Position.y = y;
             break;
         case STRAFERIGHT:
-            Move::moveRIGHT(Position, velocity);
-            break;
+            Position += Right * velocity;
+            Position.y = y;
         default:
             return;
         }
