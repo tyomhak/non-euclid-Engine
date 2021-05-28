@@ -66,6 +66,9 @@ public:
         Camera tempCamera = Camera();
         glm::mat4 view = glm::mat4(1.0f);
         view = mainCamera.getViewMatrix();
+
+        //view = mainCamera.getViewMatrix() * glm::inverse(tempCamera.getViewMatrix()) * glm::inverse(view);
+
         GLuint viewLoc = glGetUniformLocation(currShader->ID, "view");
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
 

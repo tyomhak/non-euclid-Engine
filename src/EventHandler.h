@@ -4,8 +4,8 @@
 #include "Camera.h"
 #include "IncludeHeaders.h"
 #include "CollisionHandler.h"
-#include "Objects/Player.h"
-#include "Objects/Level.h"
+#include "Player.h"
+#include "Level.h"
 
 // Before Using Set the camera and the lastX lastY position of the mouse!
 class EventHandler {
@@ -15,7 +15,8 @@ public:
         window(window_),
         level(level_),
         lastMouseX(lastX), 
-        lastMouseY(lastY)
+        lastMouseY(lastY),
+        cursorEnabled(false)
     {
 
     }
@@ -23,7 +24,10 @@ public:
 public:
     void handleEvents(float deltaTime) {
         processInput(deltaTime);
-        mouse_callback();
+        if (!cursorEnabled)
+        {
+            mouse_callback();
+        }
     }
 
 
@@ -108,6 +112,28 @@ private:
             {
                 glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
             }
+
+            // enables cursor
+
+            static int oldState = GLFW_RELEASE;
+            int newState = glfwGetKey(window, GLFW_KEY_C);
+            if (newState == GLFW_RELEASE && oldState == GLFW_PRESS) {
+                if (!cursorEnabled)
+                {
+                    cursorEnabled = true;
+                    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+                    int display_w, display_h;
+                    glfwGetFramebufferSize(window, &display_w, &display_h);
+                    glfwSetCursorPos(window, display_w / 2, display_h / 2);
+                }
+                else
+                {
+                    cursorEnabled = false;
+                    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+                    glfwSetCursorPos(window, lastMouseX, lastMouseY);
+                }
+            }
+            oldState = newState;
         }
 
     }
@@ -146,4 +172,5 @@ private:
     GLFWwindow* window;
     const Level * level;
     Player* player;
+    bool cursorEnabled;
 };

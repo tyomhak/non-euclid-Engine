@@ -81,7 +81,7 @@ private:
 private:
 	Camera camera;
 	BoundaryBox boundaryBox;
-	float height = 3.5f;
+	float height = 2.5f;
 	// deprecated
 	float radius = 5.0f;
 };

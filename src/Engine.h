@@ -1,15 +1,15 @@
 #pragma once
 
-#include "Handlers/EventHandler.h"
+#include "EventHandler.h"
 #include "Window.h"
 #include "Shader.h"
-#include "Objects/Level.h"
-
-#include "Handlers/CollisionHandler.h"
+#include "Level.h"
+#include "CollisionHandler.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "UI.h"
 
 class Engine {
 public:
@@ -19,7 +19,8 @@ public:
 			window.get_width() / 2, window.get_height() / 2),
 		level(portalShader, objectShader),
 		objectShader("./data/shaders/Object_Vertex.shader", "./data/shaders/Object_Fragment.shader"),
-		portalShader("./data/shaders/Portal_Vertex.shader", "./data/shaders/Portal_Fragment.shader")
+		portalShader("./data/shaders/Portal_Vertex.shader", "./data/shaders/Portal_Fragment.shader"),
+		ui(window.get_window())
 	{
 		setupWindow();
 
@@ -60,16 +61,19 @@ public:
 
 			// render
 			// -----
+			glfwPollEvents();
 			glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			
 
 			portalShader.use();
 			updateShaders();
 			objectShader.use();
 			updateShaders();
-			
+
 			level.Draw(player.getCamera());
 
+			ui.run();
 
 			// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 			// -------------------------------------------------------------------------------
@@ -116,8 +120,8 @@ public:
 		//}
 
 		// Collision check: camera with objects
-		std::cout << "cube1 : " << check_player_collision("cube1")
-			<< "\tcube2 : "  << check_player_collision("cube2") << std::endl;
+		//std::cout << "cube1 : " << check_player_collision("cube1")
+		//	<< "\tcube2 : "  << check_player_collision("cube2") << std::endl;
 
 			// Collision check: object with object
 			/*std::cout << "collision : " << objects_collision << std::endl;*/
@@ -234,7 +238,7 @@ private:
 		glfwMakeContextCurrent(window.get_window());
 		// resizing controls
 		glfwSetFramebufferSizeCallback(window.get_window(), EventHandler::framebuffer_size_callback);
-
+		
 		// Mouse controls
 		// --------------
 		glfwSetInputMode(window.get_window(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -252,4 +256,6 @@ private:
 
 	Shader objectShader;
 	Shader portalShader;
+
+	UI ui;
 };
