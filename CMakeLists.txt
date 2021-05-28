@@ -20,6 +20,9 @@ target_include_directories(glad PUBLIC include/glad/)
 add_library(stb_image external/stb_image/stb_image.cpp include/stb_image/stb_image.h)
 target_include_directories(stb_image PUBLIC include/stb_image)
 
+file(GLOB IMGUI_SRC include/imgui/*.h external/imgui/*.cpp)
+add_library(imgui SHARED ${IMGUI_SRC})
+target_include_directories(imgui PUBLIC include/imgui)
 
 find_package(OpenGL REQUIRED)
 
@@ -39,7 +42,7 @@ elseif(WIN32)
 	set(OPEN_GL opengl32)
 endif()
 
-set(LIBS glfw3 ${OPEN_GL} assimp stb_image glad)
+set(LIBS glfw3 ${OPEN_GL} assimp stb_image glad imgui)
 
 
 ###########
