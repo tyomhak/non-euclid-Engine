@@ -10,7 +10,7 @@
 // Before Using Set the camera and the lastX lastY position of the mouse!
 class EventHandler {
 public:
-    EventHandler(Player* player_, const Level const * level_,  GLFWwindow* window_, float lastX, float lastY) :
+    EventHandler(Player* player_, const Level * level_,  GLFWwindow* window_, float lastX, float lastY) :
         player(player_), 
         window(window_),
         level(level_),
@@ -144,6 +144,6 @@ private:
     float lastMouseX;
     float lastMouseY;
     GLFWwindow* window;
-    const Level const * level;
+    const Level * level;
     Player* player;
 };
