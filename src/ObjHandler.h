@@ -10,9 +10,9 @@ class ObjectHandler
     public:
     ObjectHandler(){};
 
-    std::unordered_map<string, Model> models;
+    static std::unordered_map<string, Model> models;
 
-    Object GetObject(string type, glm::mat4 worldMatrix = glm::mat4(1.0f))
+    static Object GetObject(string type, glm::mat4 worldMatrix = glm::mat4(1.0f))
     {
         
         if (models.find(type) == models.end())
@@ -24,7 +24,7 @@ class ObjectHandler
         return Object(models.at(type), type , type + std::to_string(id), worldMatrix);
     }
 
-    Portal GetPortal(glm::mat4 worldMatrix = glm::mat4(1.0f))
+    static Portal GetPortal(glm::mat4 worldMatrix = glm::mat4(1.0f))
     {
         string type = "portal";
         if (models.find("portal") == models.end())
@@ -41,3 +41,4 @@ private:
 };
 
 int ObjectHandler::id = 0;
+std::unordered_map<string, Model> ObjectHandler::models;

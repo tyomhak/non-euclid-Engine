@@ -20,10 +20,9 @@ public:
 		level(portalShader, objectShader),
 		objectShader("./data/shaders/Object_Vertex.shader", "./data/shaders/Object_Fragment.shader"),
 		portalShader("./data/shaders/Portal_Vertex.shader", "./data/shaders/Portal_Fragment.shader"),
-		ui(window.get_window())
+		ui(window.get_window(), &level)
 	{
 		setupWindow();
-
 	}
 
 public:
@@ -49,7 +48,7 @@ public:
 			}
 			++frameCount;
 
-			tempTest();
+			//tempTest();
 
 			// Smooth Movement
 			// ---------------
@@ -72,8 +71,7 @@ public:
 			updateShaders();
 
 			level.Draw(player.getCamera());
-
-			ui.run();
+			ui.render();
 
 			// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 			// -------------------------------------------------------------------------------
@@ -128,10 +126,9 @@ public:
 
 	}
 
-	void addObject(std::string objectName, glm::mat4 location)
+	void addObject(std::string objectName, glm::vec3 location)
 	{
-		location = glm::translate(location, glm::vec3(0.0f, 0.0f, 0.0f));
-		level.AddObject(objectHandler.GetObject(objectName, location));
+		level.AddObject(objectName, location);
 	}
 
 	void addPortal(Portal first, Portal second)
@@ -141,8 +138,8 @@ public:
 
 	void addPortal(glm::mat4 locationFirst, glm::mat4 locationSecond)
 	{
-		Portal first = objectHandler.GetPortal(locationFirst);
-		Portal second = objectHandler.GetPortal(locationSecond);
+		Portal first = ObjectHandler::GetPortal(locationFirst);
+		Portal second = ObjectHandler::GetPortal(locationSecond);
 
 		first.Move(glm::vec3(-10.0f, 0.0f, 0.0f));
 		second.Move(glm::vec3(10.0f, 0.0f, 0.0f));
@@ -165,6 +162,7 @@ public:
 	{
 		return CollisionHandler::check_collision(player, level.GetObjects().at(id));
 	}
+	
 	bool check_cube_collision(const std::string id1, const std::string id2)
 	{
 		// TODO: handle case when element was not found in the map by ID
@@ -177,8 +175,6 @@ private:
 	{
 		return &level.GetObjects().at(id);
 	}
-
-private:
 
 	void checkSave()
 	{
@@ -251,7 +247,6 @@ private:
 
 	Level level;
 	
-	ObjectHandler objectHandler;
 	EventHandler eventHandler;
 
 	Shader objectShader;

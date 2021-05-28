@@ -9,8 +9,9 @@
 class UI
 {
 public:
-	UI(GLFWwindow* _window) :
-		window(_window)
+	UI(GLFWwindow* _window, Level* _level) :
+		window(_window),
+		level(_level)
 	{
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
@@ -27,11 +28,15 @@ public:
 	void createWindow(const char* name) 
 	{
 		ImGui::Begin(name);		
-		ImGui::Button("Create");
+		if (ImGui::Button("Create"))
+		{
+			glm::vec3 position = glm::vec3(-5.0f, 0.0f, 0.0f);
+			level->AddObject("cube", position);
+		}
 		ImGui::End();
 	}
 
-	void run()
+	void render()
 	{
 		// feed inputs to dear imgui, start new frame
 		ImGuiIO& io = ImGui::GetIO();
@@ -52,4 +57,5 @@ private:
 	const char* glsl_version = "#version 130";
 	std::vector<UiWindow*> uiWindows;
 	GLFWwindow* window;
+	Level* level;
 };
