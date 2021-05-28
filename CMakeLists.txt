@@ -20,8 +20,11 @@ target_include_directories(glad PUBLIC include/glad/)
 add_library(stb_image external/stb_image/stb_image.cpp include/stb_image/stb_image.h)
 target_include_directories(stb_image PUBLIC include/stb_image)
 
-file(GLOB IMGUI_SRC include/imgui/*.h external/imgui/*.cpp)
-add_library(imgui SHARED ${IMGUI_SRC})
+#file(GLOB IMGUI_SRC external/imgui/*.cpp  include/imgui/*.h )
+#add_library(imgui SHARED ${IMGUI_SRC})
+#target_include_directories(imgui PUBLIC include/imgui)
+
+add_library(imgui external/imgui/imgui.cpp external/imgui/imgui_demo.cpp external/imgui/imgui_draw.cpp external/imgui/imgui_impl_glfw.cpp external/imgui/imgui_impl_opengl3.cpp external/imgui/imgui_tables.cpp external/imgui/imgui_widgets.cpp include/imgui/imgui.h include/imgui/imconfig.h include/imgui/imgui_impl_glfw.h include/imgui/imgui_impl_opengl3.h include/imgui/imgui_internal.h include/imgui/imstb_rectpack.h include/imgui/imstb_textedit.h include/imgui/imstb_truetype.h)
 target_include_directories(imgui PUBLIC include/imgui)
 
 find_package(OpenGL REQUIRED)
