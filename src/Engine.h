@@ -1,11 +1,11 @@
 #pragma once
 
-#include "EventHandler.h"
+#include "Handlers/EventHandler.h"
 #include "Window.h"
 #include "Shader.h"
-#include "Level.h"
+#include "Objects/Level.h"
 
-#include "CollisionHandler.h"
+#include "Handlers/CollisionHandler.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>

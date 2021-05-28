@@ -7,8 +7,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "Camera.h"
-#include "Object.h"
-#include "Player.h"
+#include "Objects/Object.h"
+#include "Objects/Player.h"
 
 class CollisionHandler {
 public:

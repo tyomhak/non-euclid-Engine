@@ -4,8 +4,8 @@
 #include "Camera.h"
 #include "IncludeHeaders.h"
 #include "CollisionHandler.h"
-#include "Player.h"
-#include "Level.h"
+#include "Objects/Player.h"
+#include "Objects/Level.h"
 
 // Before Using Set the camera and the lastX lastY position of the mouse!
 class EventHandler {
