@@ -70,6 +70,12 @@ public:
         return all_vertices;
     }
 
+    void setPosition(glm::vec3 position)
+    {
+        glm::mat4 location(1.0f);
+        worldMatrix = glm::translate(location, position);
+    }
+
     void calculate_min_max_points() {
         obj_min_p.x = INT_MAX;
         obj_min_p.y = INT_MAX;
@@ -98,6 +104,8 @@ public:
     }
 
     const glm::mat4 GetWorldMat() const { return worldMatrix; }
+
+    void SetWorldMat(glm::mat4 newWM) { worldMatrix = newWM; }
 };
 
 Object::Object(Model &_model, string _modelType, std::string id, glm::mat4 _worldMatrix) :

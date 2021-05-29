@@ -50,7 +50,7 @@ public:
     void Draw(  Shader &objShader, 
                 Shader &portShader, 
                 Camera &mainCamera, 
-                std::map<std::string /* object Id */, Object> &objs, 
+                std::map<std::string, Object> &objs, 
                 vector<Portal> &ports,
                 GLuint depth = 0
             )
@@ -66,10 +66,13 @@ public:
         Camera tempCamera = Camera();
 
         glm::mat4 view = glm::mat4(1.0f);
-        view = tempCamera.getViewMatrix();
+        view = mainCamera.getViewMatrix();
         
-        // view = pair_portal->GetWorldMat() * glm::inverse(GetWorldMat()) * glm::inverse(view);
-
+        view = glm::inverse(pair_portal->GetWorldMat() * glm::inverse(GetWorldMat()) * glm::inverse(view));
+        // view = glm::inverse(glm::inverse(view) * glm::inverse(GetWorldMat()) * pair_portal->GetWorldMat());
+        // view = view * GetWorldMat() * glm::inverse(pair_portal->GetWorldMat());
+        glm::mat4 pair_view = view;
+    
         GLuint viewLoc = glGetUniformLocation(currShader->ID, "view");
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
 
@@ -104,6 +107,8 @@ public:
 
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
         }
+
+
         currShader = &portShader;
         currShader->use();
 
@@ -120,6 +125,13 @@ public:
             glBindTexture(GL_TEXTURE_2D, renderedTexture);
             glDrawElements(GL_TRIANGLES, (GLsizei)mesh.indices.size(), GL_UNSIGNED_INT, 0);
         }
+
+        Object *tempObj = &objs.at("cube2"); // &objs["cube1"];
+        pair_view = glm::inverse(pair_view);
+        // pair_view = glm::translate(pair_view, glm::vec3(10.0f, 10.0f, 10.0f));
+        // tempObj->SetWorldMat(pair_view);
+        tempObj->setPosition(-1.0f * (mainCamera.getPosition()) );
+        tempObj->Draw(objShader);
     }
 
 
