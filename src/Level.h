@@ -61,6 +61,11 @@ public:
         }
     }
 
+    Object* getObject(string id)
+    {
+        return &levelObjects.find(id)->second;
+    }
+
     void Draw(Camera &mainCamera) 
     {
         DrawPortals(mainCamera);
@@ -78,7 +83,6 @@ public:
 
     void AddObject(std::string name, glm::vec3 position)
     {
-
         glm::mat4 location(1.0f);
         location = glm::translate(location, position);
         Object obj = ObjectHandler::GetObject(name, location);

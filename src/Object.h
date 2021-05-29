@@ -51,6 +51,13 @@ public:
         boundaryBox.Move(translate);
     }
 
+    void setPosition(glm::vec3 position)
+    {
+        glm::mat4 location(1.0f);
+        worldMatrix = glm::translate(location, position);
+        updateBoundaryBox();
+    }
+
     void rotate(const float angle, glm::vec3 translate)
     {
         worldMatrix = glm::rotate_slow(worldMatrix, angle, translate);
@@ -89,7 +96,13 @@ public:
 
 private:
 
-    void updateBoundaryBox() {
+    void updateBoundaryBox()
+    {
+        updateMinMaxPoints();
+        boundaryBox.Move(glm::vec3(worldMatrix[3][0], worldMatrix[3][1], worldMatrix[3][2]));
+    }
+
+    void updateMinMaxPoints() {
         float minX = FLT_MAX;
         float minY = FLT_MAX;
         float minZ = FLT_MAX;
@@ -129,7 +142,6 @@ ID(id),
 model(&_model)
 {
     updateBoundaryBox();
-    boundaryBox.Move(glm::vec3(_worldMatrix[3][0], _worldMatrix[3][1], _worldMatrix[3][2]));
 }
 
 Object::~Object()

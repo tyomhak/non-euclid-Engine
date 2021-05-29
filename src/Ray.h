@@ -35,15 +35,24 @@ private:
 		int width, height;
 		glfwGetFramebufferSize(window, &width, &height);
 
+		if (height == 0)
+		{
+			return;
+		}
+
 		float aspectRatio = width / height;
 		float x = width / 2.0f;
 		float y = height / 2.0f;
 
 		const float camera_x = (float)((2 * ((x + 0.5) / width) - 1) * tanf((camera->get_FOV()) / 2 * PI / 180) * aspectRatio);
 		const float camera_y = (float)((1 - 2 * ((y + 0.5) / height)) * tanf((camera->get_FOV()) / 2 * PI / 180));
-		//const float length = (float)(sqrt((camera_x * camera_x) + (camera_y * camera_y) + 1));
+
+		const float length = (float)(sqrt((camera_x * camera_x) + (camera_y * camera_y) + 1));
 		//direction = glm::vec3(camera_x / length, camera_y / length, (-1) / length);
-		direction = glm::vec3(camera_x, camera_y, (-1.0f));
+		direction = glm::vec3(camera_x, camera_y, (-1));
+
+		//glm::vec3 lookAt = glm::vec3(camera->getViewMatrix()[2][0], camera->getViewMatrix()[2][1], camera->getViewMatrix()[2][2]);
+		//direction = lookAt;
 	}
 
 private:
