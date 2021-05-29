@@ -33,8 +33,11 @@ class Level
         void DrawObjects(Camera &mainCamera, Shader *shader)
         {
             glm::mat4 view = mainCamera.getViewMatrix();
-            unsigned int viewLoc  = glGetUniformLocation(shader->ID, "view");
-            glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
+            shader->setView(view);
+            //shader->update();
+            //glm::mat4 view = mainCamera.getViewMatrix();
+            //unsigned int viewLoc  = glGetUniformLocation(shader->ID, "view");
+            //glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
 
             DrawObjects(shader);
         }
@@ -59,8 +62,6 @@ class Level
         void Draw(Camera &mainCamera) 
         {
             DrawPortals(mainCamera);
-            objectShader->use();
-
             // glm::mat4 view = mainCamera.getViewMatrix();
 
             // DrawPortalsObj();

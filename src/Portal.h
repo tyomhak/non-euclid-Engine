@@ -60,7 +60,7 @@ public:
 
         
         Shader *currShader = &objShader;        
-        currShader->use();
+        currShader->bind();
 
         // Set the view (what you'll in the portal)
         Camera tempCamera = Camera();
@@ -68,13 +68,14 @@ public:
         glm::mat4 view = glm::mat4(1.0f);
         view = mainCamera.getViewMatrix();
         
-        view = glm::inverse(pair_portal->GetWorldMat() * glm::inverse(GetWorldMat()) * glm::inverse(view));
+         //view = pair_portal->GetWorldMat() * glm::inverse(GetWorldMat()) * glm::inverse(view);
         // view = glm::inverse(glm::inverse(view) * glm::inverse(GetWorldMat()) * pair_portal->GetWorldMat());
         // view = view * GetWorldMat() * glm::inverse(pair_portal->GetWorldMat());
         glm::mat4 pair_view = view;
-    
-        GLuint viewLoc = glGetUniformLocation(currShader->ID, "view");
-        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
+        currShader->setView(view);
+        //currShader->update();
+        //GLuint viewLoc = glGetUniformLocation(currShader->ID, "view");
+        //glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
 
         // change the drawing location to portal framebuffer/texture, instead of the screen
         glBindFramebuffer(GL_FRAMEBUFFER, portalFramebuffer);
@@ -110,15 +111,25 @@ public:
 
 
         currShader = &portShader;
-        currShader->use();
+        currShader->bind();
 
         view = mainCamera.getViewMatrix();
-        viewLoc = glGetUniformLocation(currShader->ID, "view");
-        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
+        
+        currShader->setView(view);
+        currShader->setModel(worldMatrix);
+        currShader->update();
 
-        // draw the portal (with its texture) on screen
-        GLuint modelLoc = glGetUniformLocation(currShader->ID, "model");
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, &worldMatrix[0][0]);
+        //view = mainCamera.getViewMatrix();
+        //viewLoc = glGetUniformLocation(currShader->ID, "view");
+        //glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
+
+        //// draw the portal (with its texture) on screen
+        //GLuint modelLoc = glGetUniformLocation(currShader->ID, "model");
+        //glUniformMatrix4fv(modelLoc, 1, GL_FALSE, &worldMatrix[0][0]);
+
+        //currShader->setModel(worldMatrix);
+        //currShader->update();
+
         for (auto &mesh : model->meshes)
         {
             glBindVertexArray(mesh.VAO);
