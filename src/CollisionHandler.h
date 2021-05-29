@@ -6,6 +6,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "Ray.h"
 #include "Camera.h"
 #include "Object.h"
 #include "Player.h"
@@ -48,6 +49,61 @@ public:
         return check_collision(object1.getBoundaryBox(), object2.getBoundaryBox());
     }
 
+    static bool check_collision(const Ray ray, const Object object, float &t)
+    {
+        BoundaryBox box = object.getBoundaryBox();
+        glm::vec3 min = box.getMinPoint();
+        glm::vec3 max = box.getMaxPoint();
+
+        glm::vec3 orig = ray.getOrigin();
+        glm::vec3 dir = ray.getDirection();
+
+        float tmin = (min.x - orig.x) / dir.x;
+        float tmax = (max.x - orig.x) / dir.x;
+
+        if (tmin > tmax) swap(tmin, tmax);
+
+        float tymin = (min.y - orig.y) / dir.y;
+        float tymax = (max.y - orig.y) / dir.y;
+
+        if (tymin > tymax) swap(tymin, tymax);
+
+        if ((tmin > tymax) || (tymin > tmax))
+            return false;
+
+        if (tymin > tmin)
+            tmin = tymin;
+
+        if (tymax < tmax)
+            tmax = tymax;
+
+        float tzmin = (min.z - orig.z) / dir.z;
+        float tzmax = (max.z - orig.z) / dir.z;
+
+        if (tzmin > tzmax) swap(tzmin, tzmax);
+
+        if ((tmin > tzmax) || (tzmin > tmax))
+            return false;
+
+        if (tzmin > tmin)
+            tmin = tzmin;
+
+        if (tzmax < tmax)
+            tmax = tzmax;
+
+        //if (tmin < 0)
+        //{
+        //    if (tmax < 0)
+        //    {
+        //        return false;
+        //    }
+        //    tmin = tmax;
+        //}
+
+        t = tmin;
+
+        return true;
+    }
 
 private:
     // deprecated

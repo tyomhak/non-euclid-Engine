@@ -23,11 +23,14 @@ public:
 
 public:
     void handleEvents(float deltaTime) {
+        // handle keyboard
         processInput(deltaTime);
-        if (!cursorEnabled)
-        {
-            mouse_callback();
-        }
+
+        // handle mouse
+        if (!cursorEnabled){    mouse_callback();   }
+
+        castRay();
+        std::cout << selectedObjectId << std::endl;
     }
 
 
@@ -167,10 +170,39 @@ private:
         player->getCamera().ProcessMouseMovement(xoffset, yoffset);
     }
 
+    void castRay()
+    {
+        Ray ray(&player->getCamera(), window);
+        
+        float mint = FLT_MAX;
+
+        std::map<std::string /* object ID */, Object> levelObjects = level->getObjects();
+
+        for (auto const& obj : levelObjects)
+        {
+            float t = FLT_MAX;
+            if (CollisionHandler::check_collision(ray, obj.second, t))
+            {
+                if (t < mint)
+                {
+                    mint = t;
+                    selectedObjectId = obj.first;
+                }
+            }
+        }
+
+        if (mint == FLT_MAX)
+        {
+            selectedObjectId = "None";
+        }
+
+    }
+
     float lastMouseX;
     float lastMouseY;
     GLFWwindow* window;
     const Level * level;
     Player* player;
     bool cursorEnabled;
+    string selectedObjectId = "none";
 };
