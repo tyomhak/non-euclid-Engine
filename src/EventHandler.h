@@ -215,7 +215,7 @@ private:
             else
             {
                 creativeEnabled = false;
-
+                saveObject();
             }
         }
         oldStateE = newStateE;
