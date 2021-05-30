@@ -4,22 +4,13 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Move.h"
 
-
-// Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
-enum Camera_Movement {
-    FORWARD,
-    BACKWARD,
-    UPWARD,
-    DOWNWARD,
-    LEFT,
-    RIGHT
-};
 
 // Default camera values
 const float YAW = -90.0f;
 const float PITCH = 0.0f;
-const float SPEED = 45.0f;
+const float SPEED = 15.0f;
 const float SENSITIVITY = 0.05f;
 const float ZOOM = 45.0f;
 
@@ -85,28 +76,34 @@ public:
 
 
     // processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
-    void ProcessKeyboard(Camera_Movement direction, float deltaTime)
+    void ProcessKeyboard(MoveDirection direction, float deltaTime)
     {
         float velocity = MovementSpeed * deltaTime / 2;
+        float y = Position.y;
         switch (direction) {
         case FORWARD:
             Position += Front * velocity;
+            Position.y = y;
             break;
         case BACKWARD:
             Position -= Front * velocity;
+            Position.y = y;
             break;
         case UPWARD:
             Position[1] += velocity / 2;
+            Move::moveUPWARD(Position, velocity);
             break;
         case DOWNWARD:
             Position[1] -= velocity / 2;
+            Move::moveDOWNWARD(Position, velocity);
             break;
-        case LEFT: 
+        case STRAFELEFT:
             Position -= Right * velocity;
+            Position.y = y;
             break;
-        case RIGHT:
+        case STRAFERIGHT:
             Position += Right * velocity;
-            break;
+            Position.y = y;
         default:
             return;
         }

@@ -12,7 +12,7 @@
 class Level
 {
     private:
-        mutable std::map<std::string /* object ID */, Object> levelObjects;
+        std::map<std::string /* object ID */, Object> levelObjects;
         std::vector<Portal> levelPortals;
         Shader *portalShader;
         Shader *objectShader; 
@@ -30,6 +30,11 @@ class Level
         Shader *GetPortalShaderPtr() { return portalShader; }
         Shader *GetObjectShaderPtr() { return objectShader; }
         
+        std::map<std::string /* object ID */, Object> getObjects() const
+        {
+            return levelObjects;
+        }
+
         void DrawObjects(Camera &mainCamera, Shader *shader)
         {
             glm::mat4 view = mainCamera.getViewMatrix();

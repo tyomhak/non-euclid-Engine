@@ -3,11 +3,19 @@
 
 #include "Camera.h"
 #include "IncludeHeaders.h"
+#include "CollisionHandler.h"
+#include "Player.h"
+#include "Level.h"
 
 // Before Using Set the camera and the lastX lastY position of the mouse!
 class EventHandler {
 public:
-    EventHandler(Camera* camera_, GLFWwindow* window_, float lastX, float lastY) : camera(camera_), window(window_), lastMouseX(lastX), lastMouseY(lastY)
+    EventHandler(Player* player_, const Level const * level_,  GLFWwindow* window_, float lastX, float lastY) :
+        player(player_), 
+        window(window_),
+        level(level_),
+        lastMouseX(lastX), 
+        lastMouseY(lastY)
     {
 
     }
@@ -28,7 +36,6 @@ public:
         glViewport(0, 0, width, height);
     }
 
-
 private:
     // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
@@ -38,20 +45,57 @@ private:
             glfwSetWindowShouldClose(window, true);
         else
         {
+            Player dummy_player = player->getCopy();
             if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
                 deltaTime *= 2.0f;
             if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-                camera->ProcessKeyboard(FORWARD, deltaTime);
+            {
+                dummy_player.move(FORWARD, deltaTime);
+                if (!checkMovement(dummy_player)) 
+                {
+                    player->move(FORWARD, deltaTime);
+                }
+            }
             if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-                camera->ProcessKeyboard(BACKWARD, deltaTime);
+            {
+                dummy_player.move(BACKWARD, deltaTime);
+                if (!checkMovement(dummy_player))
+                {
+                    player->move(BACKWARD, deltaTime);
+                }
+            }
             if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-                camera->ProcessKeyboard(LEFT, deltaTime);
+            {
+                dummy_player.move(STRAFELEFT, deltaTime);
+                if(!checkMovement(dummy_player))
+                {
+                    player->move(STRAFELEFT, deltaTime);
+                }
+            }
             if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-                camera->ProcessKeyboard(RIGHT, deltaTime);
+            {
+                dummy_player.move(STRAFERIGHT, deltaTime);
+                if (!checkMovement(dummy_player))
+                {
+                    player->move(STRAFERIGHT, deltaTime);
+                }
+            }
             if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-                camera->ProcessKeyboard(UPWARD, deltaTime);
+            {
+                dummy_player.move(UPWARD, deltaTime);
+                if (!checkMovement(dummy_player))
+                {
+                    player->move(UPWARD, deltaTime);
+                }
+            }
             if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
-                camera->ProcessKeyboard(DOWNWARD, deltaTime);
+            {
+                dummy_player.move(DOWNWARD, deltaTime);
+                if (!checkMovement(dummy_player))
+                {
+                    player->move(DOWNWARD, deltaTime);
+                }
+            }
 
             // switch polygon mode to LINE
             if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
@@ -68,6 +112,19 @@ private:
 
     }
 
+    bool checkMovement(Player dummy_player) const
+    {
+        const std::map<std::string /* object ID */, Object> objects = level->getObjects();
+        for (auto const& it : objects)
+        {
+            if (CollisionHandler::check_collision(dummy_player, it.second))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     void mouse_callback()
     {
         double xpos;
@@ -81,16 +138,12 @@ private:
         lastMouseX = (float)xpos;
         lastMouseY = (float)ypos;
 
-        //const float sensitivity = 0.1f;
-        //xoffset *= sensitivity;
-        //yoffset *= sensitivity;
-        //std::cout << "X: " << lastMouseX << "\t" << "Y: " << lastMouseY << std::endl;
-
-        camera->ProcessMouseMovement(xoffset, yoffset);
+        player->getCamera().ProcessMouseMovement(xoffset, yoffset);
     }
 
     float lastMouseX;
     float lastMouseY;
     GLFWwindow* window;
-    Camera* camera;
+    const Level const * level;
+    Player* player;
 };

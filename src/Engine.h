@@ -5,7 +5,7 @@
 #include "Shader.h"
 #include "Level.h"
 
-#include "AABB.h"
+#include "CollisionHandler.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -14,9 +14,9 @@
 class Engine {
 public:
 	Engine() : window(),
-		camera(),
-		eventHandler(&camera, window.get_window(),
-		window.get_width() / 2, window.get_height() / 2),
+		player(),
+		eventHandler(&player, &level, window.get_window(),
+			window.get_width() / 2, window.get_height() / 2),
 		level(portalShader, objectShader),
 		objectShader("./data/shaders/Object_Vertex.shader", "./data/shaders/Object_Fragment.shader"),
 		portalShader("./data/shaders/Portal_Vertex.shader", "./data/shaders/Portal_Fragment.shader")
@@ -35,8 +35,6 @@ public:
 		float lastFrameTime = previousTime;
 		float deltaTime = 0.0f;
 
-		glm::vec3 moveRight = glm::vec3(0.01f, 0.0f, 0.0f);
-		glm::vec3 moveLeft = glm::vec3(-0.01f, 0.0f, 0.0f);
 
 		while (!glfwWindowShouldClose(window.get_window()))
 		{
@@ -44,22 +42,14 @@ public:
 			float currentTime = (float)glfwGetTime();
 			if (currentTime - previousTime >= 1.0f)
 			{
-				// std::cout << frameCount << std::endl;
+				std::cout << frameCount << std::endl;
 				frameCount = 0;
 				previousTime = currentTime;
 			}
 			++frameCount;
 
-			//moveObject(moveRight, "cube1");
-			//moveObject(moveLeft, "cube2");
+			tempTest();
 
-			
-			// Collision check: camera with objects
-			// ----------------------
-			//std::cout << "cube1 : " << check_collision("cube1")
-			//	<< "\tcube2 : " << check_collision("cube2") << std::endl;
-			//
-			
 			// Smooth Movement
 			// ---------------
 			deltaTime = currentTime - lastFrameTime;
@@ -77,8 +67,9 @@ public:
 			updateShaders();
 			objectShader.use();
 			updateShaders();
+			
+			level.Draw(player.getCamera());
 
-			level.Draw(camera);
 
 			// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 			// -------------------------------------------------------------------------------
@@ -88,8 +79,52 @@ public:
 		glfwTerminate();
 	}
 
+	// temporary function for testing stuff
+	// made with purpose to not clutter the render loop
+	// to be deleted later
+	void tempTest() 
+	{
+		bool objects_collision = false;
+		bool camera_collision = false;
 
-	void addObject(std::string objectName, glm::mat4 location = glm::mat4(1.0f))
+		static glm::vec3 moveRight = glm::vec3(0.01f, 0.0f, 0.0f);
+		static glm::vec3 moveLeft = glm::vec3(-0.01f, 0.0f, 0.0f);
+		static glm::vec3 moveUp = glm::vec3(0.0f, 0.0075f, 0.0f);
+
+		// objects collision check
+		objects_collision = check_cube_collision("cube1", "cube2");
+
+		if (objects_collision == false)	// move objects only if they did not collide
+		{
+			//moveObject(moveRight, "cube1");
+			//moveObject(moveLeft, "cube2");
+			moveObject(moveLeft, "cube2");
+		}
+
+		// camera collision check
+		camera_collision = check_player_collision("cube1");
+
+		if (camera_collision == true)
+		{
+
+		}
+
+		//if (objects_collision == false)
+		//{
+		//	moveObject(moveRight, "cube1");
+		//	rotateObject(glm::vec3(0.1f, 0.0f, 0.1f), 0.01f, "cube1");
+		//}
+
+		// Collision check: camera with objects
+		std::cout << "cube1 : " << check_player_collision("cube1")
+			<< "\tcube2 : "  << check_player_collision("cube2") << std::endl;
+
+			// Collision check: object with object
+			/*std::cout << "collision : " << objects_collision << std::endl;*/
+
+	}
+
+	void addObject(std::string objectName, glm::mat4 location)
 	{
 		level.AddObject(objectHandler.GetObject(objectName, location));
 	}
@@ -113,9 +148,20 @@ public:
 		objectToMove->Move(direction);
 	}
 
-	bool check_collision(const std::string id)
+	void rotateObject(glm::vec3 direction, float angle, std::string id)
 	{
-		return AABB::intersect(camera, level.GetObjects().at(id));
+		Object* objectToMove = findObjectById(id);
+		objectToMove->rotate(angle, direction);
+	}
+
+	bool check_player_collision(const std::string id)
+	{
+		return CollisionHandler::check_collision(player, level.GetObjects().at(id));
+	}
+	bool check_cube_collision(const std::string id1, const std::string id2)
+	{
+		// TODO: handle case when element was not found in the map by ID
+		return CollisionHandler::check_collision(level.GetObjects().at(id1), level.GetObjects().at(id2));
 	}
 
 private:
@@ -137,7 +183,7 @@ private:
 
 	void saveWorld()
 	{
-		LevelHandler::WriteLevel("./Alternative", level, camera);
+		LevelHandler::WriteLevel("./Alternative", level, player.getCamera());
 	}
 
 	void setupShaders()
@@ -171,8 +217,8 @@ private:
 
 	glm::mat4 update_mvp()
 	{
-		glm::mat4 view = camera.getViewMatrix();
-		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), 1.0f, 0.1f, 100.0f);		//perspective view
+		glm::mat4 view = player.getCamera().getViewMatrix();
+		glm::mat4 projection = glm::perspective(glm::radians(player.getCamera().Zoom), 1.0f, 0.1f, 100.0f);		//perspective view
 		glm::mat4 model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
 		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
 		//river.update_shaders("model", model);
@@ -194,7 +240,7 @@ private:
 
 private:
 	Window window;
-	Camera camera;
+	Player player;
 
 	Level level;
 	
