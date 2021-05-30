@@ -27,22 +27,18 @@ public:
     
 
 
-    Shader *GetPortalShaderPtr() { return portalShader; }
-    Shader *GetObjectShaderPtr() { return objectShader; }
-    
-    std::map<std::string /* object ID */, Object> getObjects() const
-    {
-        return levelObjects;
-    }
-
-    void DrawObjects(Camera &mainCamera, Shader *shader)
-    {
-        glm::mat4 view = mainCamera.getViewMatrix();
-        unsigned int viewLoc  = glGetUniformLocation(shader->ID, "view");
-        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
-
-        DrawObjects(shader);
-    }
+        Shader *GetPortalShaderPtr() { return portalShader; }
+        Shader *GetObjectShaderPtr() { return objectShader; }
+        
+        void DrawObjects(Camera &mainCamera, Shader *shader)
+        {
+            glm::mat4 view = mainCamera.getViewMatrix();
+            shader->setView(view);
+            //shader->update();
+            //glm::mat4 view = mainCamera.getViewMatrix();
+            //unsigned int viewLoc  = glGetUniformLocation(shader->ID, "view");
+            //glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
+        Shader *GetObjectShaderPtr() { return objectShader; }
 
     void DrawObjects(Shader *shader)
     {

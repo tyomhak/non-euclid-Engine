@@ -18,11 +18,13 @@ public:
 		eventHandler(&player, &level, window.get_window(),
 			window.get_width() / 2, window.get_height() / 2),
 		level(portalShader, objectShader),
-		objectShader("./data/shaders/Object_Vertex.shader", "./data/shaders/Object_Fragment.shader"),
-		portalShader("./data/shaders/Portal_Vertex.shader", "./data/shaders/Portal_Fragment.shader"),
+		objectShader("./data/shaders/Object_Vertex.shader", "", "./data/shaders/Object_Fragment.shader"),
+		portalShader("./data/shaders/Portal_Vertex.shader", "", "./data/shaders/Portal_Fragment.shader"),
 		ui(window.get_window(), &level)
+
 	{
 		setupWindow();
+		setupShaders();
 	}
 
 public:
@@ -42,7 +44,7 @@ public:
 			float currentTime = (float)glfwGetTime();
 			if (currentTime - previousTime >= 1.0f)
 			{
-				//std::cout << frameCount << std::endl;
+				 std::cout << frameCount << std::endl;
 				frameCount = 0;
 				previousTime = currentTime;
 			}
@@ -63,15 +65,13 @@ public:
 			glfwPollEvents();
 			glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			
 
-			portalShader.use();
-			updateShaders();
-			objectShader.use();
 			updateShaders();
 
 			level.Draw(player.getCamera());
 			ui.render();
+
+
 
 			// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 			// -------------------------------------------------------------------------------
@@ -176,6 +176,23 @@ private:
 
 private:
 
+	void updateShaders()
+	{
+		glm::mat4 view = camera.getViewMatrix();
+		glm::mat4 projection = glm::perspective(glm::radians(90.0f), window.get_width() / window.get_height(), 0.1f, 100.0f);	//perspective view
+		glm::mat4 model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
+		glm::mat4 mvp = projection* view* model;
+		objectShader.bind();
+		objectShader.SetMat4("mvp", mvp);
+
+		//objectShader.update();
+
+		portalShader.bind();
+		portalShader.SetMat4("mvp", mvp);
+		//portalShader.unbind();
+	}
+
 	void checkSave()
 	{
 		if (glfwGetKey(window.get_window(), GLFW_KEY_P) == GLFW_PRESS)
@@ -191,42 +208,18 @@ private:
 
 	void setupShaders()
 	{
+		glm::mat4 view = camera.getViewMatrix();
+		glm::mat4 projection = glm::perspective(glm::radians(90.0f), window.get_width() / window.get_height(), 0.1f, 100.0f);		//perspective view
 		glm::mat4 model = glm::mat4(1.0f);
-		glm::mat4 view = glm::mat4(1.0f);
-		glm::mat4 projection = glm::perspective(glm::radians(90.0f), window.get_width() / window.get_height(), 0.1f, 100.0f);
 
-		unsigned int modelLoc = glGetUniformLocation(objectShader.ID, "model");
-		unsigned int viewLoc = glGetUniformLocation(objectShader.ID, "view");
-		unsigned int projectionLoc = glGetUniformLocation(objectShader.ID, "projection");
+		objectShader.setView(view);
+		objectShader.setModel(model);
+		objectShader.setProjection(projection);
 
-		GLuint projectionPortal = glGetUniformLocation(portalShader.ID, "projection");
-		glUniformMatrix4fv(projectionPortal, 1, GL_FALSE, &projection[0][0]);
-	}
+		portalShader.setView(view);
+		portalShader.setModel(model);
+		portalShader.setProjection(projection);
 
-	void updateShaders()
-	{
-		glm::mat4 model = glm::mat4(1.0f);
-		glm::mat4 view = glm::mat4(1.0f);
-		glm::mat4 projection = glm::perspective(glm::radians(90.0f), window.get_width() / window.get_height(), 0.1f, 100.0f);
-
-		unsigned int modelLoc = glGetUniformLocation(objectShader.ID, "model");
-		unsigned int viewLoc = glGetUniformLocation(objectShader.ID, "view");
-		unsigned int projectionLoc = glGetUniformLocation(objectShader.ID, "projection");
-
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
-		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, &projection[0][0]);
-	}
-
-	glm::mat4 update_mvp()
-	{
-		glm::mat4 view = player.getCamera().getViewMatrix();
-		glm::mat4 projection = glm::perspective(glm::radians(player.getCamera().Zoom), 1.0f, 0.1f, 100.0f);		//perspective view
-		glm::mat4 model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
-		//river.update_shaders("model", model);
-		glm::mat4 mvp = projection * view * model;
-		return mvp;
 	}
 
 	void setupWindow()

@@ -135,6 +135,8 @@ private:
         boundaryBox.setMinPoint(glm::vec3(minX, minY, minZ));
         boundaryBox.setMaxPoint(glm::vec3(maxX, maxY, maxZ));
     }
+
+    const glm::mat4 GetWorldMat() const { return worldMatrix; }
 };
 
 Object::Object(Model &_model, string _modelType, std::string id, glm::mat4 _worldMatrix) :
