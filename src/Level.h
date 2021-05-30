@@ -59,11 +59,7 @@ class Level
         void Draw(Camera &mainCamera) 
         {
             DrawPortals(mainCamera);
-            objectShader->use();
-
-            // glm::mat4 view = mainCamera.getViewMatrix();
-
-            // DrawPortalsObj();
+            objectShader->use();        // don't know why, but deleting this breaks shit.
             DrawObjects(mainCamera, objectShader);
         }
 
@@ -82,10 +78,12 @@ class Level
 
         void AddPortalPair(Portal &first, Portal &second)
         {
-            first.SetPair(&second);
-            second.SetPair(&first);
             levelPortals.push_back(first);
             levelPortals.push_back(second);
+
+            int size = levelPortals.size();
+            levelPortals.at(size - 2).SetPair(&levelPortals.at(size -1));
+            levelPortals.at(size - 1).SetPair(&levelPortals.at(size -2));
         }
 
         std::map<std::string /* object Id */, Object>& GetObjects() { return levelObjects; }

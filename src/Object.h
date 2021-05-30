@@ -56,6 +56,8 @@ public:
         worldMatrix = glm::translate(worldMatrix, translate);
     }
 
+    void SetWorldMatrix(glm::mat4 newLocation) { worldMatrix = newLocation; };
+
     vector<glm::vec3> GetVertices()
     {
         vector<glm::vec3> all_vertices;

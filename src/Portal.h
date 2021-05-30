@@ -3,6 +3,8 @@
 #include "Object.h"
 #include "Camera.h"
 
+#include <iomanip>
+
 unsigned int texture_width = 1024;
 unsigned int texture_height = 768;
 
@@ -36,7 +38,7 @@ public:
     }
 
     Portal *GetPairPtr() { return pair_portal; }
-    glm::mat4 GetWorldMat() { return worldMatrix; }
+    glm::mat4 GetWorldMat() const { return worldMatrix; }
 
     void Draw(  Camera &mainCamera, 
                 std::map<std::string /* object Id */, Object> &objs,
@@ -58,18 +60,21 @@ public:
         glDisable(GL_DEPTH_TEST);
         //glViewport(0, 0, texture_width, texture_height);
 
-        
         Shader *currShader = &objShader;        
         currShader->use();
 
         // Set the view (what you'll in the portal)
-        Camera tempCamera = Camera();
-
-        glm::mat4 view = glm::mat4(1.0f);
-        view = tempCamera.getViewMatrix();
+        glm::mat4 view = mainCamera.getViewMatrix();
         
-        // view = pair_portal->GetWorldMat() * glm::inverse(GetWorldMat()) * glm::inverse(view);
+        view = pair_portal->GetWorldMat() * glm::inverse(GetWorldMat()) * glm::inverse(view); 
+        view = glm::inverse(view);
 
+
+        // PAIR PORTAL CAMERAS POSITION CUBES //
+        // ================================== // 
+        // glm::mat4 view_clone = view;
+
+        
         GLuint viewLoc = glGetUniformLocation(currShader->ID, "view");
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
 
@@ -79,16 +84,6 @@ public:
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glEnable(GL_DEPTH_TEST);
 
-        // stop from drawing an infinite loop of portals
-        if (depth < max_depth)
-        {
-            for (auto &portal : ports)
-            {
-                // don't draw the pair portal, since you must draw what's behind it.
-                if (&portal != pair_portal)
-                    portal.Draw(objShader, portShader, mainCamera, objs, ports, depth + 1);
-            }
-        }
 
         // draw objects onto the portal texture
         for (auto obj : objs)
@@ -120,6 +115,14 @@ public:
             glBindTexture(GL_TEXTURE_2D, renderedTexture);
             glDrawElements(GL_TRIANGLES, (GLsizei)mesh.indices.size(), GL_UNSIGNED_INT, 0);
         }
+
+
+        // PAIR PORTAL CAMERAS POSITION CUBES //
+        // ================================== //
+        // Object &cube = objs.at("cube2");
+        // view_clone = glm::inverse(view_clone);
+        // cube.SetWorldMatrix(view_clone);
+        // cube.Draw(*currShader);
     }
 
 
