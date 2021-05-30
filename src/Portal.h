@@ -74,9 +74,7 @@ public:
         // ================================== // 
         // glm::mat4 view_clone = view;
 
-        
-        GLuint viewLoc = glGetUniformLocation(currShader->ID, "view");
-        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
+        currShader->setView(view);
 
         // change the drawing location to portal framebuffer/texture, instead of the screen
         glBindFramebuffer(GL_FRAMEBUFFER, portalFramebuffer);
@@ -105,8 +103,10 @@ public:
         currShader->bind();
 
         view = mainCamera.getViewMatrix();
-        viewLoc = glGetUniformLocation(currShader->ID, "view");
-        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
+
+        currShader->setView(view);
+        currShader->setModel(worldMatrix);
+        currShader->update();
 
         for (auto &mesh : model->meshes)
         {

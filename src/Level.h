@@ -30,15 +30,16 @@ public:
         Shader *GetPortalShaderPtr() { return portalShader; }
         Shader *GetObjectShaderPtr() { return objectShader; }
         
-        void DrawObjects(Camera &mainCamera, Shader *shader)
-        {
-            glm::mat4 view = mainCamera.getViewMatrix();
-            shader->setView(view);
-            //shader->update();
-            //glm::mat4 view = mainCamera.getViewMatrix();
-            //unsigned int viewLoc  = glGetUniformLocation(shader->ID, "view");
-            //glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
-        Shader *GetObjectShaderPtr() { return objectShader; }
+    void DrawObjects(Camera& mainCamera, Shader* shader)
+    {
+        glm::mat4 view = mainCamera.getViewMatrix();
+        shader->setView(view);
+        //shader->update();
+        //glm::mat4 view = mainCamera.getViewMatrix();
+        //unsigned int viewLoc  = glGetUniformLocation(shader->ID, "view");
+        //glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
+        DrawObjects(shader);
+    }
 
     void DrawObjects(Shader *shader)
     {
@@ -57,12 +58,18 @@ public:
         }
     }
 
-        void Draw(Camera &mainCamera) 
-        {
-            DrawPortals(mainCamera);
-            objectShader->use();        // don't know why, but deleting this breaks shit.
-            DrawObjects(mainCamera, objectShader);
-        }
+    void Draw(Camera &mainCamera) 
+    {
+        DrawPortals(mainCamera);
+        objectShader->bind();        // don't know why, but deleting this breaks shit.
+        DrawObjects(mainCamera, objectShader);
+    }
+
+    std::map<std::string /* object ID */, Object> getObjects() const
+    {
+        return levelObjects;
+    }
+
     Object* getObject(string id)
     {
         return &levelObjects.find(id)->second;

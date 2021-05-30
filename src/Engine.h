@@ -178,7 +178,7 @@ private:
 
 	void updateShaders()
 	{
-		glm::mat4 view = camera.getViewMatrix();
+		glm::mat4 view = player.getCamera().getViewMatrix();
 		glm::mat4 projection = glm::perspective(glm::radians(90.0f), window.get_width() / window.get_height(), 0.1f, 100.0f);	//perspective view
 		glm::mat4 model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
 		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
@@ -208,7 +208,7 @@ private:
 
 	void setupShaders()
 	{
-		glm::mat4 view = camera.getViewMatrix();
+		glm::mat4 view = player.getCamera().getViewMatrix();
 		glm::mat4 projection = glm::perspective(glm::radians(90.0f), window.get_width() / window.get_height(), 0.1f, 100.0f);		//perspective view
 		glm::mat4 model = glm::mat4(1.0f);
 
