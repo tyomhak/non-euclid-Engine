@@ -16,8 +16,6 @@ int main()
 
 	// portals pair creation
 	engine.addPortal(locationFirst, locationSecond);
-
-	std::cout << "temp" << std::endl;
 	engine.render();
 
 	return 0;
