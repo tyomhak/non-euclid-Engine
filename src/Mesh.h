@@ -70,6 +70,7 @@ public:
     // render the mesh
     void Draw(Shader &shader, glm::mat4 worldMatrix = glm::mat4(1.0f)) 
     {
+        shader.use();
         // bind appropriate textures
         unsigned int diffuseNr  = 1;
         unsigned int specularNr = 1;
@@ -100,7 +101,7 @@ public:
         
         // draw mesh
         glBindVertexArray(VAO);
-        glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, (GLsizei)indices.size(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
 
         // always good practice to set everything back to defaults once configured.

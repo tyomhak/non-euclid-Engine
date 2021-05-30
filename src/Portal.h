@@ -3,8 +3,10 @@
 #include "Object.h"
 #include "Camera.h"
 
-unsigned int texture_width = 1024;
-unsigned int texture_height = 768;
+#include <iomanip>
+
+unsigned int texture_width = 1920;
+unsigned int texture_height = 1080;
 
 unsigned int max_depth = 2;
 
@@ -12,8 +14,8 @@ unsigned int max_depth = 2;
 class Portal: public Object 
 {
 public:
-    Portal(Model &_model, string _modelType, glm::mat4 _worldMatrix = glm::mat4(1.0f)):
-    Object(_model, _modelType, _worldMatrix)
+    Portal(Model &_model, string _modelType, std::string id, glm::mat4 _worldMatrix = glm::mat4(1.0f)):
+    Object(_model, _modelType, id, _worldMatrix)
     {
         SetupPortal();
     }
@@ -36,10 +38,10 @@ public:
     }
 
     Portal *GetPairPtr() { return pair_portal; }
-    glm::mat4 GetWorldMat() { return worldMatrix; }
+    glm::mat4 GetWorldMat() const { return worldMatrix; }
 
     void Draw(  Camera &mainCamera, 
-                vector<Object> &objs, 
+                std::map<std::string /* object Id */, Object> &objs,
                 vector<Portal> &ports,
                 GLuint depth = 0
             )
@@ -50,23 +52,36 @@ public:
     void Draw(  Shader &objShader, 
                 Shader &portShader, 
                 Camera &mainCamera, 
-                vector<Object> &objs, 
+                std::map<std::string /* object Id */, Object> &objs, 
                 vector<Portal> &ports,
                 GLuint depth = 0
             )
     {
         glDisable(GL_DEPTH_TEST);
-        glViewport(0, 0, texture_width, texture_height);
+        //glViewport(0, 0, texture_width, texture_height);
+
+        Shader *currShader = &objShader;        
+        currShader->use();
+
+        // Set the view (what you'll in the portal) //
+        // ======================================== //
+        glm::mat4 view = mainCamera.getViewMatrix();
+        view = pair_portal->GetWorldMat() * glm::inverse(GetWorldMat()) * glm::inverse(view); 
+        view = glm::inverse(view);
+
+
+        // CAN USE THIS FOR PAIR CAMERA VIEW INSTEAD, BUT IT's MORE COMPLEX //
+        // ================================================================ //
+        // Camera tempCamera = GetPairCamera(mainCamera);
+        // glm::mat4 view = tempCamera.getViewMatrix();
+
+
+        // PAIR PORTAL CAMERAS POSITION CUBES //
+        // ================================== // 
+        // glm::mat4 view_clone = view;
 
         
-        Shader &currShader = portShader;        
-        currShader.use();
-
-        // Set the view (what you'll in the portal)
-        Camera tempCamera = Camera();
-        glm::mat4 view = glm::mat4(1.0f);
-        view = mainCamera.GetView();
-        GLuint viewLoc = glGetUniformLocation(currShader.ID, "view");
+        GLuint viewLoc = glGetUniformLocation(currShader->ID, "view");
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
 
         // change the drawing location to portal framebuffer/texture, instead of the screen
@@ -75,48 +90,62 @@ public:
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glEnable(GL_DEPTH_TEST);
 
-        // stop from drawing an infinite loop of portals
-        if (depth < max_depth)
-        {
-            for (auto &portal : ports)
-            {
-                // don't draw the pair portal, since you must draw what's behind it.
-                if (&portal != pair_portal)
-                    portal.Draw(objShader, portShader, mainCamera, objs, ports, depth + 1);
-            }
-        }
 
         // draw objects onto the portal texture
-        for (auto obj : objs)
+        for (auto &obj : objs)
         {
-            obj.Draw(currShader);
+            obj.second.Draw(*currShader);
         }
 
         // move back to drawing on screen, instead of drawing on portal texture
         if (depth == 0)
         {
             glEnable(GL_DEPTH_TEST);
-            glViewport(0, 0, 1024, 768);
+            //glViewport(0, 0, 1024, 768);
 
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
         }
-        currShader = objShader;
-        currShader.use();
+        currShader = &portShader;
+        currShader->use();
 
-        // change the view to the main camera (player camera)
-        view = mainCamera.GetView();
-        viewLoc = glGetUniformLocation(currShader.ID, "view");
+        view = mainCamera.getViewMatrix();
+        viewLoc = glGetUniformLocation(currShader->ID, "view");
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
 
         // draw the portal (with its texture) on screen
-        GLuint modelLoc = glGetUniformLocation(currShader.ID, "model");
+        GLuint modelLoc = glGetUniformLocation(currShader->ID, "model");
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, &worldMatrix[0][0]);
         for (auto &mesh : model->meshes)
         {
             glBindVertexArray(mesh.VAO);
             glBindTexture(GL_TEXTURE_2D, renderedTexture);
-            glDrawElements(GL_TRIANGLES, mesh.indices.size(), GL_UNSIGNED_INT, 0);
+            glDrawElements(GL_TRIANGLES, (GLsizei)mesh.indices.size(), GL_UNSIGNED_INT, 0);
         }
+
+        // PAIR PORTAL CAMERAS POSITION CUBES //
+        // ================================== //
+        // Object &cube = objs.at("cube2");
+        // view_clone = glm::inverse(view_clone);
+        // cube.SetWorldMatrix(view_clone);
+        // cube.Draw(*currShader);
+    }
+
+    Camera GetPairCamera(Camera &mainCamera)
+    {
+        glm::mat4 view = mainCamera.getViewMatrix();
+        view = pair_portal->GetWorldMat() * glm::inverse(GetWorldMat()) * glm::inverse(view); 
+        // view = glm::inverse(view);
+
+        glm::vec3 newPosition = glm::vec3(view[3][0], view[3][1], view[3][2]);
+
+        // Inverse (instead of line 69)
+        view = glm::inverse(view);
+        
+        GLfloat yawDiff = yaw - mainCamera.Yaw;
+        GLfloat newYaw = pair_portal->yaw - yawDiff;
+        
+        // Camera tempCamera = Camera(newPosition, newFront, newRight, newUp);
+        return Camera(newPosition, glm::vec3(0.0f, 1.0f, 0.0f), newYaw, mainCamera.Pitch);
     }
 
 
@@ -132,6 +161,8 @@ private:
 
     void SetupPortal()
     {
+        yaw = -90.0f;
+
         glGenFramebuffers(1, &portalFramebuffer);
         glBindFramebuffer(GL_FRAMEBUFFER, portalFramebuffer);
 
