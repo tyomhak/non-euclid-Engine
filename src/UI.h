@@ -47,7 +47,7 @@ public:
 		ImGui::Dummy(ImVec2(0.0f, 7.0f));	// adds horizontal and vertical spacing by mentioned size
 
 		// adding tabs for object manipulations
-		ImGui::Columns(4, false);
+		ImGui::Columns(4);
 		if (ImGui::Button("Position")) tabs_index = 1;
 		ImGui::NextColumn();
 		if (ImGui::Button("Size")) tabs_index = 2;
