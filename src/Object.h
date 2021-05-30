@@ -26,7 +26,7 @@ public:
 
     ~Object();
 
-    std::string getId()
+    std::string getId() const
     {
         return ID;
     }
@@ -86,8 +86,6 @@ public:
         return all_vertices;
     }
 
-    void SetWorldMatrix(glm::mat4 newLocation) { worldMatrix = newLocation; };
-
     vector<glm::vec3> GetVertices()
     {
         vector<glm::vec3> all_vertices;
@@ -103,6 +101,11 @@ public:
     }
 
     const glm::mat4 GetWorldMat() const { return worldMatrix; }
+    void SetWorldMatrix(glm::mat4 newLocation) 
+    {
+        worldMatrix = newLocation;
+        updateBoundaryBox();
+    }
 
 private:
 
@@ -143,6 +146,7 @@ private:
         boundaryBox.setMinPoint(glm::vec3(minX, minY, minZ));
         boundaryBox.setMaxPoint(glm::vec3(maxX, maxY, maxZ));
     }
+
 };
 
 Object::Object(Model &_model, string _modelType, std::string id, glm::mat4 _worldMatrix) :

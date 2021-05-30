@@ -10,15 +10,18 @@
 // Before Using Set the camera and the lastX lastY position of the mouse!
 class EventHandler {
 public:
+    EventHandler()
+    {}
+
     EventHandler(Player* player_, Level * level_,  GLFWwindow* window_, float lastX, float lastY) :
         player(player_), 
         window(window_),
+        level(level_),
         lastMouseX(lastX), 
         lastMouseY(lastY),
-        cursorEnabled(false)
+        cursorEnabled(false),
+        creativeEnabled(false)
     {
-        level = level_;
-        selectedObjectId = "none";
     }
 
 public:
@@ -28,18 +31,29 @@ public:
 
         // handle mouse
         if (!cursorEnabled){    mouse_callback();   }
-
-        castRay();
-        // std::cout << selectedObjectId << std::endl;
+        //std::cout << selectedObjectId << std::endl;
+        if (creativeEnabled)
+        {
+            castRay();
+        }
     }
 
-    static void moveObjectToPosition(glm::vec3 position)
+    void moveSelectedObjectToPosition(glm::vec3 position)
     {
-        if (selectedObjectId == "None")
+        if (underViewObjectId == "None")
         {
             return;
         }
-        level->getObject(selectedObjectId)->setPosition(position);
+        level->getObjectPointer(underViewObjectId)->setPosition(position);
+    }
+
+    void moveCreateObjectToPosition(glm::vec3 position)
+    {
+        if (updateObjectId == "None")
+        {
+            return;
+        }
+        level->getObjectPointer(updateObjectId)->setPosition(position);
     }
 
     // glfw: whenever the window size changed (by OS or user resize) this callback function executes
@@ -49,6 +63,29 @@ public:
         // make sure the viewport matches the new window dimensions; note that width and 
         // height will be significantly larger than specified on retina displays.
         glViewport(0, 0, width, height);
+    }
+
+    void saveObject()
+    {
+        creativeEnabled = false;
+        underViewObjectId = "None";
+        updateObjectId = "None";
+    }
+
+    void selectObject()
+    {
+        updateObjectId = underViewObjectId;
+    }
+
+    void deleteObject()
+    {
+        level->deleteObject(underViewObjectId);
+    }
+
+    // add the object into the level and return the id of created object
+    string addObject(string name, glm::vec3 Position)
+    {
+        return level->AddObject(name, Position);
     }
 
 private:
@@ -100,10 +137,11 @@ private:
                 dummy_player.move(UPWARD, deltaTime);
                 if (!checkMovement(dummy_player))
                 {
-                    player->move(UPWARD, deltaTime);
+                    player->move(UPWARD, deltaTime * 2);
                 }
             }
-            if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+            //if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+            if (true)
             {
                 dummy_player.move(DOWNWARD, deltaTime);
                 if (!checkMovement(dummy_player))
@@ -124,11 +162,31 @@ private:
                 glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
             }
 
-            // enables cursor
+            // make distance longer
+            if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+            {
+                distance += deltaTime * 5;
+            }
 
-            static int oldState = GLFW_RELEASE;
-            int newState = glfwGetKey(window, GLFW_KEY_C);
-            if (newState == GLFW_RELEASE && oldState == GLFW_PRESS) {
+            // make distance shorter
+            if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+            {
+                if (distance >= minDistance)
+                {
+                    distance -= deltaTime * 5;
+                }
+            }
+
+            // place Object
+            if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS)
+            {
+                saveObject();
+            }
+
+            // enables cursor
+            static int oldStateC = GLFW_RELEASE;
+            int newStateC = glfwGetKey(window, GLFW_KEY_C);
+            if (newStateC == GLFW_RELEASE && oldStateC == GLFW_PRESS) {
                 if (!cursorEnabled)
                 {
                     cursorEnabled = true;
@@ -144,9 +202,64 @@ private:
                     glfwSetCursorPos(window, lastMouseX, lastMouseY);
                 }
             }
-            oldState = newState;
+            oldStateC = newStateC;
         }
 
+        static int oldStateE = GLFW_RELEASE;
+        int newStateE = glfwGetKey(window, GLFW_KEY_E);
+        if (newStateE == GLFW_RELEASE && oldStateE == GLFW_PRESS) {
+            if (!creativeEnabled)
+            {
+                creativeEnabled = true;
+            }
+            else
+            {
+                creativeEnabled = false;
+                saveObject();
+            }
+        }
+        oldStateE = newStateE;
+
+        // switch polygon mode to FILL
+        if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
+        {
+            selectObject();
+        }
+
+    }
+
+    bool checkObjectCollision(Object obj) const
+    {
+        // check collision with objects
+        const std::map<std::string /* object ID */, Object> objects = level->getObjects();
+        for (auto const& it : objects)
+        {
+            if (it.first == obj.getId())
+            {
+                continue;
+            }
+            if (CollisionHandler::check_collision(obj, it.second))
+            {
+                return true;
+            }
+        }
+
+        // check collision with portals
+        const std::vector<Portal> portals = level->getPortals();
+        for (auto const& portal : portals)
+        {
+            if (portal.getId() == obj.getId())
+            {
+                continue;
+            }
+            if (CollisionHandler::check_collision(obj, portal))
+            {
+                return true;
+            }
+        }
+
+        // check collision with player
+        return CollisionHandler::check_collision(player->getCamera(), obj);
     }
 
     bool checkMovement(Player dummy_player) const
@@ -161,7 +274,7 @@ private:
         }
         return false;
     }
-
+    
     void mouse_callback()
     {
         double xpos;
@@ -191,29 +304,74 @@ private:
             float t = FLT_MAX;
             if (CollisionHandler::check_collision(ray, obj.second, t))
             {
+                if (obj.second.getId() == updateObjectId)
+                {
+                    continue;
+                }
                 if (t < mint)
                 {
                     mint = t;
-                    selectedObjectId = obj.first;
+                    underViewObjectId = obj.first;
                 }
             }
         }
 
-        if (mint == FLT_MAX)
+        if (updateObjectId != "None")
         {
-            selectedObjectId = "None";
+            float dist;
+            if (mint < distance)
+            {
+                dist = mint;
+            }
+            else
+            {
+                dist = distance;
+            }
+            while (dist >= minDistance)
+            {
+                glm::vec3 obj_pos = ray.getOrigin() + (dist)*ray.getDirection();
+                const glm::mat4 oldWorldMat = level->getObjectPointer(updateObjectId)->GetWorldMat();
+                moveCreateObjectToPosition(obj_pos);
+                if (checkObjectCollision(level->getObject(updateObjectId)))
+                {
+                    level->getObjectPointer(updateObjectId)->SetWorldMatrix(oldWorldMat);
+                }
+                else
+                {
+                    break;
+                }
+                dist -= 0.1f;
+            }
+
         }
 
+
+        if (mint == FLT_MAX)
+        {
+            underViewObjectId = "None";
+            return;
+        }
+        
     }
 
     float lastMouseX;
     float lastMouseY;
     GLFWwindow* window;
-    static Level * level;
+    Level * level;
     Player* player;
+    
+    const float minDistance = 2.0f;
+    float distance = 5.0f;
+
+
+public:
     bool cursorEnabled;
-    static string selectedObjectId;
+    bool creativeEnabled;
+    
+    static string underViewObjectId;
+    static string updateObjectId;
+
 };
 
-Level* EventHandler::level = nullptr;
-string EventHandler::selectedObjectId = "None";
+string EventHandler::underViewObjectId("None");
+string EventHandler::updateObjectId("None");

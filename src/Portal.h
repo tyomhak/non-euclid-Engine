@@ -52,7 +52,7 @@ public:
     void Draw(  Shader &objShader, 
                 Shader &portShader, 
                 Camera &mainCamera, 
-                std::map<std::string /* object Id */, Object> &objs, 
+                std::map<std::string, Object> &objs, 
                 vector<Portal> &ports,
                 GLuint depth = 0
             )
@@ -61,7 +61,7 @@ public:
         //glViewport(0, 0, texture_width, texture_height);
 
         Shader *currShader = &objShader;        
-        currShader->use();
+        currShader->bind();
 
         // Set the view (what you'll in the portal) //
         // ======================================== //
@@ -80,9 +80,7 @@ public:
         // ================================== // 
         // glm::mat4 view_clone = view;
 
-        
-        GLuint viewLoc = glGetUniformLocation(currShader->ID, "view");
-        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
+        currShader->setView(view);
 
         // change the drawing location to portal framebuffer/texture, instead of the screen
         glBindFramebuffer(GL_FRAMEBUFFER, portalFramebuffer);
@@ -105,16 +103,17 @@ public:
 
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
         }
+
+
         currShader = &portShader;
-        currShader->use();
+        currShader->bind();
 
         view = mainCamera.getViewMatrix();
-        viewLoc = glGetUniformLocation(currShader->ID, "view");
-        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
 
-        // draw the portal (with its texture) on screen
-        GLuint modelLoc = glGetUniformLocation(currShader->ID, "model");
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, &worldMatrix[0][0]);
+        currShader->setView(view);
+        currShader->setModel(worldMatrix);
+        currShader->update();
+
         for (auto &mesh : model->meshes)
         {
             glBindVertexArray(mesh.VAO);
