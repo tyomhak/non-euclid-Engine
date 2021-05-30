@@ -7,9 +7,9 @@
 class PositionUi: protected UiWindow
 {
 public:
-	PositionUi(std::string _name)
+	PositionUi(std::string _name, EventHandler* _eventHandler) :
+		UiWindow(_name, _eventHandler)
 	{
-		name = _name;
 		my_tool_active = true;
 	}
 
@@ -27,7 +27,7 @@ public:
 		ImGui::End();
 
 
-		EventHandler::moveObjectToPosition(glm::vec3(position[0], position[1], position[2]));
+		eventHandler->moveSelectedObjectToPosition(glm::vec3(position[0], position[1], position[2]));
 
 	}
 

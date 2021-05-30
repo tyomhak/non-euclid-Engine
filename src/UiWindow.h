@@ -3,18 +3,21 @@
 class UiWindow
 {
 public: 
-	UiWindow() : name("Window")
+	UiWindow(EventHandler* _eventHandler) :
+		name("Window")
 	{
-
+		eventHandler = _eventHandler;
 	}
 protected:
-	UiWindow(std::string _name) 
+	UiWindow(std::string _name, EventHandler* _eventHandler) :
+		name(_name)
 	{
-		name = _name;
+		eventHandler = _eventHandler;
 	}
 
-	static void render();
+	void render();
 
 protected:
+	EventHandler* eventHandler;
 	std::string name;
 };

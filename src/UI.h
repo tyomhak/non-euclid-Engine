@@ -20,9 +20,9 @@ private:
 
 public:
 
-	UI(GLFWwindow* _window, Level* _level) :
+	UI(GLFWwindow* _window, EventHandler* _eventHandler) :
 		window(_window),
-		level(_level)
+		eventHandler(_eventHandler)
 	{
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
@@ -60,7 +60,7 @@ public:
 
 		if (tabs_index == 1)
 		{
-			PositionUi positionWindow("PositionWindow");
+			PositionUi positionWindow("PositionWindow", eventHandler);
 			positionWindow.render();
 		}
 		if (tabs_index == 2)
@@ -92,12 +92,17 @@ public:
 
 		ImGui::SetCursorPos(cursor_pos);	// places upcoming attributes of the window on the place that is set by cursor
 
+		// Selected object status display
+		ImGui::Text((" Update object ID: " + eventHandler->updateObjectId).c_str());
+		ImGui::Text(("Under View object ID: " + eventHandler->underViewObjectId).c_str());
+
+
 		// Save, Delete, Create functionality
 		ImGui::Separator();
 		ImGui::Spacing();ImGui::Spacing();	// can be replaced by ImGui::Dummy(ImVec2(0.0f, 2.0f));
 		if (ImGui::Button("Delete"))
 		{
-			// add functionality to delete added object that is not saved yet
+			eventHandler->deleteObject();
 		}
 
 		ImGui::SameLine();
@@ -105,8 +110,12 @@ public:
 		ImGui::SameLine();
 		if (ImGui::Button("Create"))
 		{
-			glm::vec3 position = glm::vec3(-0.5f, 0.0f, 0.0f);
-			level->AddObject(objects_menu_items[selected_object_item], position);	// add also the 'size' and 'color'
+			if (objects_menu_items[selected_object_item] != "")
+			{
+				eventHandler->creativeEnabled = true;
+				glm::vec3 position = glm::vec3(-0.5f, 0.0f, 0.0f);
+				eventHandler->updateObjectId = eventHandler->addObject(objects_menu_items[selected_object_item], position);	// add also the 'size' and 'color'
+			}
 		}
 
 		ImGui::SameLine();
@@ -114,7 +123,9 @@ public:
 		ImGui::SameLine();
 		if (ImGui::Button("Save"))
 		{
-			// add functionality to save the object, i.e. permanently add the object to the level
+			eventHandler->creativeEnabled = false;
+			eventHandler->underViewObjectId = "None";
+			eventHandler->updateObjectId = "None";
 		}
 
 		ImGui::End();
@@ -141,5 +152,5 @@ private:
 	const char* glsl_version = "#version 130";
 	std::vector<UiWindow*> uiWindows;
 	GLFWwindow* window;
-	Level* level;
+	EventHandler* eventHandler;
 };

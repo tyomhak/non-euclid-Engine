@@ -91,14 +91,14 @@ public:
         if (tzmax < tmax)
             tmax = tzmax;
 
-        //if (tmin < 0)
-        //{
-        //    if (tmax < 0)
-        //    {
-        //        return false;
-        //    }
-        //    tmin = tmax;
-        //}
+        if (tmin < 0)
+        {
+            if (tmax < 0)
+            {
+                return false;
+            }
+            tmin = tmax;
+        }
 
         t = tmin;
 

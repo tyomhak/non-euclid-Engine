@@ -24,7 +24,7 @@ public:
 
     ~Object();
 
-    std::string getId()
+    std::string getId() const
     {
         return ID;
     }
@@ -78,8 +78,6 @@ public:
         return all_vertices;
     }
 
-    void SetWorldMatrix(glm::mat4 newLocation) { worldMatrix = newLocation; };
-
     vector<glm::vec3> GetVertices()
     {
         vector<glm::vec3> all_vertices;
@@ -95,6 +93,11 @@ public:
     }
 
     const glm::mat4 GetWorldMat() const { return worldMatrix; }
+    void SetWorldMatrix(glm::mat4 newLocation) 
+    {
+        worldMatrix = newLocation;
+        updateBoundaryBox();
+    }
 
 private:
 

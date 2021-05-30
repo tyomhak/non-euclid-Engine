@@ -20,7 +20,7 @@ public:
 		level(portalShader, objectShader),
 		objectShader("./data/shaders/Object_Vertex.shader", "", "./data/shaders/Object_Fragment.shader"),
 		portalShader("./data/shaders/Portal_Vertex.shader", "", "./data/shaders/Portal_Fragment.shader"),
-		ui(window.get_window(), &level)
+		ui(window.get_window(), &eventHandler)
 
 	{
 		setupWindow();
@@ -94,7 +94,7 @@ public:
 		static glm::vec3 moveUp = glm::vec3(0.0f, 0.0075f, 0.0f);
 
 		// objects collision check
-		objects_collision = check_cube_collision("cube1", "cube2");
+		//objects_collision = check_cube_collision("cube1", "cube2");
 
 		if (objects_collision == false)	// move objects only if they did not collide
 		{
@@ -104,7 +104,7 @@ public:
 		}
 
 		// camera collision check
-		camera_collision = check_player_collision("cube1");
+		//camera_collision = check_player_collision("cube1");
 
 		if (camera_collision == true)
 		{
@@ -232,7 +232,6 @@ private:
 		// --------------
 		glfwSetInputMode(window.get_window(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	}
-
 
 private:
 	Window window;
