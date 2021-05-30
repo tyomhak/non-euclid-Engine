@@ -12,8 +12,8 @@ class Window
 public:
 
 	Window() :
-		width(1024),
-		height(768)
+		width(1920),
+		height(1080)
 	{
 		initialize_window((int)width, (int)height);
 	}
@@ -40,6 +40,10 @@ public:
 	{
 		return height;
 	}
+	float get_aspectRatio() const
+	{
+		return width / height;
+	}
 
 
 private:
@@ -57,7 +61,7 @@ private:
 		#endif
 
 		/* Create a windowed mode window and its OpenGL context */
-		//window = glfwCreateWindow(width, height, "River", glfwGetPrimaryMonitor(), NULL);
+		//window = glfwCreateWindow(width, height, "LearnOpenGL", glfwGetPrimaryMonitor(), NULL);
 		window = glfwCreateWindow(width, height, "LearnOpenGL", NULL, NULL);
 
 		if (!window)

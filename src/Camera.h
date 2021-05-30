@@ -4,24 +4,16 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Move.h"
 
-
-// Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
-enum Camera_Movement {
-    FORWARD,
-    BACKWARD,
-    UPWARD,
-    DOWNWARD,
-    LEFT,
-    RIGHT
-};
 
 // Default camera values
 const float YAW = -90.0f;
 const float PITCH = 0.0f;
-const float SPEED = 45.0f;
+const float SPEED = 15.0f;
 const float SENSITIVITY = 0.05f;
 const float ZOOM = 45.0f;
+const float FOV = 90.0f;
 
 
 // An abstract camera class that processes input and calculates the corresponding Euler Angles, Vectors and Matrices for use in OpenGL
@@ -41,6 +33,7 @@ public:
     float MovementSpeed;
     float MouseSensitivity;
     float Zoom;
+    float fov;
 
 public:
 
@@ -48,7 +41,7 @@ public:
     Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 3.0f),
                                 glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f),
                                 float yaw = YAW, float pitch = PITCH) : Front(glm::vec3(0.0f, 0.0f, -1.0f)),
-                                MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
+                                MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM), fov(FOV)
     {
         Position = position;
         WorldUp = up;
@@ -57,7 +50,7 @@ public:
         updateCameraVectors();
     }
     // constructor with scalar values
-    Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
+    Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM), fov(FOV)
     {
         Position = glm::vec3(posX, posY, posZ);
         WorldUp = glm::vec3(upX, upY, upZ);
@@ -82,31 +75,40 @@ public:
         return Front;
     }
 
+    float get_FOV() const
+    {
+        return fov;
+    }
+
 
 
     // processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
-    void ProcessKeyboard(Camera_Movement direction, float deltaTime)
+    void ProcessKeyboard(MoveDirection direction, float deltaTime)
     {
         float velocity = MovementSpeed * deltaTime / 2;
+        float y = Position.y;
         switch (direction) {
         case FORWARD:
             Position += Front * velocity;
+            Position.y = y;
             break;
         case BACKWARD:
             Position -= Front * velocity;
+            Position.y = y;
             break;
         case UPWARD:
-            Position[1] += velocity / 2;
+            Move::moveUPWARD(Position, velocity);
             break;
         case DOWNWARD:
-            Position[1] -= velocity / 2;
+            Move::moveDOWNWARD(Position, velocity);
             break;
-        case LEFT: 
+        case STRAFELEFT:
             Position -= Right * velocity;
+            Position.y = y;
             break;
-        case RIGHT:
+        case STRAFERIGHT:
             Position += Right * velocity;
-            break;
+            Position.y = y;
         default:
             return;
         }
