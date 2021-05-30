@@ -61,12 +61,13 @@ public:
         }
     }
 
-        void Draw(Camera &mainCamera) 
-        {
-            DrawPortals(mainCamera);
-            objectShader->use();        // don't know why, but deleting this breaks shit.
-            DrawObjects(mainCamera, objectShader);
-        }
+    void Draw(Camera &mainCamera) 
+    {
+        DrawPortals(mainCamera);
+        objectShader->use();        // don't know why, but deleting this breaks shit.
+        DrawObjects(mainCamera, objectShader);
+    }
+    
     Object* getObject(string id)
     {
         return &levelObjects.find(id)->second;
