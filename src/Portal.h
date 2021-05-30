@@ -5,8 +5,8 @@
 
 #include <iomanip>
 
-unsigned int texture_width = 1024;
-unsigned int texture_height = 768;
+unsigned int texture_width = 1920;
+unsigned int texture_height = 1080;
 
 unsigned int max_depth = 2;
 

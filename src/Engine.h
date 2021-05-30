@@ -4,12 +4,12 @@
 #include "Window.h"
 #include "Shader.h"
 #include "Level.h"
-
 #include "CollisionHandler.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "UI.h"
 
 class Engine {
 public:
@@ -19,10 +19,10 @@ public:
 			window.get_width() / 2, window.get_height() / 2),
 		level(portalShader, objectShader),
 		objectShader("./data/shaders/Object_Vertex.shader", "./data/shaders/Object_Fragment.shader"),
-		portalShader("./data/shaders/Portal_Vertex.shader", "./data/shaders/Portal_Fragment.shader")
+		portalShader("./data/shaders/Portal_Vertex.shader", "./data/shaders/Portal_Fragment.shader"),
+		ui(window.get_window(), &level)
 	{
 		setupWindow();
-
 	}
 
 public:
@@ -48,7 +48,7 @@ public:
 			}
 			++frameCount;
 
-			tempTest();
+			//tempTest();
 
 			// Smooth Movement
 			// ---------------
@@ -60,16 +60,18 @@ public:
 
 			// render
 			// -----
+			glfwPollEvents();
 			glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			
 
 			portalShader.use();
 			updateShaders();
 			objectShader.use();
 			updateShaders();
-			
-			level.Draw(player.getCamera());
 
+			level.Draw(player.getCamera());
+			ui.render();
 
 			// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 			// -------------------------------------------------------------------------------
@@ -116,17 +118,17 @@ public:
 		//}
 
 		// Collision check: camera with objects
-		std::cout << "cube1 : " << check_player_collision("cube1")
-			<< "\tcube2 : "  << check_player_collision("cube2") << std::endl;
+		//std::cout << "cube1 : " << check_player_collision("cube1")
+		//	<< "\tcube2 : "  << check_player_collision("cube2") << std::endl;
 
 			// Collision check: object with object
 			/*std::cout << "collision : " << objects_collision << std::endl;*/
 
 	}
 
-	void addObject(std::string objectName, glm::mat4 location)
+	void addObject(std::string objectName, glm::vec3 location)
 	{
-		level.AddObject(objectHandler.GetObject(objectName, location));
+		level.AddObject(objectName, location);
 	}
 
 	void addPortal(Portal first, Portal second)
@@ -136,8 +138,8 @@ public:
 
 	void addPortal(glm::mat4 locationFirst, glm::mat4 locationSecond)
 	{
-		Portal first = objectHandler.GetPortal(locationFirst);
-		Portal second = objectHandler.GetPortal(locationSecond);
+		Portal first = ObjectHandler::GetPortal(locationFirst);
+		Portal second = ObjectHandler::GetPortal(locationSecond);
 
 		level.AddPortalPair(first, second);
 	}
@@ -158,6 +160,7 @@ public:
 	{
 		return CollisionHandler::check_collision(player, level.GetObjects().at(id));
 	}
+	
 	bool check_cube_collision(const std::string id1, const std::string id2)
 	{
 		// TODO: handle case when element was not found in the map by ID
@@ -231,7 +234,7 @@ private:
 		glfwMakeContextCurrent(window.get_window());
 		// resizing controls
 		glfwSetFramebufferSizeCallback(window.get_window(), EventHandler::framebuffer_size_callback);
-
+		
 		// Mouse controls
 		// --------------
 		glfwSetInputMode(window.get_window(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -244,9 +247,10 @@ private:
 
 	Level level;
 	
-	ObjectHandler objectHandler;
 	EventHandler eventHandler;
 
 	Shader objectShader;
 	Shader portalShader;
+
+	UI ui;
 };

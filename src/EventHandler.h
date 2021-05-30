@@ -10,12 +10,13 @@
 // Before Using Set the camera and the lastX lastY position of the mouse!
 class EventHandler {
 public:
-    EventHandler(Player* player_, const Level const * level_,  GLFWwindow* window_, float lastX, float lastY) :
+    EventHandler(Player* player_, const Level * level_,  GLFWwindow* window_, float lastX, float lastY) :
         player(player_), 
         window(window_),
         level(level_),
         lastMouseX(lastX), 
-        lastMouseY(lastY)
+        lastMouseY(lastY),
+        cursorEnabled(false)
     {
 
     }
@@ -23,7 +24,10 @@ public:
 public:
     void handleEvents(float deltaTime) {
         processInput(deltaTime);
-        mouse_callback();
+        if (!cursorEnabled)
+        {
+            mouse_callback();
+        }
     }
 
 
@@ -108,6 +112,28 @@ private:
             {
                 glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
             }
+
+            // enables cursor
+
+            static int oldState = GLFW_RELEASE;
+            int newState = glfwGetKey(window, GLFW_KEY_C);
+            if (newState == GLFW_RELEASE && oldState == GLFW_PRESS) {
+                if (!cursorEnabled)
+                {
+                    cursorEnabled = true;
+                    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+                    int display_w, display_h;
+                    glfwGetFramebufferSize(window, &display_w, &display_h);
+                    glfwSetCursorPos(window, display_w / 2, display_h / 2);
+                }
+                else
+                {
+                    cursorEnabled = false;
+                    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+                    glfwSetCursorPos(window, lastMouseX, lastMouseY);
+                }
+            }
+            oldState = newState;
         }
 
     }
@@ -144,6 +170,7 @@ private:
     float lastMouseX;
     float lastMouseY;
     GLFWwindow* window;
-    const Level const * level;
+    const Level * level;
     Player* player;
+    bool cursorEnabled;
 };
