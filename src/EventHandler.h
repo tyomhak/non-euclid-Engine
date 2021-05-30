@@ -10,26 +10,37 @@
 // Before Using Set the camera and the lastX lastY position of the mouse!
 class EventHandler {
 public:
-    EventHandler(Player* player_, const Level * level_,  GLFWwindow* window_, float lastX, float lastY) :
+    EventHandler(Player* player_, Level * level_,  GLFWwindow* window_, float lastX, float lastY) :
         player(player_), 
         window(window_),
-        level(level_),
         lastMouseX(lastX), 
         lastMouseY(lastY),
         cursorEnabled(false)
     {
-
+        level = level_;
+        selectedObjectId = "none";
     }
 
 public:
     void handleEvents(float deltaTime) {
+        // handle keyboard
         processInput(deltaTime);
-        if (!cursorEnabled)
-        {
-            mouse_callback();
-        }
+
+        // handle mouse
+        if (!cursorEnabled){    mouse_callback();   }
+
+        castRay();
+        std::cout << selectedObjectId << std::endl;
     }
 
+    static void moveObjectToPosition(glm::vec3 position)
+    {
+        if (selectedObjectId == "None")
+        {
+            return;
+        }
+        level->getObject(selectedObjectId)->setPosition(position);
+    }
 
     // glfw: whenever the window size changed (by OS or user resize) this callback function executes
     // ---------------------------------------------------------------------------------------------
@@ -167,10 +178,42 @@ private:
         player->getCamera().ProcessMouseMovement(xoffset, yoffset);
     }
 
+    void castRay()
+    {
+        Ray ray(&player->getCamera(), window);
+        
+        float mint = FLT_MAX;
+
+        std::map<std::string /* object ID */, Object> levelObjects = level->getObjects();
+
+        for (auto const& obj : levelObjects)
+        {
+            float t = FLT_MAX;
+            if (CollisionHandler::check_collision(ray, obj.second, t))
+            {
+                if (t < mint)
+                {
+                    mint = t;
+                    selectedObjectId = obj.first;
+                }
+            }
+        }
+
+        if (mint == FLT_MAX)
+        {
+            selectedObjectId = "None";
+        }
+
+    }
+
     float lastMouseX;
     float lastMouseY;
     GLFWwindow* window;
-    const Level * level;
+    static Level * level;
     Player* player;
     bool cursorEnabled;
+    static string selectedObjectId;
 };
+
+Level* EventHandler::level = nullptr;
+string EventHandler::selectedObjectId = "None";

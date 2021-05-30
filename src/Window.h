@@ -40,6 +40,10 @@ public:
 	{
 		return height;
 	}
+	float get_aspectRatio() const
+	{
+		return width / height;
+	}
 
 
 private:
@@ -57,8 +61,8 @@ private:
 		#endif
 
 		/* Create a windowed mode window and its OpenGL context */
-		window = glfwCreateWindow(width, height, "LearnOpenGL", glfwGetPrimaryMonitor(), NULL);
-		//window = glfwCreateWindow(width, height, "LearnOpenGL", NULL, NULL);
+		//window = glfwCreateWindow(width, height, "LearnOpenGL", glfwGetPrimaryMonitor(), NULL);
+		window = glfwCreateWindow(width, height, "LearnOpenGL", NULL, NULL);
 
 		if (!window)
 		{

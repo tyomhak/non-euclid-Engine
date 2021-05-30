@@ -2,6 +2,7 @@
 
 #include "IncludeHeaders.h"
 #include "UiWindow.h"
+#include "PositionUi.h"
 
 #include <string>
 #include <vector>
@@ -15,6 +16,7 @@ private:
 	bool tabs_active = true;
 	short tabs_index = 0;
 	ImVec2 cursor_pos = { 0, 250 };	// make this dynamics later to set the cursor position once and forever
+
 
 public:
 
@@ -56,10 +58,10 @@ public:
 		ImGui::Columns(1);
 		ImGui::Separator();		// places a separator line
 
-		if (tabs_index == 1) {
-			// stuff to be displayed in tab 1
-			ImGui::Button("tab1 btn 1");
-			ImGui::Button("tab1 btn 2");
+		if (tabs_index == 1)
+		{
+			PositionUi positionWindow("PositionWindow");
+			positionWindow.render();
 		}
 		if (tabs_index == 2)
 		{
@@ -68,7 +70,25 @@ public:
 			ImGui::SameLine();
 			ImGui::Button("tab2 btn 2");
 		}
-		// ... add next tabs functionality
+		if (tabs_index == 3)
+		{
+			ImGui::Begin("Object Color window");
+			static float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+			ImGui::ColorEdit3("color1", color);							// color buttons (sliders R,G,B and button)
+			ImGui::End();
+		}
+		if (tabs_index == 4)
+		{
+			ImGui::Begin("Object Movement window");
+			// object movement handling
+			static float direction[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+			static float speed = 0.0f;
+
+            ImGui::InputFloat3("input direction", direction);
+			ImGui::SliderFloat("speed", &speed, 0.0f, 10.0f);
+			
+			ImGui::End();
+		}
 
 		ImGui::SetCursorPos(cursor_pos);	// places upcoming attributes of the window on the place that is set by cursor
 

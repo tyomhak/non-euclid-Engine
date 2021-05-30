@@ -67,6 +67,10 @@ public:
             objectShader->use();        // don't know why, but deleting this breaks shit.
             DrawObjects(mainCamera, objectShader);
         }
+    Object* getObject(string id)
+    {
+        return &levelObjects.find(id)->second;
+    }
 
     void DrawPortals(Camera &camera)
     {
@@ -78,7 +82,6 @@ public:
 
     void AddObject(std::string name, glm::vec3 position)
     {
-
         glm::mat4 location(1.0f);
         location = glm::translate(location, position);
         Object obj = ObjectHandler::GetObject(name, location);
