@@ -16,6 +16,8 @@ int main()
 	//// portals pair creation
 	//engine.addPortal(locationFirst, locationSecond);
 
+	// portals pair creation
+	engine.addPortal(locationFirst, locationSecond);
 	engine.render();
 
 	return 0;

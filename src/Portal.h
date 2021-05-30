@@ -63,11 +63,17 @@ public:
         Shader *currShader = &objShader;        
         currShader->bind();
 
-        // Set the view (what you'll in the portal)
+        // Set the view (what you'll in the portal) //
+        // ======================================== //
         glm::mat4 view = mainCamera.getViewMatrix();
-        
         view = pair_portal->GetWorldMat() * glm::inverse(GetWorldMat()) * glm::inverse(view); 
         view = glm::inverse(view);
+
+
+        // CAN USE THIS FOR PAIR CAMERA VIEW INSTEAD, BUT IT's MORE COMPLEX //
+        // ================================================================ //
+        // Camera tempCamera = GetPairCamera(mainCamera);
+        // glm::mat4 view = tempCamera.getViewMatrix();
 
 
         // PAIR PORTAL CAMERAS POSITION CUBES //
@@ -84,7 +90,7 @@ public:
 
 
         // draw objects onto the portal texture
-        for (auto obj : objs)
+        for (auto &obj : objs)
         {
             obj.second.Draw(*currShader);
         }
@@ -115,13 +121,30 @@ public:
             glDrawElements(GL_TRIANGLES, (GLsizei)mesh.indices.size(), GL_UNSIGNED_INT, 0);
         }
 
-
         // PAIR PORTAL CAMERAS POSITION CUBES //
         // ================================== //
         // Object &cube = objs.at("cube2");
         // view_clone = glm::inverse(view_clone);
         // cube.SetWorldMatrix(view_clone);
         // cube.Draw(*currShader);
+    }
+
+    Camera GetPairCamera(Camera &mainCamera)
+    {
+        glm::mat4 view = mainCamera.getViewMatrix();
+        view = pair_portal->GetWorldMat() * glm::inverse(GetWorldMat()) * glm::inverse(view); 
+        // view = glm::inverse(view);
+
+        glm::vec3 newPosition = glm::vec3(view[3][0], view[3][1], view[3][2]);
+
+        // Inverse (instead of line 69)
+        view = glm::inverse(view);
+        
+        GLfloat yawDiff = yaw - mainCamera.Yaw;
+        GLfloat newYaw = pair_portal->yaw - yawDiff;
+        
+        // Camera tempCamera = Camera(newPosition, newFront, newRight, newUp);
+        return Camera(newPosition, glm::vec3(0.0f, 1.0f, 0.0f), newYaw, mainCamera.Pitch);
     }
 
 
@@ -137,6 +160,8 @@ private:
 
     void SetupPortal()
     {
+        yaw = -90.0f;
+
         glGenFramebuffers(1, &portalFramebuffer);
         glBindFramebuffer(GL_FRAMEBUFFER, portalFramebuffer);
 

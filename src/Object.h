@@ -20,6 +20,8 @@ protected:
 public:
     Model* model;
     const string modelType;
+    GLfloat yaw = -90.0f;
+
     Object (Model &_model, string _modelType, std::string id, glm::mat4 _worldMatrix = glm::mat4(1.0f));
 
     ~Object();
@@ -62,6 +64,12 @@ public:
     {
         worldMatrix = glm::rotate_slow(worldMatrix, angle, translate);
         // TODO: update min and max values of AABB in case of rotation
+    }
+
+    void RotateHozontal(GLfloat degree)
+    {
+        rotate(degree, glm::vec3(0.0f, 1.0f, 0.0f));
+        yaw -= degree;
     }
 
     vector<glm::vec3> get_vertices_in_world_space()
