@@ -30,7 +30,7 @@ public:
         if (!cursorEnabled){    mouse_callback();   }
 
         castRay();
-        std::cout << selectedObjectId << std::endl;
+        // std::cout << selectedObjectId << std::endl;
     }
 
     static void moveObjectToPosition(glm::vec3 position)
