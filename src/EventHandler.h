@@ -357,7 +357,7 @@ private:
             {
                 dist = minDistance;
             }
-            while (dist >= minDistance)
+            while(dist >= minDistance)
             {
                 glm::vec3 obj_pos = ray.getOrigin() + (dist)*ray.getDirection();
                 const glm::mat4 oldWorldMat = level->getObjectPointer(updateObjectId)->GetWorldMat();

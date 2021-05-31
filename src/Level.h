@@ -67,7 +67,9 @@ public:
 
         if (levelPortals.find(id) != levelPortals.end())
         {
-            levelObjects.erase(id);
+            string pairId = levelPortals.find(id)->second.GetPairPtr()->getId();
+            levelPortals.erase(id);
+            levelPortals.erase(pairId);
         }
     }
 
