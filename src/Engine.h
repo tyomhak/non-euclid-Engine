@@ -144,6 +144,11 @@ public:
 		level.AddPortalPair(first, second);
 	}
 
+	void addPortal(glm::vec3 locationFirst, glm::vec3 locationSecond)
+	{
+		level.AddPortalPair(locationFirst, locationSecond);
+	}
+
 	void moveObject(glm::vec3 direction, std::string id)
 	{
 		Object* objectToMove = findObjectById(id);

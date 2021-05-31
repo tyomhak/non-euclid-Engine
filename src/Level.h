@@ -56,6 +56,16 @@ public:
         //levelPortals.at(size - 1).SetPair(&levelPortals.at(size - 2));
     }
 
+    void AddPortalPair(glm::vec3 position1, glm::vec3 position2)
+    {
+        glm::mat4 location = glm::mat4(1.0f);
+        glm::mat4 locationFirst = glm::translate(location, position1);
+        glm::mat4 locationSecond = glm::translate(location, position2);
+        Portal first = ObjectHandler::GetPortal(locationFirst);
+        Portal second = ObjectHandler::GetPortal(locationSecond);
+        AddPortalPair(first, second);
+    }
+
     std::map<std::string /* object Id */, Object>& GetObjects() { return levelObjects; }
 
     void deleteObject(std::string id)
