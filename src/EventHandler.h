@@ -140,8 +140,8 @@ private:
                     player->move(UPWARD, deltaTime * 2);
                 }
             }
-            //if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
-            if (true)
+            if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+            //if (true)
             {
                 dummy_player.move(DOWNWARD, deltaTime);
                 if (!checkMovement(dummy_player))
@@ -245,14 +245,14 @@ private:
         }
 
         // check collision with portals
-        const std::vector<Portal> portals = level->getPortals();
+        const std::map<std::string /* object ID */, Portal> portals = level->getPortals();
         for (auto const& portal : portals)
         {
-            if (portal.getId() == obj.getId())
+            if (portal.first == obj.getId())
             {
                 continue;
             }
-            if (CollisionHandler::check_collision(obj, portal))
+            if (CollisionHandler::check_collision(obj, portal.second))
             {
                 return true;
             }
@@ -312,6 +312,25 @@ private:
                 {
                     mint = t;
                     underViewObjectId = obj.first;
+                }
+            }
+        }
+
+        // check collision with portals
+        const std::map<std::string /* object ID */, Portal> portals = level->getPortals();
+        for (auto const& portal : portals)
+        {
+            float t = FLT_MAX;
+            if (CollisionHandler::check_collision(ray, portal.second, t))
+            {
+                if (portal.first == updateObjectId)
+                {
+                    continue;
+                }
+                if (t < mint)
+                {
+                    mint = t;
+                    underViewObjectId = portal.first;
                 }
             }
         }

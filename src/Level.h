@@ -13,7 +13,7 @@ class Level
 {
 private:
     std::map<std::string /* object ID */, Object> levelObjects;
-    std::vector<Portal> levelPortals;
+    std::map<std::string /* object ID */, Portal> levelPortals;
     Shader *portalShader;
     Shader *objectShader; 
 
@@ -45,12 +45,15 @@ public:
 
     void AddPortalPair(Portal& first, Portal& second)
     {
-        levelPortals.push_back(first);
-        levelPortals.push_back(second);
+        levelPortals.emplace(first.getId(), first);
+        levelPortals.emplace(second.getId(), second);
 
         int size = levelPortals.size();
-        levelPortals.at(size - 2).SetPair(&levelPortals.at(size - 1));
-        levelPortals.at(size - 1).SetPair(&levelPortals.at(size - 2));
+        levelPortals.find(first.getId())->second.SetPair(&levelPortals.find(second.getId())->second);
+        levelPortals.find(second.getId())->second.SetPair(&levelPortals.find(first.getId())->second);
+
+        //levelPortals.at(size - 2).SetPair(&levelPortals.at(size - 1));
+        //levelPortals.at(size - 1).SetPair(&levelPortals.at(size - 2));
     }
 
     std::map<std::string /* object Id */, Object>& GetObjects() { return levelObjects; }
@@ -103,7 +106,7 @@ public:
         return levelObjects;
     }
 
-    std::vector<Portal> getPortals() const
+    std::map<std::string /* object ID */, Portal> getPortals() const
     {
         return levelPortals;
     }
@@ -122,7 +125,7 @@ public:
     {
         for (auto &portal : levelPortals)
         {
-            portal.Draw(*objectShader, *portalShader, camera, levelObjects, levelPortals);
+            portal.second.Draw(*objectShader, *portalShader, camera, levelObjects, levelPortals);
         }
     }
 

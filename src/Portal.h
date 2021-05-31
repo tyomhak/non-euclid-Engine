@@ -42,7 +42,7 @@ public:
 
     void Draw(  Camera &mainCamera, 
                 std::map<std::string /* object Id */, Object> &objs,
-                vector<Portal> &ports,
+                std::map<std::string /* object ID */, Portal> &ports,
                 GLuint depth = 0
             )
     {
@@ -53,7 +53,7 @@ public:
                 Shader &portShader, 
                 Camera &mainCamera, 
                 std::map<std::string, Object> &objs, 
-                vector<Portal> &ports,
+                std::map<std::string /* object ID */, Portal>&ports,
                 GLuint depth = 0
             )
     {
