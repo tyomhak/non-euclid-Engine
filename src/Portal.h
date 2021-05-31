@@ -37,7 +37,7 @@ public:
         worldMatrix = glm::translate(worldMatrix, move_vec);
     }
 
-    Portal *GetPairPtr() { return pair_portal; }
+    Portal *GetPairPtr() const { return pair_portal; }
     glm::mat4 GetWorldMat() const { return worldMatrix; }
 
     void Draw(  Camera &mainCamera, 
@@ -129,7 +129,7 @@ public:
         // cube.Draw(*currShader);
     }
 
-    Camera GetPairCamera(Camera &mainCamera)
+    Camera GetPairCamera(Camera &mainCamera) const
     {
         glm::mat4 view = mainCamera.getViewMatrix();
         view = pair_portal->GetWorldMat() * glm::inverse(GetWorldMat()) * glm::inverse(view); 

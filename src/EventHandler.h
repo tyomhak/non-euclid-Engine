@@ -269,16 +269,34 @@ private:
         return CollisionHandler::check_collision(player->getCamera(), obj);
     }
 
-    bool checkMovement(Player dummy_player) const
+    bool checkMovement(Player dummy_player) 
     {
-        const std::map<std::string /* object ID */, Object> objects = level->getObjects();
-        for (auto const& it : objects)
+        if (!isPassing)
+        {
+            const std::map<std::string /* object ID */, Object> objects = level->getObjects();
+            for (auto const& it : objects)
+            {
+                if (CollisionHandler::check_collision(dummy_player, it.second))
+                {
+                    return true;
+                }
+            }
+        }
+
+        const std::map<std::string /* object ID */, Portal> portals = level->getPortals();
+        for (auto & it : portals)
         {
             if (CollisionHandler::check_collision(dummy_player, it.second))
             {
-                return true;
+                isPassing = true;
+                //player->getCamera().Position = it.second.GetPairCamera(dummy_player.getCamera()).Position;
+                player->getCamera() = it.second.GetPairCamera(dummy_player.getCamera());
+            }
+            else {
+                isPassing = false;
             }
         }
+
         return false;
     }
     
@@ -395,6 +413,7 @@ private:
 
 
 public:
+    bool isPassing;
     bool cursorEnabled;
     bool creativeEnabled;
     
