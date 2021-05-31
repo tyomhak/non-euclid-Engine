@@ -64,6 +64,11 @@ public:
         {
             levelObjects.erase(id);
         }
+
+        if (levelPortals.find(id) != levelPortals.end())
+        {
+            levelObjects.erase(id);
+        }
     }
 
     void DrawObjects(Camera& mainCamera, Shader* shader)
@@ -113,12 +118,33 @@ public:
 
     Object* getObjectPointer(string id)
     {
-        return &levelObjects.find(id)->second;
+        std::map<std::string /* object ID */, Object>::iterator it = levelObjects.find(id);
+        if (it != levelObjects.end())
+        {
+            return &levelObjects.find(id)->second;
+        }
+
+        std::map<std::string /* object ID */, Portal>::iterator itPortal = levelPortals.find(id);
+        if (itPortal != levelPortals.end())
+        {
+            return &levelPortals.find(id)->second;
+        }
+        return nullptr;
     }
 
     Object getObject(string id)
     {
-        return levelObjects.find(id)->second;
+        std::map<std::string /* object ID */, Object>::iterator it = levelObjects.find(id);
+        if (it != levelObjects.end())
+        {
+            return levelObjects.find(id)->second;
+        }
+
+        std::map<std::string /* object ID */, Portal>::iterator itPortal = levelPortals.find(id);
+        if (itPortal != levelPortals.end())
+        {
+            return levelPortals.find(id)->second;
+        }
     }
 
     void DrawPortals(Camera &camera)

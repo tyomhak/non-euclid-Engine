@@ -74,6 +74,10 @@ public:
 
     void selectObject()
     {
+        if (underViewObjectId == "None")
+        {
+            return;
+        }
         updateObjectId = underViewObjectId;
     }
 
@@ -220,11 +224,14 @@ private:
         }
         oldStateE = newStateE;
 
-        // switch polygon mode to FILL
-        if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
+        // select Object
+        static int oldStateR = GLFW_RELEASE;
+        int newStateR = glfwGetKey(window, GLFW_KEY_R);
+        if (newStateR == GLFW_RELEASE && oldStateR == GLFW_PRESS) 
         {
             selectObject();
         }
+        oldStateR = newStateR;
 
     }
 
@@ -345,6 +352,10 @@ private:
             else
             {
                 dist = distance;
+            }
+            if (dist < minDistance)
+            {
+                dist = minDistance;
             }
             while (dist >= minDistance)
             {
