@@ -40,6 +40,12 @@ public:
 		return camera;
 	}
 
+	void setCamera(Camera cam)
+	{
+		camera = cam;
+		updateBoundaryBox();
+	}
+
 
 	void setHeight(float h)
 	{
@@ -66,7 +72,7 @@ private:
 	**/
 	void updateBoundaryBox() 
 	{
-		float headHeight = height / 3;
+		float headHeight = height / 6;
 		// we were high, we are sorry
 		float halfHeadHeight = headHeight / 2;
 		glm::vec3 position = camera.getPosition();

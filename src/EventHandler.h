@@ -283,18 +283,26 @@ private:
             }
         }
 
+
+        bool touched_any = false;
         const std::map<std::string /* object ID */, Portal> portals = level->getPortals();
         for (auto & it : portals)
         {
             if (CollisionHandler::check_collision(dummy_player, it.second))
             {
+                if (!isPassing)
+                {
+                    player->setCamera(it.second.GetPairCamera(dummy_player.getCamera()));
+                }
                 isPassing = true;
-                //player->getCamera().Position = it.second.GetPairCamera(dummy_player.getCamera()).Position;
-                player->getCamera() = it.second.GetPairCamera(dummy_player.getCamera());
+                touched_any = true;
+                break;
             }
-            else {
-                isPassing = false;
-            }
+        }
+
+        if (!touched_any)
+        {
+            isPassing = false;
         }
 
         return false;
@@ -419,7 +427,6 @@ public:
     
     static string underViewObjectId;
     static string updateObjectId;
-
 };
 
 string EventHandler::underViewObjectId("None");
