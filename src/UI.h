@@ -14,8 +14,27 @@ private:
 	const char* objects_menu_items[4]{ "", "cube", "backpack", "portal" };
 	int selected_object_item = 0;
 	bool tabs_active = true;
+	bool helper_window_active = false;
 	short tabs_index = 0;
 	ImVec2 cursor_pos = { 0, 250 };	// make this dynamics later to set the cursor position once and forever
+	vector<vector<const char*>> help_table = {
+		{ "W",			 "move Forward" },
+		{ "S",			 "move Backward" },
+		{ "A",			 "move Left" },
+		{ "D",			 "move Right" },
+		{ "SPACE",		 "move Up" },
+		{ "CTRL",		 "move Down" },
+		{ "SHIFT(hold)", "move faster" },
+		{ "C",			 "enable/disable 'Creative' mode" },
+		{ "E",			 "enable/disable object selection" },
+		{ "R",			 "select pointed object for manipulation" },
+		{ "ARROW UP",	 "move Forward the selected object" },
+		{ "ARROW DOWN",	 "move Backward the selected object" },
+		{ "ENTER",		 "place selected object" },
+		{ "L",			 "switch ON 'Strips' mode" },
+		{ "F",			 "switch OFF 'Strips' mode" },
+		{ "ESC",		 "quit" }
+	};
 
 
 public:
@@ -41,6 +60,36 @@ public:
 		// Create a window called "My First Tool", with a menu bar.
 		ImGui::Begin(window_name, &tabs_active, ImGuiWindowFlags_MenuBar);
 
+		ImGui::SameLine(ImGui::GetWindowWidth() - 60.0f);		// adds next functionality on the same line with RightAline
+
+		// helper button to get instructions
+		if (ImGui::Button("Help")) { helper_window_active = !helper_window_active; }
+		// helper window creation
+		if (helper_window_active)
+		{
+			ImGui::Begin("Helper: instructions");	// open new table of instructions
+			ImGui::BeginChild("Scrolling");			// enable scrolling in the window
+			ImGui::BeginTable("Instructions", 1);	// create single table of values
+			
+			for (auto &row : help_table)
+			{
+				ImGui::TableNextRow();
+				ImGui::TableSetColumnIndex(0);
+				ImGui::Text(row[0]);
+
+				ImGui::SameLine(80.0f);
+				ImGui::Text("--");
+
+				ImGui::SameLine(120.0f);
+				ImGui::Text(row[1]);
+			};
+
+			ImGui::EndTable();
+			ImGui::EndChild();
+			ImGui::End();
+		}
+
+
 		// choosing object to be created
 		ImGui::Combo("Choose object", &selected_object_item, objects_menu_items, IM_ARRAYSIZE(objects_menu_items));
 		
@@ -56,38 +105,13 @@ public:
 		ImGui::NextColumn();
 		if (ImGui::Button("Other")) tabs_index = 4;
 		ImGui::Columns(1);
-		ImGui::Separator();		// places a separator line
+		ImGui::Separator();					// places a separator line
 
-		if (tabs_index == 1)
+		// tabs attributes display
+		if (tabs_index > 0)
 		{
-			PositionUi positionWindow("PositionWindow", eventHandler);
-			positionWindow.render();
-		}
-		if (tabs_index == 2)
-		{
-			// stuff to be displayed in tab 1
-			ImGui::Button("tab2 btn 1");
-			ImGui::SameLine();
-			ImGui::Button("tab2 btn 2");
-		}
-		if (tabs_index == 3)
-		{
-			ImGui::Begin("Object Color window");
-			static float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-			ImGui::ColorEdit3("color1", color);							// color buttons (sliders R,G,B and button)
-			ImGui::End();
-		}
-		if (tabs_index == 4)
-		{
-			ImGui::Begin("Object Movement window");
-			// object movement handling
-			static float direction[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-			static float speed = 0.0f;
-
-            ImGui::InputFloat3("input direction", direction);
-			ImGui::SliderFloat("speed", &speed, 0.0f, 10.0f);
-			
-			ImGui::End();
+			ImGui::Text("Tab's functional is not implemented, yet.");
+			ImGui::Text("Functional will be added with next releases.");
 		}
 
 		ImGui::SetCursorPos(cursor_pos);	// places upcoming attributes of the window on the place that is set by cursor
@@ -105,9 +129,7 @@ public:
 			eventHandler->deleteObject();
 		}
 
-		ImGui::SameLine();
-		ImGui::Dummy(ImVec2(200.0f, 0.0f));
-		ImGui::SameLine();
+		ImGui::SameLine(ImGui::GetWindowWidth() - 130.0f);
 		if (ImGui::Button("Create"))
 		{
 			if (objects_menu_items[selected_object_item] != "" && objects_menu_items[selected_object_item] != "portal")
@@ -126,9 +148,7 @@ public:
 			}
 		}
 
-		ImGui::SameLine();
-		ImGui::Dummy(ImVec2(5.0f, 0.0f));
-		ImGui::SameLine();
+		ImGui::SameLine(ImGui::GetWindowWidth() - 60.0f);
 		if (ImGui::Button("Save"))
 		{
 			eventHandler->creativeEnabled = false;
