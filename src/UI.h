@@ -110,11 +110,16 @@ public:
 		ImGui::SameLine();
 		if (ImGui::Button("Create"))
 		{
-			if (objects_menu_items[selected_object_item] != "")
+			if (objects_menu_items[selected_object_item] != "" && objects_menu_items[selected_object_item] != "portal")
 			{
 				eventHandler->creativeEnabled = true;
 				glm::vec3 position = glm::vec3(-0.5f, 0.0f, 0.0f);
 				eventHandler->updateObjectId = eventHandler->addObject(objects_menu_items[selected_object_item], position);	// add also the 'size' and 'color'
+			}
+
+			if (objects_menu_items[selected_object_item] == "portal")
+			{
+				eventHandler->addPortals();
 			}
 		}
 

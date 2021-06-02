@@ -40,12 +40,11 @@ public:
 		return camera;
 	}
 
-	void setCamera(Camera cam)
+	void setCamera(Camera _camera)
 	{
-		camera = cam;
+		camera = _camera;
 		updateBoundaryBox();
 	}
-
 
 	void setHeight(float h)
 	{
