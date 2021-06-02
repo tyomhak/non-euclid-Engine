@@ -36,6 +36,8 @@ public:
         return boundaryBox;
     }
 
+    float getYaw() const { return yaw; }
+
 
    void Draw(Shader &shader)
    {

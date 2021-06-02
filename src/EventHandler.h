@@ -13,14 +13,16 @@ public:
     EventHandler()
     {}
 
-    EventHandler(Player* player_, Level * level_,  GLFWwindow* window_, float lastX, float lastY) :
+    EventHandler(Player* player_, Level * level_,  GLFWwindow* window_, float lastX, float lastY, Shader *objShader, Shader *portShader) :
         player(player_), 
         window(window_),
         level(level_),
         lastMouseX(lastX), 
         lastMouseY(lastY),
         cursorEnabled(false),
-        creativeEnabled(false)
+        creativeEnabled(false),
+        objectShader(objShader),
+        portalShader(portShader)
     {
     }
 
@@ -186,6 +188,20 @@ private:
             {
                 saveObject();
             }
+
+            if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
+            {
+                LevelHandler::WriteLevel("temp_level", *level, player->getCamera());
+            }
+
+            if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
+            {
+                Level newLevel = LevelHandler::ReadLevel("temp_level.lev", player->getCamera(), *portalShader, *objectShader);
+                *level = newLevel;
+            }
+
+
+
 
             // enables cursor
             static int oldStateC = GLFW_RELEASE;
@@ -427,6 +443,10 @@ public:
     
     static string underViewObjectId;
     static string updateObjectId;
+
+    Shader *objectShader;
+    Shader *portalShader;
+
 };
 
 string EventHandler::underViewObjectId("None");
