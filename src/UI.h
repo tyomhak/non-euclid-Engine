@@ -116,6 +116,14 @@ public:
 				glm::vec3 position = glm::vec3(-0.5f, 0.0f, 0.0f);
 				eventHandler->updateObjectId = eventHandler->addObject(objects_menu_items[selected_object_item], position);	// add also the 'size' and 'color'
 			}
+
+			if (objects_menu_items[selected_object_item] == "portal")
+			{
+				Portal::portalBackground[0] = 0.3f;
+				Portal::portalBackground[1] = 0.8f;
+				Portal::portalBackground[2] = 1.0f;
+				eventHandler->addPortals();
+			}
 		}
 
 		ImGui::SameLine();

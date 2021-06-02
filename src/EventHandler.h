@@ -6,6 +6,7 @@
 #include "CollisionHandler.h"
 #include "Player.h"
 #include "Level.h"
+#include "Portal.h"
 
 // Before Using Set the camera and the lastX lastY position of the mouse!
 class EventHandler {
@@ -258,6 +259,28 @@ private:
         }
         oldStateR = newStateR;
 
+        // select Object
+        static int oldStateU = GLFW_RELEASE;
+        int newStateU = glfwGetKey(window, GLFW_KEY_U);
+        if (newStateU == GLFW_RELEASE && oldStateU == GLFW_PRESS)
+        {
+            if (!isPortalVisible)
+            {
+                isPortalVisible = true;
+                Portal::portalBackground[0] = 0.1f;
+                Portal::portalBackground[1] = 0.1f;
+                Portal::portalBackground[2] = 0.1f;
+            }
+            else
+            {
+                isPortalVisible = false;
+                Portal::portalBackground[0] = 0.3f;
+                Portal::portalBackground[1] = 0.8f;
+                Portal::portalBackground[2] = 1.0f;
+            }
+        }
+        oldStateU = newStateU;
+
     }
 
     bool checkObjectCollision(Object obj) const
@@ -294,7 +317,7 @@ private:
         return CollisionHandler::check_collision(player->getCamera(), obj);
     }
 
-    bool checkMovement(Player dummy_player) 
+    bool checkMovement(Player dummy_player)
     {
         if (!isPassing)
         {
@@ -457,6 +480,7 @@ public:
     Shader *objectShader;
     Shader *portalShader;
 
+    bool isPortalVisible = true;
 };
 
 string EventHandler::underViewObjectId("None");

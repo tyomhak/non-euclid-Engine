@@ -2,6 +2,7 @@
 
 #include "Object.h"
 #include "Camera.h"
+#include "EventHandler.h"
 
 #include <iomanip>
 
@@ -84,7 +85,10 @@ public:
 
         // change the drawing location to portal framebuffer/texture, instead of the screen
         glBindFramebuffer(GL_FRAMEBUFFER, portalFramebuffer);
-        glClearColor(0.3f, 0.8f,  1.0f , 1.0f);
+        float r = portalBackground[0];
+        float g = portalBackground[1];
+        float b = portalBackground[2];
+        glClearColor(r, g, b, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glEnable(GL_DEPTH_TEST);
 
@@ -147,7 +151,8 @@ public:
         return Camera(newPosition, glm::vec3(0.0f, 1.0f, 0.0f), newYaw, mainCamera.Pitch);
     }
 
-
+public:
+    static std::vector<float> portalBackground;
 private:
     Portal *pair_portal;
     Shader *objectShader;
@@ -189,3 +194,5 @@ private:
 
     }
 };
+
+std::vector<float> Portal::portalBackground = std::vector<float>(3, 0.1f);
