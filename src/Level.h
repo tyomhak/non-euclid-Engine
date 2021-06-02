@@ -8,6 +8,7 @@
 #include "ObjHandler.h"
 
 #include <map>
+#include <set>
 
 class Level
 {
@@ -54,6 +55,17 @@ public:
 
         //levelPortals.at(size - 2).SetPair(&levelPortals.at(size - 1));
         //levelPortals.at(size - 1).SetPair(&levelPortals.at(size - 2));
+    }
+
+    void AddPortalPair(glm::mat4 firstPos, glm::mat4 secondPos, float firstYaw = -90.0f, float secondYaw = -90.0f)
+    {
+        Portal first = ObjectHandler::GetPortal(firstPos);
+        Portal second = ObjectHandler::GetPortal(secondPos);
+
+        first.yaw = firstYaw;
+        second.yaw = secondYaw;
+
+        AddPortalPair(first, second);
     }
 
     std::map<std::string /* object Id */, Object>& GetObjects() { return levelObjects; }
@@ -140,7 +152,7 @@ class LevelHandler
 private:
 
 public:
-    Level ReadLevel(string path, ObjectHandler &oH, Camera &myCamera, Shader &portalShader, Shader &objectShader)
+    static Level ReadLevel(string path, Camera &myCamera, Shader &portalShader, Shader &objectShader)
     {
         Level myLevel = Level(portalShader, objectShader);
 
@@ -148,6 +160,7 @@ public:
         ifstream myLevelFile(path);
 
         glm::mat4 worldMatrix(1.0f);
+        glm::mat4 worldMatrixBackup(1.0f);
 
         while (getline(myLevelFile, line))
         {
@@ -163,7 +176,7 @@ public:
                             worldMatrix[i][j] = std::stof(line);
                     }
                 }
-                myLevel.AddObject(oH.GetObject(objType, worldMatrix));
+                myLevel.AddObject(ObjectHandler::GetObject(objType, worldMatrix));
             }
 
             if (line == "camera")
@@ -175,11 +188,11 @@ public:
                     cPos[i] = std::stof(line);
                 }
                 
-                glm::vec3 cFront(1.0f);
+                glm::vec3 cUp(1.0f);
                 for (int i = 0; i < 3; ++i)
                 {
                     getline(myLevelFile, line);
-                    cFront[i] = std::stof(line);
+                    cUp[i] = std::stof(line);
                 }
 
                 getline(myLevelFile, line);
@@ -189,15 +202,56 @@ public:
                 float pitch = std::stof(line);
 
                 // myCamera.SetPosition(cPos);
-                // myCamera.SetFront(cFront);
-                myCamera = Camera(cPos, cFront, yaw, pitch);
+                // myCamera.SetFront(cUp);
+                myCamera = Camera(cPos, glm::vec3(0.0f, 1.0f, 0.0f), yaw, pitch);
+            }
+
+            if (line == "p1")
+            {
+                for (int i = 0; i < 4; ++i)
+                {
+                    for (int j = 0; j < 4; ++j)
+                    {
+                        if(getline(myLevelFile, line))
+                            worldMatrix[i][j] = std::stof(line);
+                    }
+                }
+                float yawFirst = 0;
+                float yawSecond = 0;
+                if(getline(myLevelFile, line))
+                {
+                    yawFirst = std::stof(line);
+                }
+
+                if(getline(myLevelFile, line) && line == "p2")  
+                {
+                    for (int i = 0; i < 4; ++i)
+                    {
+                        for (int j = 0; j < 4; ++j)
+                        {
+                            if(getline(myLevelFile, line))
+                                worldMatrixBackup[i][j] = std::stof(line);
+                        }
+                    }
+                    if(getline(myLevelFile, line))
+                    {
+                        yawSecond = std::stof(line);
+                    }
+
+                    myLevel.AddPortalPair(worldMatrix, worldMatrixBackup, yawFirst, yawSecond);
+                }
+                else
+                {
+                    std::cout << "AbortingLevelLoad::MissingPairPortal" << std::endl;
+                    return myLevel;
+                }              
             }
         }
 
         return myLevel;
     }
 
-    void static WriteLevel(string fileName, Level &level, Camera myCamera)
+    static void WriteLevel(string fileName, Level &level, Camera myCamera)
     {
         ofstream newLevel(fileName + ".lev");
 
@@ -206,29 +260,65 @@ public:
             newLevel << std::to_string(myCamera.getPosition()[i]) + "\n";
 
         for (int i = 0; i < 3; ++i)
-            newLevel << std::to_string(myCamera.getFront()[i]) + "\n";
+            newLevel << std::to_string(myCamera.getUp()[i]) + "\n";
 
-        newLevel << std::to_string(YAW) + "\n";
-        newLevel << std::to_string(PITCH) + "\n";
+        newLevel << std::to_string(myCamera.Yaw) + "\n";
+        newLevel << std::to_string(myCamera.Pitch) + "\n";
 
 
         for (std::pair<std::string, Object> const& obj : level.GetObjects())
         {
             newLevel << "o:" + obj.second.modelType + "\n";
-            const glm::mat4 matrix = obj.second.GetWorldMat();
+            const glm::mat4 worldMatrix = obj.second.GetWorldMat();
             for (int i = 0; i < 4; ++i)
             {
                 for (int j = 0; j < 4; ++j)
                 {
-                    newLevel << std::to_string(matrix[i][j]) + "\n";
+                    newLevel << std::to_string(worldMatrix[i][j]) + "\n";
                 }
             }
         }
 
+
+        std::set<std::string> savedPorts;
+        unsigned int portalNumber = 0;
+        for (auto &port : level.getPortals())
+        {
+            if (savedPorts.count(port.second.getId()) == 0)
+            {
+                // SAVE THIS PORTAL //
+                // ================ //
+                savedPorts.insert(port.second.getId());
+                newLevel << "p1\n";
+                glm::mat4 worldMatrix = port.second.GetWorldMat();
+                for (int i = 0; i < 4; ++i)
+                {
+                    for (int j = 0; j < 4; ++j)
+                    {
+                        newLevel << std::to_string(worldMatrix[i][j]) + "\n";
+                    }
+                }
+                newLevel << std::to_string(port.second.yaw) + "\n";
+
+                // SAVE THE PAIR PORTAL //
+                // ==================== //
+                savedPorts.insert(port.second.GetPairPtr()->getId());    // add pair port to set, to avoid duplicate saving
+                newLevel << "p2\n";
+                worldMatrix = port.second.GetPairPtr()->GetWorldMat();
+                for (int i = 0; i < 4; ++i)
+                {
+                    for (int j = 0; j < 4; ++j)
+                    {
+                        newLevel << std::to_string(worldMatrix[i][j]) + "\n";
+                    }
+                }
+                newLevel << std::to_string(port.second.GetPairPtr()->getYaw()) + "\n";
+            }
+        }
         newLevel.close();
     }
 
-    void WriteLevel(string fileName, Level &level)
+    static void WriteLevel(string fileName, Level &level)
     {
         return WriteLevel(fileName, level, level.GetCamera());
     }
