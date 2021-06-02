@@ -294,7 +294,7 @@ private:
         return CollisionHandler::check_collision(player->getCamera(), obj);
     }
 
-    bool checkMovement(Player dummy_player) 
+    bool checkMovement(Player dummy_player)
     {
         if (!isPassing)
         {
@@ -311,10 +311,9 @@ private:
 
         bool touched_any = false;
         const std::map<std::string /* object ID */, Portal> portals = level->getPortals();
-        string pairPortalId;
-        for (auto & it : portals)
+        for (auto& it : portals)
         {
-            if (pairPortalId == it.first)
+            if (CollisionHandler::check_collision(dummy_player, it.second))
             {
                 if (!isPassing)
                 {
@@ -324,7 +323,6 @@ private:
                 touched_any = true;
                 break;
             }
-
         }
 
         if (!touched_any)
