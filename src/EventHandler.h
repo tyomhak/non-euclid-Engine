@@ -95,6 +95,15 @@ public:
         return level->AddObject(name, Position);
     }
 
+    void addPortals()
+    {
+        Ray ray(&player->getCamera(), window);
+        glm::vec3 locationFirst = ray.getOrigin() + (minDistance + 1.0f) * ray.getDirection();
+        glm::vec3 locationSecond = ray.getOrigin() + (minDistance + 3.0f) * ray.getDirection();
+        // portals pair creation
+        level->AddPortalPair(locationFirst, locationSecond);
+    }
+
 private:
     // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
