@@ -13,14 +13,16 @@ public:
     EventHandler()
     {}
 
-    EventHandler(Player* player_, Level * level_,  GLFWwindow* window_, float lastX, float lastY) :
+    EventHandler(Player* player_, Level * level_,  GLFWwindow* window_, float lastX, float lastY, Shader *objShader, Shader *portShader) :
         player(player_), 
         window(window_),
         level(level_),
         lastMouseX(lastX), 
         lastMouseY(lastY),
         cursorEnabled(false),
-        creativeEnabled(false)
+        creativeEnabled(false),
+        objectShader(objShader),
+        portalShader(portShader)
     {
     }
 
@@ -196,6 +198,20 @@ private:
                 saveObject();
             }
 
+            if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
+            {
+                LevelHandler::WriteLevel("temp_level", *level, player->getCamera());
+            }
+
+            if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
+            {
+                Level newLevel = LevelHandler::ReadLevel("temp_level.lev", player->getCamera(), *portalShader, *objectShader);
+                *level = newLevel;
+            }
+
+
+
+
             // enables cursor
             static int oldStateC = GLFW_RELEASE;
             int newStateC = glfwGetKey(window, GLFW_KEY_C);
@@ -292,28 +308,28 @@ private:
             }
         }
 
+
+        bool touched_any = false;
         const std::map<std::string /* object ID */, Portal> portals = level->getPortals();
         string pairPortalId;
         for (auto & it : portals)
         {
             if (pairPortalId == it.first)
             {
-                pairPortalId = "";
-            }
-            else
-            {
-                if (CollisionHandler::check_collision(dummy_player, it.second))
+                if (!isPassing)
                 {
-                    isPassing = true;
-                    //player->getCamera().Position = it.second.GetPairCamera(dummy_player.getCamera()).Position;
                     player->setCamera(it.second.GetPairCamera(dummy_player.getCamera()));
-                    pairPortalId = it.second.GetPairPtr()->getId();
                 }
-                else {
-                    isPassing = false;
-                }
+                isPassing = true;
+                touched_any = true;
+                break;
             }
 
+        }
+
+        if (!touched_any)
+        {
+            isPassing = false;
         }
 
         return false;
@@ -438,6 +454,9 @@ public:
     
     static string underViewObjectId;
     static string updateObjectId;
+
+    Shader *objectShader;
+    Shader *portalShader;
 
 };
 

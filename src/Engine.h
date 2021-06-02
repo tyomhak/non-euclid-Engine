@@ -15,11 +15,11 @@ class Engine {
 public:
 	Engine() : window(),
 		player(),
-		eventHandler(&player, &level, window.get_window(),
-			window.get_width() / 2, window.get_height() / 2),
 		level(portalShader, objectShader),
 		objectShader("./data/shaders/Object_Vertex.shader", "", "./data/shaders/Object_Fragment.shader"),
 		portalShader("./data/shaders/Portal_Vertex.shader", "", "./data/shaders/Portal_Fragment.shader"),
+		eventHandler(&player, &level, window.get_window(),
+			window.get_width() / 2, window.get_height() / 2, &objectShader, &portalShader),
 		ui(window.get_window(), &eventHandler)
 
 	{
@@ -44,7 +44,7 @@ public:
 			float currentTime = (float)glfwGetTime();
 			if (currentTime - previousTime >= 1.0f)
 			{
-				 std::cout << frameCount << std::endl;
+				std::cout << frameCount << std::endl;
 				frameCount = 0;
 				previousTime = currentTime;
 			}
@@ -136,10 +136,13 @@ public:
 		level.AddPortalPair(first, second);
 	}
 
-	void addPortal(glm::mat4 locationFirst, glm::mat4 locationSecond)
+	void addPortal(glm::mat4 locationFirst, glm::mat4 locationSecond, float yawFirst = -90.0f, float yawSecond = -90.0f)
 	{
 		Portal first = ObjectHandler::GetPortal(locationFirst);
 		Portal second = ObjectHandler::GetPortal(locationSecond);
+
+		first.yaw = yawFirst;
+		second.yaw = yawSecond;
 
 		level.AddPortalPair(first, second);
 	}
