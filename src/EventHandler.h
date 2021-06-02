@@ -93,6 +93,15 @@ public:
     {
         return level->AddObject(name, Position);
     }
+    
+    void addPortals()
+    {
+        Ray ray(&player->getCamera(), window);
+        glm::vec3 locationFirst  = ray.getOrigin() + (minDistance + 1.0f)*ray.getDirection();
+        glm::vec3 locationSecond = ray.getOrigin() + (minDistance + 3.0f)*ray.getDirection();
+        // portals pair creation
+        level->AddPortalPair(locationFirst, locationSecond);
+    }
 
 private:
     // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
@@ -302,9 +311,10 @@ private:
 
         bool touched_any = false;
         const std::map<std::string /* object ID */, Portal> portals = level->getPortals();
+        string pairPortalId;
         for (auto & it : portals)
         {
-            if (CollisionHandler::check_collision(dummy_player, it.second))
+            if (pairPortalId == it.first)
             {
                 if (!isPassing)
                 {
@@ -314,6 +324,7 @@ private:
                 touched_any = true;
                 break;
             }
+
         }
 
         if (!touched_any)
@@ -437,7 +448,7 @@ private:
 
 
 public:
-    bool isPassing;
+    bool isPassing = false;
     bool cursorEnabled;
     bool creativeEnabled;
     
