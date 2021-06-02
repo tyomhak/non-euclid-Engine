@@ -66,13 +66,28 @@ public:
     {
         worldMatrix = glm::rotate_slow(worldMatrix, angle, translate);
         // TODO: update min and max values of AABB in case of rotation
+        
     }
 
-    void RotateHozontal(GLfloat degree)
+    void RotateHorizontal(GLfloat degrees)
     {
-        rotate(degree, glm::vec3(0.0f, 1.0f, 0.0f));
-        yaw -= degree;
+        rotate(degrees, glm::vec3(0.0f, 1.0f, 0.0f));
+        yaw -= degrees;
+        updateBoundaryBox();
     }
+
+    void scale(float scale_value)
+    {
+        glm::vec3 location = glm::vec3(worldMatrix[3][0], worldMatrix[3][1], worldMatrix[3][2]);
+        boundaryBox.Move(-1.0f * location);
+
+        boundaryBox.setMinPoint(scale_value * boundaryBox.getMinPoint());
+        boundaryBox.setMaxPoint(scale_value * boundaryBox.getMaxPoint());
+
+        boundaryBox.Move(location);
+
+        worldMatrix = glm::scale(worldMatrix, glm::vec3(scale_value, scale_value, scale_value));
+    } 
 
     vector<glm::vec3> get_vertices_in_world_space()
     {

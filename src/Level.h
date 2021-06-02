@@ -125,7 +125,7 @@ public:
         return levelObjects;
     }
 
-    std::map<std::string /* object ID */, Portal> getPortals() const
+    std::map<std::string /* object ID */, Portal> &getPortals()
     {
         return levelPortals;
     }

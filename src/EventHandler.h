@@ -200,6 +200,15 @@ private:
                 *level = newLevel;
             }
 
+            if (glfwGetKey(window, GLFW_KEY_V) == GLFW_PRESS)
+            {
+                for (auto &port : level->getPortals())
+                {
+                    // port.second.RotateHorizontal(45.0f);
+                    port.second.scale(1.05);
+                }
+            }
+
 
 
 
