@@ -73,7 +73,8 @@ public:
     {
         rotate(degrees, glm::vec3(0.0f, 1.0f, 0.0f));
         yaw -= degrees;
-        updateBoundaryBox();
+
+        updateMinMaxPointsWorld();
     }
 
     void scale(float scale_value)
@@ -156,6 +157,41 @@ private:
                 if (this->model->meshes[i].vertices[j].Position.x > maxX) { maxX = this->model->meshes[i].vertices[j].Position.x; }
                 if (this->model->meshes[i].vertices[j].Position.y > maxY) { maxY = this->model->meshes[i].vertices[j].Position.y; }
                 if (this->model->meshes[i].vertices[j].Position.z > maxZ) { maxZ = this->model->meshes[i].vertices[j].Position.z; }
+                
+            }
+        }
+        // update min and max of AABB
+        boundaryBox.setMinPoint(glm::vec3(minX, minY, minZ));
+        boundaryBox.setMaxPoint(glm::vec3(maxX, maxY, maxZ));
+    }
+
+    void updateMinMaxPointsWorld() {
+        float minX = FLT_MAX;
+        float minY = FLT_MAX;
+        float minZ = FLT_MAX;
+
+        float maxX = FLT_MIN;
+        float maxY = FLT_MIN;
+        float maxZ = FLT_MIN;
+
+        long meshes_quantity = (long)this->model->meshes.size();
+        for (int i{ 0 }; i < meshes_quantity; ++i)
+        {
+            int amount = (int)this->model->meshes[i].vertices.size();
+            for (int j{ 0 }; j < amount; ++j)
+            {
+                glm::vec3 Position = this->model->meshes[i].vertices[j].Position;
+                Position = worldMatrix * glm::vec4(Position, 1.0f);
+
+                // min point assigning
+                if (Position.x < minX) { minX = Position.x; }
+                if (Position.y < minY) { minY = Position.y; }
+                if (Position.z < minZ) { minZ = Position.z; }
+                
+                // max point assigning
+                if (Position.x > maxX) { maxX = Position.x; }
+                if (Position.y > maxY) { maxY = Position.y; }
+                if (Position.z > maxZ) { maxZ = Position.z; }
                 
             }
         }

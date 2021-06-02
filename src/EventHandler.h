@@ -202,11 +202,11 @@ private:
 
             if (glfwGetKey(window, GLFW_KEY_V) == GLFW_PRESS)
             {
-                for (auto &port : level->getPortals())
-                {
-                    // port.second.RotateHorizontal(45.0f);
-                    port.second.scale(1.05);
-                }
+                // for (auto &port : level->getPortals())
+                // {
+                //     port.second.RotateHorizontal(45.0f);
+                //     port.second.scale(1.05);
+                // }
             }
 
 
@@ -443,6 +443,7 @@ private:
     
     const float minDistance = 2.0f;
     float distance = 5.0f;
+    float rotation_degree = 0.01f;
 
 
 public:
