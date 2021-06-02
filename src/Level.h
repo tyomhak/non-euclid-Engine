@@ -57,17 +57,6 @@ public:
         //levelPortals.at(size - 1).SetPair(&levelPortals.at(size - 2));
     }
 
-
-    void AddPortalPair(glm::vec3 position1, glm::vec3 position2)
-    {
-        glm::mat4 location = glm::mat4(1.0f);
-        glm::mat4 locationFirst = glm::translate(location, position1);
-        glm::mat4 locationSecond = glm::translate(location, position2);
-        Portal first = ObjectHandler::GetPortal(locationFirst);
-        Portal second = ObjectHandler::GetPortal(locationSecond);
-        AddPortalPair(first, second);
-    }
-
     void AddPortalPair(glm::mat4 firstPos, glm::mat4 secondPos, float firstYaw = -90.0f, float secondYaw = -90.0f)
     {
         Portal first = ObjectHandler::GetPortal(firstPos);

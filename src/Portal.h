@@ -78,7 +78,7 @@ public:
 
         // PAIR PORTAL CAMERAS POSITION CUBES //
         // ================================== // 
-         //glm::mat4 view_clone = view;
+        // glm::mat4 view_clone = view;
 
         currShader->setView(view);
 
@@ -121,8 +121,8 @@ public:
             glDrawElements(GL_TRIANGLES, (GLsizei)mesh.indices.size(), GL_UNSIGNED_INT, 0);
         }
 
-        //// PAIR PORTAL CAMERAS POSITION CUBES //
-        //// ================================== //
+        // PAIR PORTAL CAMERAS POSITION CUBES //
+        // ================================== //
         // Object &cube = objs.at("cube2");
         // view_clone = glm::inverse(view_clone);
         // cube.SetWorldMatrix(view_clone);
