@@ -200,15 +200,44 @@ private:
                 *level = newLevel;
             }
 
-            if (glfwGetKey(window, GLFW_KEY_V) == GLFW_PRESS)
+            if (glfwGetKey(window, GLFW_KEY_EQUAL) == GLFW_PRESS)
             {
-                // for (auto &port : level->getPortals())
-                // {
-                //     port.second.RotateHorizontal(45.0f);
-                //     port.second.scale(1.05);
-                // }
+                for (auto &port : level->getPortals())
+                {
+                    // port.second.RotateHorizontal(45.0f);
+                    port.second.scale(1.05);
+                }
             }
 
+
+            if (glfwGetKey(window, GLFW_KEY_MINUS) == GLFW_PRESS)
+            {
+                for (auto &port : level->getPortals())
+                {
+                    // port.second.RotateHorizontal(45.0f);
+                    port.second.scale(0.95);
+                }
+            }
+
+
+            if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+            {
+                for (auto &port : level->getPortals())
+                {
+                    port.second.RotateHorizontal(0.05f);
+                    // port.second.scale(1.05);
+                }
+            }
+
+
+            if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+            {
+                for (auto &port : level->getPortals())
+                {
+                    port.second.RotateHorizontal(0.05f);
+                    // port.second.scale(0.95);
+                }
+            }
 
 
 

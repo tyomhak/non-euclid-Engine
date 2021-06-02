@@ -84,7 +84,8 @@ public:
 
         // change the drawing location to portal framebuffer/texture, instead of the screen
         glBindFramebuffer(GL_FRAMEBUFFER, portalFramebuffer);
-        glClearColor(0.3f, 0.8f,  1.0f , 1.0f);
+        // glClearColor(0.3f, 0.8f,  1.0f , 1.0f);
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glEnable(GL_DEPTH_TEST);
 
