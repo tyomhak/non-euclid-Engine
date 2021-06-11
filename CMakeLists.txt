@@ -4,6 +4,9 @@ SET(sampleName nonEuclid)
 
 project(NonEuclid VERSION 0.1.0 LANGUAGES C CXX)
 
+SET(DEBUG_MODE "-g")
+SET(CMAKE_CXX_FLAGS "${DEBUG_MODE}")
+
 if(UNIX AND NOT APPLE)
 	set(LINUX TRUE)
 endif()
