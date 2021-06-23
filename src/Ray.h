@@ -31,7 +31,7 @@ public:
 private:
 	void createRay()
 	{
-		origin = camera->getPosition();
+		origin = camera->GetPosition();
 		int width, height;
 		glfwGetFramebufferSize(window, &width, &height);
 
@@ -52,7 +52,7 @@ private:
 		glm::mat4 projection = glm::perspective(glm::radians(90.0f), float((float)width / (float)height), 0.1f, 100.0f);	//perspective view
 
 		glm::vec4 ndc_vector = glm::vec4(ndc_x, ndc_y, ndc_z, w);
-		direction = glm::inverse(camera->getViewMatrix()) * glm::inverse(projection) * ndc_vector;
+		direction = glm::inverse(camera->GetViewMatrix()) * glm::inverse(projection) * ndc_vector;
 	}
 
 private:

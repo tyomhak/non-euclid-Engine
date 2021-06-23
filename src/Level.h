@@ -98,10 +98,10 @@ public:
 
     void DrawObjects(Camera& mainCamera, Shader* shader)
     {
-        glm::mat4 view = mainCamera.getViewMatrix();
+        glm::mat4 view = mainCamera.GetViewMatrix();
         shader->SetView(view);
         //shader->update();
-        //glm::mat4 view = mainCamera.getViewMatrix();
+        //glm::mat4 view = mainCamera.GetViewMatrix();
         //unsigned int viewLoc  = glGetUniformLocation(shader->ID, "view");
         //glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
         DrawObjects(shader);
@@ -296,10 +296,10 @@ public:
 
         newLevel << "camera\n";
         for (int i = 0; i < 3; ++i)
-            newLevel << std::to_string(myCamera.getPosition()[i]) + "\n";
+            newLevel << std::to_string(myCamera.GetPosition()[i]) + "\n";
 
         for (int i = 0; i < 3; ++i)
-            newLevel << std::to_string(myCamera.getUp()[i]) + "\n";
+            newLevel << std::to_string(myCamera.GetUp()[i]) + "\n";
 
         newLevel << std::to_string(myCamera.Yaw) + "\n";
         newLevel << std::to_string(myCamera.Pitch) + "\n";

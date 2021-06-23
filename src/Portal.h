@@ -66,7 +66,7 @@ public:
 
         // Set the view (what you'll in the portal) //
         // ======================================== //
-        glm::mat4 view = mainCamera.getViewMatrix();
+        glm::mat4 view = mainCamera.GetViewMatrix();
         view = pair_portal->GetWorldMat() * glm::inverse(GetWorldMat()) * glm::inverse(view); 
         view = glm::inverse(view);
 
@@ -74,7 +74,7 @@ public:
         // CAN USE THIS FOR PAIR CAMERA VIEW INSTEAD, BUT IT's MORE COMPLEX //
         // ================================================================ //
         // Camera tempCamera = GetPairCamera(mainCamera);
-        // glm::mat4 view = tempCamera.getViewMatrix();
+        // glm::mat4 view = tempCamera.GetViewMatrix();
 
 
         // PAIR PORTAL CAMERAS POSITION CUBES //
@@ -112,7 +112,7 @@ public:
         currShader = &portShader;
         currShader->Bind();
 
-        view = mainCamera.getViewMatrix();
+        view = mainCamera.GetViewMatrix();
 
         currShader->SetView(view);
         currShader->SetModel(worldMatrix);
@@ -135,7 +135,7 @@ public:
 
     Camera GetPairCamera(Camera &mainCamera) const
     {
-        glm::mat4 view = mainCamera.getViewMatrix();
+        glm::mat4 view = mainCamera.GetViewMatrix();
         view = pair_portal->GetWorldMat() * glm::inverse(GetWorldMat()) * glm::inverse(view); 
         // view = glm::inverse(view);
 

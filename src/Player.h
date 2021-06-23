@@ -75,7 +75,7 @@ private:
 		float headHeight = height / 6;
 		// we were high, we are sorry
 		float halfHeadHeight = headHeight / 2;
-		glm::vec3 position = camera.getPosition();
+		glm::vec3 position = camera.GetPosition();
 		glm::vec3 maxPoint =  position + (halfHeadHeight);
 		glm::vec3 minPoint = position - (halfHeadHeight);
 		minPoint.y -= height - (halfHeadHeight);
