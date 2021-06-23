@@ -18,9 +18,9 @@ public:
     // intersection check of aabb with point
     static bool check_collision(const Camera camera, const BoundaryBox box)
     {
-        return (camera.getPosition().x >= box.getMinPoint().x && camera.getPosition().x <= box.getMaxPoint().x)
-            && (camera.getPosition().y >= box.getMinPoint().y && camera.getPosition().y <= box.getMaxPoint().y)
-            && (camera.getPosition().z >= box.getMinPoint().z && camera.getPosition().z <= box.getMaxPoint().z);
+        return (camera.getPosition().x >= box.GetMinPoint().x && camera.getPosition().x <= box.GetMaxPoint().x)
+            && (camera.getPosition().y >= box.GetMinPoint().y && camera.getPosition().y <= box.GetMaxPoint().y)
+            && (camera.getPosition().z >= box.GetMinPoint().z && camera.getPosition().z <= box.GetMaxPoint().z);
     }
 
     // intersection check of aabb with point
@@ -38,9 +38,9 @@ public:
     // intersection check of aabb with aabb
     static bool check_collision(const BoundaryBox box1, const BoundaryBox box2)
     {
-        return (box1.getMinPoint().x <= box2.getMaxPoint().x && box1.getMaxPoint().x >= box2.getMinPoint().x)
-            && (box1.getMinPoint().y <= box2.getMaxPoint().y && box1.getMaxPoint().y >= box2.getMinPoint().y)
-            && (box1.getMinPoint().z <= box2.getMaxPoint().z && box1.getMaxPoint().z >= box2.getMinPoint().z);
+        return (box1.GetMinPoint().x <= box2.GetMaxPoint().x && box1.GetMaxPoint().x >= box2.GetMinPoint().x)
+            && (box1.GetMinPoint().y <= box2.GetMaxPoint().y && box1.GetMaxPoint().y >= box2.GetMinPoint().y)
+            && (box1.GetMinPoint().z <= box2.GetMaxPoint().z && box1.GetMaxPoint().z >= box2.GetMinPoint().z);
     }
 
     // intersection check of aabb with aabb
@@ -52,8 +52,8 @@ public:
     static bool check_collision(const Ray ray, const Object object, float &t)
     {
         BoundaryBox box = object.GetBoundaryBox();
-        glm::vec3 min = box.getMinPoint();
-        glm::vec3 max = box.getMaxPoint();
+        glm::vec3 min = box.GetMinPoint();
+        glm::vec3 max = box.GetMaxPoint();
 
         glm::vec3 orig = ray.getOrigin();
         glm::vec3 dir = ray.getDirection();
@@ -109,10 +109,10 @@ private:
     // deprecated
     static bool check_radius_collision(const Player player, const Object object) 
     {
-        float distance_from_centers = glm::distance(player.GetBoundaryBox().getCenterPoint(), object.GetBoundaryBox().getCenterPoint());
+        float distance_from_centers = glm::distance(player.GetBoundaryBox().GetCenterPoint(), object.GetBoundaryBox().GetCenterPoint());
         float distance_from_edges = distance_from_centers
-                                        - (distance(player.GetBoundaryBox().getMinPoint(), player.GetBoundaryBox().getMaxPoint()) / 2)
-                                        - (distance(object.GetBoundaryBox().getMinPoint(), object.GetBoundaryBox().getMaxPoint()) / 2);
+                                        - (distance(player.GetBoundaryBox().GetMinPoint(), player.GetBoundaryBox().GetMaxPoint()) / 2)
+                                        - (distance(object.GetBoundaryBox().GetMinPoint(), object.GetBoundaryBox().GetMaxPoint()) / 2);
 
         return player.GetRadius() > distance_from_edges;
     }

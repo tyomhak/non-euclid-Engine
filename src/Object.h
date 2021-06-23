@@ -85,8 +85,8 @@ public:
         glm::vec3 location = glm::vec3(worldMatrix[3][0], worldMatrix[3][1], worldMatrix[3][2]);
         boundaryBox.Move(-1.0f * location);
 
-        boundaryBox.setMinPoint(scale_value * boundaryBox.getMinPoint());
-        boundaryBox.setMaxPoint(scale_value * boundaryBox.getMaxPoint());
+        boundaryBox.SetMinPoint(scale_value * boundaryBox.GetMinPoint());
+        boundaryBox.SetMaxPoint(scale_value * boundaryBox.GetMaxPoint());
 
         boundaryBox.Move(location);
 
@@ -164,8 +164,8 @@ private:
             }
         }
         // update min and max of AABB
-        boundaryBox.setMinPoint(glm::vec3(minX, minY, minZ));
-        boundaryBox.setMaxPoint(glm::vec3(maxX, maxY, maxZ));
+        boundaryBox.SetMinPoint(glm::vec3(minX, minY, minZ));
+        boundaryBox.SetMaxPoint(glm::vec3(maxX, maxY, maxZ));
     }
 
     void UpdateMinMaxPointsWorld() {
@@ -199,8 +199,8 @@ private:
             }
         }
         // update min and max of AABB
-        boundaryBox.setMinPoint(glm::vec3(minX, minY, minZ));
-        boundaryBox.setMaxPoint(glm::vec3(maxX, maxY, maxZ));
+        boundaryBox.SetMinPoint(glm::vec3(minX, minY, minZ));
+        boundaryBox.SetMaxPoint(glm::vec3(maxX, maxY, maxZ));
     }
 
 };

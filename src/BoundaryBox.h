@@ -57,27 +57,27 @@ public:
 		}
 	}
 
-	glm::vec3 getMinPoint() const 
+	glm::vec3 GetMinPoint() const 
 	{
 		return minPoint;
 	}
 
-	glm::vec3 getMaxPoint() const
+	glm::vec3 GetMaxPoint() const
 	{
 		return maxPoint;
 	}
 
-	glm::vec3 getCenterPoint() const
+	glm::vec3 GetCenterPoint() const
 	{
 		return (maxPoint + minPoint) / 2.0f;
 	}
 
-	void setMinPoint(glm::vec3 minPoint_)
+	void SetMinPoint(glm::vec3 minPoint_)
 	{
 		minPoint = minPoint_;
 	}
 
-	void setMaxPoint(glm::vec3 maxPoint_)
+	void SetMaxPoint(glm::vec3 maxPoint_)
 	{
 		maxPoint = maxPoint_;
 	}

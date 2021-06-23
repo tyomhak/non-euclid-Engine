@@ -80,8 +80,8 @@ private:
 		glm::vec3 minPoint = position - (halfHeadHeight);
 		minPoint.y -= height - (halfHeadHeight);
 
-		boundaryBox.setMinPoint(minPoint);
-		boundaryBox.setMaxPoint(maxPoint);
+		boundaryBox.SetMinPoint(minPoint);
+		boundaryBox.SetMaxPoint(maxPoint);
 	}
 
 private:
