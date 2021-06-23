@@ -98,8 +98,8 @@ public:
     void addPortals()
     {
         Ray ray(&player->GetCamera(), window);
-        glm::vec3 locationFirst = ray.getOrigin() + (minDistance + 1.0f) * ray.getDirection();
-        glm::vec3 locationSecond = ray.getOrigin() + (minDistance + 3.0f) * ray.getDirection();
+        glm::vec3 locationFirst = ray.GetOrigin() + (minDistance + 1.0f) * ray.GetDirection();
+        glm::vec3 locationSecond = ray.GetOrigin() + (minDistance + 3.0f) * ray.GetDirection();
         // portals pair creation
         level->AddPortalPair(locationFirst, locationSecond);
     }
@@ -471,7 +471,7 @@ private:
             }
             while(dist >= minDistance)
             {
-                glm::vec3 obj_pos = ray.getOrigin() + (dist)*ray.getDirection();
+                glm::vec3 obj_pos = ray.GetOrigin() + (dist)*ray.GetDirection();
                 const glm::mat4 oldWorldMat = level->GetObjectPointer(updateObjectId)->GetWorldMat();
                 moveCreateObjectToPosition(obj_pos);
                 if (checkObjectCollision(level->GetObject(updateObjectId)))

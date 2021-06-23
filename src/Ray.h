@@ -12,24 +12,24 @@ public:
 		camera(_camera),
 		window(_window)
 	{
-		createRay();
+		CreateRay();
 	}
 
 
 public:
 
-	glm::vec3 getOrigin() const
+	glm::vec3 GetOrigin() const
 	{
 		return origin;
 	}
 
-	glm::vec3 getDirection() const
+	glm::vec3 GetDirection() const
 	{
 		return direction;
 	}
 
 private:
-	void createRay()
+	void CreateRay()
 	{
 		origin = camera->GetPosition();
 		int width, height;

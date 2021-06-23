@@ -55,8 +55,8 @@ public:
         glm::vec3 min = box.GetMinPoint();
         glm::vec3 max = box.GetMaxPoint();
 
-        glm::vec3 orig = ray.getOrigin();
-        glm::vec3 dir = ray.getDirection();
+        glm::vec3 orig = ray.GetOrigin();
+        glm::vec3 dir = ray.GetDirection();
 
         float tmin = (min.x - orig.x) / dir.x;
         float tmax = (max.x - orig.x) / dir.x;
