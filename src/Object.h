@@ -26,17 +26,20 @@ public:
 
     ~Object();
 
-    std::string getId() const
+    std::string GetId() const
     {
         return ID;
     }
 
-    BoundaryBox getBoundaryBox() const 
+    BoundaryBox GetBoundaryBox() const 
     {
         return boundaryBox;
     }
 
-    float getYaw() const { return yaw; }
+    float GetYaw() const 
+    { 
+        return yaw;
+    }
 
 
    void Draw(Shader &shader)
@@ -55,14 +58,14 @@ public:
         boundaryBox.Move(translate);
     }
 
-    void setPosition(glm::vec3 position)
+    void SetPosition(glm::vec3 position)
     {
         glm::mat4 location(1.0f);
         worldMatrix = glm::translate(location, position);
-        updateBoundaryBox();
+        UpdateBoundaryBox();
     }
 
-    void rotate(const float angle, glm::vec3 translate)
+    void Rotate(const float angle, glm::vec3 translate)
     {
         worldMatrix = glm::rotate_slow(worldMatrix, angle, translate);
         // TODO: update min and max values of AABB in case of rotation
@@ -71,13 +74,13 @@ public:
 
     void RotateHorizontal(GLfloat degrees)
     {
-        rotate(degrees, glm::vec3(0.0f, 1.0f, 0.0f));
+        Rotate(degrees, glm::vec3(0.0f, 1.0f, 0.0f));
         yaw -= degrees;
 
-        updateMinMaxPointsWorld();
+        UpdateMinMaxPointsWorld();
     }
 
-    void scale(float scale_value)
+    void Scale(float scale_value)
     {
         glm::vec3 location = glm::vec3(worldMatrix[3][0], worldMatrix[3][1], worldMatrix[3][2]);
         boundaryBox.Move(-1.0f * location);
@@ -90,7 +93,7 @@ public:
         worldMatrix = glm::scale(worldMatrix, glm::vec3(scale_value, scale_value, scale_value));
     } 
 
-    vector<glm::vec3> get_vertices_in_world_space()
+    vector<glm::vec3> GetVerticesWorldSpace()
     {
         vector<glm::vec3> all_vertices;
         for (auto& mesh : model->meshes)
@@ -122,18 +125,18 @@ public:
     void SetWorldMatrix(glm::mat4 newLocation) 
     {
         worldMatrix = newLocation;
-        updateBoundaryBox();
+        UpdateBoundaryBox();
     }
 
 private:
 
-    void updateBoundaryBox()
+    void UpdateBoundaryBox()
     {
-        updateMinMaxPoints();
+        UpdateMinMaxPoints();
         boundaryBox.Move(glm::vec3(worldMatrix[3][0], worldMatrix[3][1], worldMatrix[3][2]));
     }
 
-    void updateMinMaxPoints() {
+    void UpdateMinMaxPoints() {
         float minX = FLT_MAX;
         float minY = FLT_MAX;
         float minZ = FLT_MAX;
@@ -165,7 +168,7 @@ private:
         boundaryBox.setMaxPoint(glm::vec3(maxX, maxY, maxZ));
     }
 
-    void updateMinMaxPointsWorld() {
+    void UpdateMinMaxPointsWorld() {
         float minX = FLT_MAX;
         float minY = FLT_MAX;
         float minZ = FLT_MAX;
@@ -203,12 +206,12 @@ private:
 };
 
 Object::Object(Model &_model, string _modelType, std::string id, glm::mat4 _worldMatrix) :
-modelType(_modelType),
-worldMatrix(_worldMatrix),
-ID(id),
-model(&_model)
+    modelType(_modelType),
+    worldMatrix(_worldMatrix),
+    ID(id),
+    model(&_model)
 {
-    updateBoundaryBox();
+    UpdateBoundaryBox();
 }
 
 Object::~Object()

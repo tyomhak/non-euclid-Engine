@@ -47,7 +47,7 @@ public:
         {
             return;
         }
-        level->getObjectPointer(underViewObjectId)->setPosition(position);
+        level->getObjectPointer(underViewObjectId)->SetPosition(position);
     }
 
     void moveCreateObjectToPosition(glm::vec3 position)
@@ -56,7 +56,7 @@ public:
         {
             return;
         }
-        level->getObjectPointer(updateObjectId)->setPosition(position);
+        level->getObjectPointer(updateObjectId)->SetPosition(position);
     }
 
     // glfw: whenever the window size changed (by OS or user resize) this callback function executes
@@ -215,7 +215,7 @@ private:
                 for (auto &port : level->getPortals())
                 {
                     // port.second.RotateHorizontal(45.0f);
-                    port.second.scale(1.05);
+                    port.second.Scale(1.05);
                 }
             }
 
@@ -225,7 +225,7 @@ private:
                 for (auto &port : level->getPortals())
                 {
                     // port.second.RotateHorizontal(45.0f);
-                    port.second.scale(0.95);
+                    port.second.Scale(0.95);
                 }
             }
 
@@ -235,7 +235,7 @@ private:
                 for (auto &port : level->getPortals())
                 {
                     port.second.RotateHorizontal(0.05f);
-                    // port.second.scale(1.05);
+                    // port.second.Scale(1.05);
                 }
             }
 
@@ -245,7 +245,7 @@ private:
                 for (auto &port : level->getPortals())
                 {
                     port.second.RotateHorizontal(0.05f);
-                    // port.second.scale(0.95);
+                    // port.second.Scale(0.95);
                 }
             }
 
@@ -327,7 +327,7 @@ private:
         const std::map<std::string /* object ID */, Object> objects = level->getObjects();
         for (auto const& it : objects)
         {
-            if (it.first == obj.getId())
+            if (it.first == obj.GetId())
             {
                 continue;
             }
@@ -341,7 +341,7 @@ private:
         const std::map<std::string /* object ID */, Portal> portals = level->getPortals();
         for (auto const& portal : portals)
         {
-            if (portal.first == obj.getId())
+            if (portal.first == obj.GetId())
             {
                 continue;
             }
@@ -423,7 +423,7 @@ private:
             float t = FLT_MAX;
             if (CollisionHandler::check_collision(ray, obj.second, t))
             {
-                if (obj.second.getId() == updateObjectId)
+                if (obj.second.GetId() == updateObjectId)
                 {
                     continue;
                 }

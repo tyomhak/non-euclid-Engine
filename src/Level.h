@@ -34,24 +34,24 @@ public:
         glm::mat4 location(1.0f);
         location = glm::translate(location, position);
         Object obj = ObjectHandler::GetObject(name, location);
-        string id = obj.getId();
+        string id = obj.GetId();
         levelObjects.emplace(id, obj);
         return id;
     }
 
     void AddObject(Object obj)
     {
-        levelObjects.emplace(obj.getId(), obj);
+        levelObjects.emplace(obj.GetId(), obj);
     }
 
     void AddPortalPair(Portal& first, Portal& second)
     {
-        levelPortals.emplace(first.getId(), first);
-        levelPortals.emplace(second.getId(), second);
+        levelPortals.emplace(first.GetId(), first);
+        levelPortals.emplace(second.GetId(), second);
 
         int size = levelPortals.size();
-        levelPortals.find(first.getId())->second.SetPair(&levelPortals.find(second.getId())->second);
-        levelPortals.find(second.getId())->second.SetPair(&levelPortals.find(first.getId())->second);
+        levelPortals.find(first.GetId())->second.SetPair(&levelPortals.find(second.GetId())->second);
+        levelPortals.find(second.GetId())->second.SetPair(&levelPortals.find(first.GetId())->second);
 
         //levelPortals.at(size - 2).SetPair(&levelPortals.at(size - 1));
         //levelPortals.at(size - 1).SetPair(&levelPortals.at(size - 2));
@@ -90,7 +90,7 @@ public:
 
         if (levelPortals.find(id) != levelPortals.end())
         {
-            string pairId = levelPortals.find(id)->second.GetPairPtr()->getId();
+            string pairId = levelPortals.find(id)->second.GetPairPtr()->GetId();
             levelPortals.erase(id);
             levelPortals.erase(pairId);
         }
@@ -323,11 +323,11 @@ public:
         unsigned int portalNumber = 0;
         for (auto &port : level.getPortals())
         {
-            if (savedPorts.count(port.second.getId()) == 0)
+            if (savedPorts.count(port.second.GetId()) == 0)
             {
                 // SAVE THIS PORTAL //
                 // ================ //
-                savedPorts.insert(port.second.getId());
+                savedPorts.insert(port.second.GetId());
                 newLevel << "p1\n";
                 glm::mat4 worldMatrix = port.second.GetWorldMat();
                 for (int i = 0; i < 4; ++i)
@@ -341,7 +341,7 @@ public:
 
                 // SAVE THE PAIR PORTAL //
                 // ==================== //
-                savedPorts.insert(port.second.GetPairPtr()->getId());    // add pair port to set, to avoid duplicate saving
+                savedPorts.insert(port.second.GetPairPtr()->GetId());    // add pair port to set, to avoid duplicate saving
                 newLevel << "p2\n";
                 worldMatrix = port.second.GetPairPtr()->GetWorldMat();
                 for (int i = 0; i < 4; ++i)
@@ -351,7 +351,7 @@ public:
                         newLevel << std::to_string(worldMatrix[i][j]) + "\n";
                     }
                 }
-                newLevel << std::to_string(port.second.GetPairPtr()->getYaw()) + "\n";
+                newLevel << std::to_string(port.second.GetPairPtr()->GetYaw()) + "\n";
             }
         }
         newLevel.close();

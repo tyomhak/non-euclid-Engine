@@ -156,7 +156,7 @@ public:
 	void RotateObject(glm::vec3 direction, float angle, std::string id)
 	{
 		Object* objectToMove = FindObjectById(id);
-		objectToMove->rotate(angle, direction);
+		objectToMove->Rotate(angle, direction);
 	}
 
 	bool CheckPlayerCollision(const std::string id)
