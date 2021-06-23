@@ -244,8 +244,8 @@ private:
             {
                 for (auto &port : level->getPortals())
                 {
-                    port.second.RotateHorizontal(0.05f);
-                    // port.second.Scale(0.95);
+                    port.second.RotateHorizontal(-0.05f);
+                    // port.second.scale(0.95);
                 }
             }
 
