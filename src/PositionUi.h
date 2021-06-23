@@ -13,23 +13,23 @@ public:
 		my_tool_active = true;
 	}
 
-	void render()
-	{
-		static float position[] = { 0.0f, 0.0f, 0.0f };
+	// void Render()
+	// {
+	// 	static float position[] = { 0.0f, 0.0f, 0.0f };
 
-		//ImGui::Checkbox()
+	// 	//ImGui::Checkbox()
 
-		// stuff to be displayed in tab 1
-		ImGui::Begin("Object Position window", &my_tool_active, ImGuiWindowFlags_MenuBar);
+	// 	// stuff to be displayed in tab 1
+	// 	ImGui::Begin("Object Position window", &my_tool_active, ImGuiWindowFlags_MenuBar);
 
-		ImGui::SliderFloat3("position", position, -5.0f, 5.0f);	// translation buttons (sliders)
+	// 	ImGui::SliderFloat3("position", position, -5.0f, 5.0f);	// translation buttons (sliders)
 
-		ImGui::End();
+	// 	ImGui::End();
 
 
-		eventHandler->moveSelectedObjectToPosition(glm::vec3(position[0], position[1], position[2]));
+	// 	eventHandler->moveSelectedObjectToPosition(glm::vec3(position[0], position[1], position[2]));
 
-	}
+	// }
 
 private:
 	bool my_tool_active;	// To Be Deleted
