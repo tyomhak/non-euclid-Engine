@@ -15,7 +15,7 @@ protected:
 		eventHandler = _eventHandler;
 	}
 
-	void render();
+	// void Render();
 
 protected:
 	EventHandler* eventHandler;
