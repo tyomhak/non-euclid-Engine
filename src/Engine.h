@@ -18,9 +18,9 @@ public:
 		level(portalShader, objectShader),
 		objectShader("./data/shaders/Object_Vertex.shader", "", "./data/shaders/Object_Fragment.shader"),
 		portalShader("./data/shaders/Portal_Vertex.shader", "", "./data/shaders/Portal_Fragment.shader"),
-		eventHandler(&player, &level, window.get_window(),
-			window.get_width() / 2, window.get_height() / 2, &objectShader, &portalShader),
-		ui(window.get_window(), &eventHandler)
+		eventHandler(&player, &level, window.GetWindow(),
+			window.GetWidth() / 2, window.GetHeight() / 2, &objectShader, &portalShader),
+		ui(window.GetWindow(), &eventHandler)
 
 	{
 		setupWindow();
@@ -38,7 +38,7 @@ public:
 		float deltaTime = 0.0f;
 
 
-		while (!glfwWindowShouldClose(window.get_window()))
+		while (!glfwWindowShouldClose(window.GetWindow()))
 		{
 			// Frame Counter
 			float currentTime = (float)glfwGetTime();
@@ -75,7 +75,7 @@ public:
 
 			// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 			// -------------------------------------------------------------------------------
-			glfwSwapBuffers(window.get_window());
+			glfwSwapBuffers(window.GetWindow());
 			glfwPollEvents();
 		}
 		glfwTerminate();
@@ -182,7 +182,7 @@ private:
 	void updateShaders()
 	{
 		glm::mat4 view = player.getCamera().getViewMatrix();
-		glm::mat4 projection = glm::perspective(glm::radians(90.0f), window.get_width() / window.get_height(), 0.1f, 100.0f);	//perspective view
+		glm::mat4 projection = glm::perspective(glm::radians(90.0f), window.GetWidth() / window.GetHeight(), 0.1f, 100.0f);	//perspective view
 		glm::mat4 model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
 		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
 		glm::mat4 mvp = projection* view* model;
@@ -198,7 +198,7 @@ private:
 
 	void checkSave()
 	{
-		if (glfwGetKey(window.get_window(), GLFW_KEY_P) == GLFW_PRESS)
+		if (glfwGetKey(window.GetWindow(), GLFW_KEY_P) == GLFW_PRESS)
 		{
 			saveWorld();
 		}
@@ -212,7 +212,7 @@ private:
 	void setupShaders()
 	{
 		glm::mat4 view = player.getCamera().getViewMatrix();
-		glm::mat4 projection = glm::perspective(glm::radians(90.0f), window.get_width() / window.get_height(), 0.1f, 100.0f);		//perspective view
+		glm::mat4 projection = glm::perspective(glm::radians(90.0f), window.GetWidth() / window.GetHeight(), 0.1f, 100.0f);		//perspective view
 		glm::mat4 model = glm::mat4(1.0f);
 
 		objectShader.setView(view);
@@ -227,13 +227,13 @@ private:
 
 	void setupWindow()
 	{
-		glfwMakeContextCurrent(window.get_window());
+		glfwMakeContextCurrent(window.GetWindow());
 		// resizing controls
-		glfwSetFramebufferSizeCallback(window.get_window(), EventHandler::framebuffer_size_callback);
+		glfwSetFramebufferSizeCallback(window.GetWindow(), EventHandler::framebuffer_size_callback);
 		
 		// Mouse controls
 		// --------------
-		glfwSetInputMode(window.get_window(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		glfwSetInputMode(window.GetWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	}
 
 private:

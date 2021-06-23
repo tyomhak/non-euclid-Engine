@@ -15,39 +15,39 @@ public:
 		width(1920),
 		height(1080)
 	{
-		initialize_window((int)width, (int)height);
+		InitializeWindow((int)width, (int)height);
 	}
 
 	Window(int wid, int hei) :
 		width((float)wid),
 		height((float)hei)
 	{
-		initialize_window(wid, hei);
+		InitializeWindow(wid, hei);
 	}
 
 public:
-	GLFWwindow* get_window() const
+	GLFWwindow* GetWindow() const
 	{
 		return window;
 	}
 
-	float get_width() const
+	float GetWidth() const
 	{
 		return width;
 	}
 
-	float get_height() const
+	float GetHeight() const
 	{
 		return height;
 	}
-	float get_aspectRatio() const
+	float GetAspectRatio() const
 	{
 		return width / height;
 	}
 
 
 private:
-	void initialize_window(int width, int height)
+	void InitializeWindow(int width, int height)
 	{
 		/* Initialize the library */
 		if (!glfwInit()) { return; }
