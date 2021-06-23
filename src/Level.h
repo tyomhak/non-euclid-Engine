@@ -99,7 +99,7 @@ public:
     void DrawObjects(Camera& mainCamera, Shader* shader)
     {
         glm::mat4 view = mainCamera.getViewMatrix();
-        shader->setView(view);
+        shader->SetView(view);
         //shader->update();
         //glm::mat4 view = mainCamera.getViewMatrix();
         //unsigned int viewLoc  = glGetUniformLocation(shader->ID, "view");
@@ -127,7 +127,7 @@ public:
     void Draw(Camera &mainCamera) 
     {
         DrawPortals(mainCamera);
-        objectShader->bind();        // don't know why, but deleting this breaks shit.
+        objectShader->Bind();        // don't know why, but deleting this breaks shit.
         DrawObjects(mainCamera, objectShader);
     }
 

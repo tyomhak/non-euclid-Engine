@@ -62,7 +62,7 @@ public:
         //glViewport(0, 0, texture_width, texture_height);
 
         Shader *currShader = &objShader;        
-        currShader->bind();
+        currShader->Bind();
 
         // Set the view (what you'll in the portal) //
         // ======================================== //
@@ -81,7 +81,7 @@ public:
         // ================================== // 
         // glm::mat4 view_clone = view;
 
-        currShader->setView(view);
+        currShader->SetView(view);
 
         // change the drawing location to portal framebuffer/texture, instead of the screen
         glBindFramebuffer(GL_FRAMEBUFFER, portalFramebuffer);
@@ -110,13 +110,13 @@ public:
 
 
         currShader = &portShader;
-        currShader->bind();
+        currShader->Bind();
 
         view = mainCamera.getViewMatrix();
 
-        currShader->setView(view);
-        currShader->setModel(worldMatrix);
-        currShader->update();
+        currShader->SetView(view);
+        currShader->SetModel(worldMatrix);
+        currShader->Update();
 
         for (auto &mesh : model->meshes)
         {

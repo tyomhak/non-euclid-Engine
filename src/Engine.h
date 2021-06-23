@@ -186,12 +186,12 @@ private:
 		glm::mat4 model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
 		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
 		glm::mat4 mvp = projection* view* model;
-		objectShader.bind();
+		objectShader.Bind();
 		objectShader.SetMat4("mvp", mvp);
 
 		//objectShader.update();
 
-		portalShader.bind();
+		portalShader.Bind();
 		portalShader.SetMat4("mvp", mvp);
 		//portalShader.unbind();
 	}
@@ -215,13 +215,13 @@ private:
 		glm::mat4 projection = glm::perspective(glm::radians(90.0f), window.GetWidth() / window.GetHeight(), 0.1f, 100.0f);		//perspective view
 		glm::mat4 model = glm::mat4(1.0f);
 
-		objectShader.setView(view);
-		objectShader.setModel(model);
-		objectShader.setProjection(projection);
+		objectShader.SetView(view);
+		objectShader.SetModel(model);
+		objectShader.SetProjection(projection);
 
-		portalShader.setView(view);
-		portalShader.setModel(model);
-		portalShader.setProjection(projection);
+		portalShader.SetView(view);
+		portalShader.SetModel(model);
+		portalShader.SetProjection(projection);
 
 	}
 

@@ -32,11 +32,11 @@ public:
 		glDeleteProgram(ID);
 	}
 
-	void bind() {
+	void Bind() {
 		glUseProgram(ID);
 	}
 
-	void unbind() {
+	void Unbind() {
 		glUseProgram(0);
 	}
 
@@ -96,10 +96,10 @@ public:
 		return ID;
 	}
 
-	void update()
+	void Update()
 	{
 		glm::mat4 mvp = projection * view * model;
-		bind();
+		Bind();
 		SetMat4("mvp", mvp);
 	}
 
@@ -144,17 +144,17 @@ public:
 		glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
 	}
 
-	void setView(glm::mat4 _view)
+	void SetView(glm::mat4 _view)
 	{
 		view = _view;
 	}
 
-	void setModel(glm::mat4 _model)
+	void SetModel(glm::mat4 _model)
 	{
 		model = _model;
 	}
 
-	void setProjection(glm::mat4 _projection)
+	void SetProjection(glm::mat4 _projection)
 	{
 		projection = _projection;
 	}
