@@ -6,6 +6,7 @@
 #include "CollisionHandler.h"
 #include "Player.h"
 #include "Level.h"
+#include "Portal.h"
 
 // Before Using Set the camera and the lastX lastY position of the mouse!
 class EventHandler {
@@ -46,7 +47,7 @@ public:
         {
             return;
         }
-        level->getObjectPointer(underViewObjectId)->setPosition(position);
+        level->getObjectPointer(underViewObjectId)->SetPosition(position);
     }
 
     void moveCreateObjectToPosition(glm::vec3 position)
@@ -55,7 +56,7 @@ public:
         {
             return;
         }
-        level->getObjectPointer(updateObjectId)->setPosition(position);
+        level->getObjectPointer(updateObjectId)->SetPosition(position);
     }
 
     // glfw: whenever the window size changed (by OS or user resize) this callback function executes
@@ -92,6 +93,15 @@ public:
     string addObject(string name, glm::vec3 Position)
     {
         return level->AddObject(name, Position);
+    }
+
+    void addPortals()
+    {
+        Ray ray(&player->getCamera(), window);
+        glm::vec3 locationFirst = ray.getOrigin() + (minDistance + 1.0f) * ray.getDirection();
+        glm::vec3 locationSecond = ray.getOrigin() + (minDistance + 3.0f) * ray.getDirection();
+        // portals pair creation
+        level->AddPortalPair(locationFirst, locationSecond);
     }
 
 private:
@@ -200,6 +210,44 @@ private:
                 *level = newLevel;
             }
 
+            if (glfwGetKey(window, GLFW_KEY_EQUAL) == GLFW_PRESS)
+            {
+                for (auto &port : level->getPortals())
+                {
+                    // port.second.RotateHorizontal(45.0f);
+                    port.second.Scale(1.05);
+                }
+            }
+
+
+            if (glfwGetKey(window, GLFW_KEY_MINUS) == GLFW_PRESS)
+            {
+                for (auto &port : level->getPortals())
+                {
+                    // port.second.RotateHorizontal(45.0f);
+                    port.second.Scale(0.95);
+                }
+            }
+
+
+            if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+            {
+                for (auto &port : level->getPortals())
+                {
+                    port.second.RotateHorizontal(0.05f);
+                    // port.second.Scale(1.05);
+                }
+            }
+
+
+            if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+            {
+                for (auto &port : level->getPortals())
+                {
+                    port.second.RotateHorizontal(-0.05f);
+                    // port.second.scale(0.95);
+                }
+            }
 
 
 
@@ -249,6 +297,28 @@ private:
         }
         oldStateR = newStateR;
 
+        // select Object
+        static int oldStateU = GLFW_RELEASE;
+        int newStateU = glfwGetKey(window, GLFW_KEY_U);
+        if (newStateU == GLFW_RELEASE && oldStateU == GLFW_PRESS)
+        {
+            if (!isPortalVisible)
+            {
+                isPortalVisible = true;
+                Portal::portalBackground[0] = 0.1f;
+                Portal::portalBackground[1] = 0.1f;
+                Portal::portalBackground[2] = 0.1f;
+            }
+            else
+            {
+                isPortalVisible = false;
+                Portal::portalBackground[0] = 0.3f;
+                Portal::portalBackground[1] = 0.8f;
+                Portal::portalBackground[2] = 1.0f;
+            }
+        }
+        oldStateU = newStateU;
+
     }
 
     bool checkObjectCollision(Object obj) const
@@ -257,7 +327,7 @@ private:
         const std::map<std::string /* object ID */, Object> objects = level->getObjects();
         for (auto const& it : objects)
         {
-            if (it.first == obj.getId())
+            if (it.first == obj.GetId())
             {
                 continue;
             }
@@ -271,7 +341,7 @@ private:
         const std::map<std::string /* object ID */, Portal> portals = level->getPortals();
         for (auto const& portal : portals)
         {
-            if (portal.first == obj.getId())
+            if (portal.first == obj.GetId())
             {
                 continue;
             }
@@ -285,7 +355,7 @@ private:
         return CollisionHandler::check_collision(player->getCamera(), obj);
     }
 
-    bool checkMovement(Player dummy_player) 
+    bool checkMovement(Player dummy_player)
     {
         if (!isPassing)
         {
@@ -353,7 +423,7 @@ private:
             float t = FLT_MAX;
             if (CollisionHandler::check_collision(ray, obj.second, t))
             {
-                if (obj.second.getId() == updateObjectId)
+                if (obj.second.GetId() == updateObjectId)
                 {
                     continue;
                 }
@@ -434,6 +504,7 @@ private:
     
     const float minDistance = 2.0f;
     float distance = 5.0f;
+    float rotation_degree = 0.01f;
 
 
 public:
@@ -447,6 +518,7 @@ public:
     Shader *objectShader;
     Shader *portalShader;
 
+    bool isPortalVisible = true;
 };
 
 string EventHandler::underViewObjectId("None");

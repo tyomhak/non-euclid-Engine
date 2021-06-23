@@ -26,13 +26,13 @@ public:
     // intersection check of aabb with point
     static bool check_collision(const Camera camera, const Object object)
     {
-        return check_collision(camera, object.getBoundaryBox());
+        return check_collision(camera, object.GetBoundaryBox());
     }
 
     // intersection check of aabb with point
     static bool check_collision(const Player player, const Object object)
     {
-        return check_collision(player.getBoundaryBox(), object.getBoundaryBox());
+        return check_collision(player.getBoundaryBox(), object.GetBoundaryBox());
     }
 
     // intersection check of aabb with aabb
@@ -46,12 +46,12 @@ public:
     // intersection check of aabb with aabb
     static bool check_collision(const Object object1, const Object object2)
     {
-        return check_collision(object1.getBoundaryBox(), object2.getBoundaryBox());
+        return check_collision(object1.GetBoundaryBox(), object2.GetBoundaryBox());
     }
 
     static bool check_collision(const Ray ray, const Object object, float &t)
     {
-        BoundaryBox box = object.getBoundaryBox();
+        BoundaryBox box = object.GetBoundaryBox();
         glm::vec3 min = box.getMinPoint();
         glm::vec3 max = box.getMaxPoint();
 
@@ -109,10 +109,10 @@ private:
     // deprecated
     static bool check_radius_collision(const Player player, const Object object) 
     {
-        float distance_from_centers = glm::distance(player.getBoundaryBox().getCenterPoint(), object.getBoundaryBox().getCenterPoint());
+        float distance_from_centers = glm::distance(player.getBoundaryBox().getCenterPoint(), object.GetBoundaryBox().getCenterPoint());
         float distance_from_edges = distance_from_centers
                                         - (distance(player.getBoundaryBox().getMinPoint(), player.getBoundaryBox().getMaxPoint()) / 2)
-                                        - (distance(object.getBoundaryBox().getMinPoint(), object.getBoundaryBox().getMaxPoint()) / 2);
+                                        - (distance(object.GetBoundaryBox().getMinPoint(), object.GetBoundaryBox().getMaxPoint()) / 2);
 
         return player.getRadius() > distance_from_edges;
     }

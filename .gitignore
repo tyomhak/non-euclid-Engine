@@ -30,4 +30,16 @@
 *.out
 *.app
 
+
+cmake-build-debug/*
 /build
+
+imgui.ini
+.idea/.name
+.idea/misc.xml
+.idea/modules.xml
+.idea/non-euclid-Engine.iml
+.idea/vcs.xml
+.vscode/launch.json
+.vscode/settings.json
+.vscode/tasks.json

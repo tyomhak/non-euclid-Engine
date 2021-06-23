@@ -18,18 +18,18 @@ public:
 		level(portalShader, objectShader),
 		objectShader("./data/shaders/Object_Vertex.shader", "", "./data/shaders/Object_Fragment.shader"),
 		portalShader("./data/shaders/Portal_Vertex.shader", "", "./data/shaders/Portal_Fragment.shader"),
-		eventHandler(&player, &level, window.get_window(),
-			window.get_width() / 2, window.get_height() / 2, &objectShader, &portalShader),
-		ui(window.get_window(), &eventHandler)
+		eventHandler(&player, &level, window.GetWindow(),
+			window.GetWidth() / 2, window.GetHeight() / 2, &objectShader, &portalShader),
+		ui(window.GetWindow(), &eventHandler)
 
 	{
-		setupWindow();
-		setupShaders();
+		SetupWindow();
+		SetupShaders();
 	}
 
 public:
 
-	void render()
+	void Render()
 	{
 		float previousTime = (float)glfwGetTime();
 		int frameCount = 0;
@@ -38,7 +38,7 @@ public:
 		float deltaTime = 0.0f;
 
 
-		while (!glfwWindowShouldClose(window.get_window()))
+		while (!glfwWindowShouldClose(window.GetWindow()))
 		{
 			// Frame Counter
 			float currentTime = (float)glfwGetTime();
@@ -50,7 +50,7 @@ public:
 			}
 			++frameCount;
 
-			//tempTest();
+			//TempTest();
 
 			// Smooth Movement
 			// ---------------
@@ -66,7 +66,7 @@ public:
 			glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			updateShaders();
+			UpdateShaders();
 
 			level.Draw(player.getCamera());
 			ui.render();
@@ -75,7 +75,7 @@ public:
 
 			// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 			// -------------------------------------------------------------------------------
-			glfwSwapBuffers(window.get_window());
+			glfwSwapBuffers(window.GetWindow());
 			glfwPollEvents();
 		}
 		glfwTerminate();
@@ -84,7 +84,7 @@ public:
 	// temporary function for testing stuff
 	// made with purpose to not clutter the render loop
 	// to be deleted later
-	void tempTest() 
+	void TempTest() 
 	{
 		bool objects_collision = false;
 		bool camera_collision = false;
@@ -100,7 +100,7 @@ public:
 		{
 			//moveObject(moveRight, "cube1");
 			//moveObject(moveLeft, "cube2");
-			moveObject(moveLeft, "cube2");
+			MoveObject(moveLeft, "cube2");
 		}
 
 		// camera collision check
@@ -126,17 +126,17 @@ public:
 
 	}
 
-	void addObject(std::string objectName, glm::vec3 location)
+	void AddObject(std::string objectName, glm::vec3 location)
 	{
 		level.AddObject(objectName, location);
 	}
 
-	void addPortal(Portal first, Portal second)
+	void AddPortal(Portal first, Portal second)
 	{
 		level.AddPortalPair(first, second);
 	}
 
-	void addPortal(glm::mat4 locationFirst, glm::mat4 locationSecond, float yawFirst = -90.0f, float yawSecond = -90.0f)
+	void AddPortal(glm::mat4 locationFirst, glm::mat4 locationSecond, float yawFirst = -90.0f, float yawSecond = -90.0f)
 	{
 		Portal first = ObjectHandler::GetPortal(locationFirst);
 		Portal second = ObjectHandler::GetPortal(locationSecond);
@@ -147,24 +147,24 @@ public:
 		level.AddPortalPair(first, second);
 	}
 
-	void moveObject(glm::vec3 direction, std::string id)
+	void MoveObject(glm::vec3 direction, std::string id)
 	{
-		Object* objectToMove = findObjectById(id);
+		Object* objectToMove = FindObjectById(id);
 		objectToMove->Move(direction);
 	}
 
-	void rotateObject(glm::vec3 direction, float angle, std::string id)
+	void RotateObject(glm::vec3 direction, float angle, std::string id)
 	{
-		Object* objectToMove = findObjectById(id);
-		objectToMove->rotate(angle, direction);
+		Object* objectToMove = FindObjectById(id);
+		objectToMove->Rotate(angle, direction);
 	}
 
-	bool check_player_collision(const std::string id)
+	bool CheckPlayerCollision(const std::string id)
 	{
 		return CollisionHandler::check_collision(player, level.GetObjects().at(id));
 	}
 	
-	bool check_cube_collision(const std::string id1, const std::string id2)
+	bool CheckCubeCollision(const std::string id1, const std::string id2)
 	{
 		// TODO: handle case when element was not found in the map by ID
 		return CollisionHandler::check_collision(level.GetObjects().at(id1), level.GetObjects().at(id2));
@@ -172,17 +172,17 @@ public:
 
 private:
 
-	Object* findObjectById(std::string id)
+	Object* FindObjectById(std::string id)
 	{
 		return &level.GetObjects().at(id);
 	}
 
 private:
 
-	void updateShaders()
+	void UpdateShaders()
 	{
 		glm::mat4 view = player.getCamera().getViewMatrix();
-		glm::mat4 projection = glm::perspective(glm::radians(90.0f), window.get_width() / window.get_height(), 0.1f, 100.0f);	//perspective view
+		glm::mat4 projection = glm::perspective(glm::radians(90.0f), window.GetWidth() / window.GetHeight(), 0.1f, 100.0f);	//perspective view
 		glm::mat4 model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
 		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
 		glm::mat4 mvp = projection* view* model;
@@ -196,23 +196,23 @@ private:
 		//portalShader.unbind();
 	}
 
-	void checkSave()
+	void CheckSave()
 	{
-		if (glfwGetKey(window.get_window(), GLFW_KEY_P) == GLFW_PRESS)
+		if (glfwGetKey(window.GetWindow(), GLFW_KEY_P) == GLFW_PRESS)
 		{
-			saveWorld();
+			SaveWorld();
 		}
 	}
 
-	void saveWorld()
+	void SaveWorld()
 	{
 		LevelHandler::WriteLevel("./Alternative", level, player.getCamera());
 	}
 
-	void setupShaders()
+	void SetupShaders()
 	{
 		glm::mat4 view = player.getCamera().getViewMatrix();
-		glm::mat4 projection = glm::perspective(glm::radians(90.0f), window.get_width() / window.get_height(), 0.1f, 100.0f);		//perspective view
+		glm::mat4 projection = glm::perspective(glm::radians(90.0f), window.GetWidth() / window.GetHeight(), 0.1f, 100.0f);		//perspective view
 		glm::mat4 model = glm::mat4(1.0f);
 
 		objectShader.setView(view);
@@ -225,15 +225,15 @@ private:
 
 	}
 
-	void setupWindow()
+	void SetupWindow()
 	{
-		glfwMakeContextCurrent(window.get_window());
+		glfwMakeContextCurrent(window.GetWindow());
 		// resizing controls
-		glfwSetFramebufferSizeCallback(window.get_window(), EventHandler::framebuffer_size_callback);
+		glfwSetFramebufferSizeCallback(window.GetWindow(), EventHandler::framebuffer_size_callback);
 		
 		// Mouse controls
 		// --------------
-		glfwSetInputMode(window.get_window(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		glfwSetInputMode(window.GetWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	}
 
 private:
