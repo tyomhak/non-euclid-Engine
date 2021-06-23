@@ -81,7 +81,7 @@ public:
 
     std::map<std::string /* object Id */, Object>& GetObjects() { return levelObjects; }
 
-    void deleteObject(std::string id)
+    void DeleteObject(std::string id)
     {
         if (levelObjects.find(id) != levelObjects.end())
         {
@@ -131,17 +131,17 @@ public:
         DrawObjects(mainCamera, objectShader);
     }
 
-    std::map<std::string /* object ID */, Object> getObjects() const
+    std::map<std::string /* object ID */, Object> GetObjects() const
     {
         return levelObjects;
     }
 
-    std::map<std::string /* object ID */, Portal> &getPortals()
+    std::map<std::string /* object ID */, Portal> &GetPortals()
     {
         return levelPortals;
     }
 
-    Object* getObjectPointer(string id)
+    Object* GetObjectPointer(string id)
     {
         std::map<std::string /* object ID */, Object>::iterator it = levelObjects.find(id);
         if (it != levelObjects.end())
@@ -157,7 +157,7 @@ public:
         return nullptr;
     }
 
-    Object getObject(string id)
+    Object GetObject(string id)
     {
         std::map<std::string /* object ID */, Object>::iterator it = levelObjects.find(id);
         if (it != levelObjects.end())
@@ -321,7 +321,7 @@ public:
 
         std::set<std::string> savedPorts;
         unsigned int portalNumber = 0;
-        for (auto &port : level.getPortals())
+        for (auto &port : level.GetPortals())
         {
             if (savedPorts.count(port.second.GetId()) == 0)
             {

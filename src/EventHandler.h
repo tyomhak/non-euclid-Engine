@@ -47,7 +47,7 @@ public:
         {
             return;
         }
-        level->getObjectPointer(underViewObjectId)->SetPosition(position);
+        level->GetObjectPointer(underViewObjectId)->SetPosition(position);
     }
 
     void moveCreateObjectToPosition(glm::vec3 position)
@@ -56,7 +56,7 @@ public:
         {
             return;
         }
-        level->getObjectPointer(updateObjectId)->SetPosition(position);
+        level->GetObjectPointer(updateObjectId)->SetPosition(position);
     }
 
     // glfw: whenever the window size changed (by OS or user resize) this callback function executes
@@ -86,7 +86,7 @@ public:
 
     void deleteObject()
     {
-        level->deleteObject(underViewObjectId);
+        level->DeleteObject(underViewObjectId);
     }
 
     // add the object into the level and return the id of created object
@@ -212,7 +212,7 @@ private:
 
             if (glfwGetKey(window, GLFW_KEY_EQUAL) == GLFW_PRESS)
             {
-                for (auto &port : level->getPortals())
+                for (auto &port : level->GetPortals())
                 {
                     // port.second.RotateHorizontal(45.0f);
                     port.second.Scale(1.05);
@@ -222,7 +222,7 @@ private:
 
             if (glfwGetKey(window, GLFW_KEY_MINUS) == GLFW_PRESS)
             {
-                for (auto &port : level->getPortals())
+                for (auto &port : level->GetPortals())
                 {
                     // port.second.RotateHorizontal(45.0f);
                     port.second.Scale(0.95);
@@ -232,7 +232,7 @@ private:
 
             if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
             {
-                for (auto &port : level->getPortals())
+                for (auto &port : level->GetPortals())
                 {
                     port.second.RotateHorizontal(0.05f);
                     // port.second.Scale(1.05);
@@ -242,7 +242,7 @@ private:
 
             if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
             {
-                for (auto &port : level->getPortals())
+                for (auto &port : level->GetPortals())
                 {
                     port.second.RotateHorizontal(-0.05f);
                     // port.second.scale(0.95);
@@ -324,7 +324,7 @@ private:
     bool checkObjectCollision(Object obj) const
     {
         // check collision with objects
-        const std::map<std::string /* object ID */, Object> objects = level->getObjects();
+        const std::map<std::string /* object ID */, Object> objects = level->GetObjects();
         for (auto const& it : objects)
         {
             if (it.first == obj.GetId())
@@ -338,7 +338,7 @@ private:
         }
 
         // check collision with portals
-        const std::map<std::string /* object ID */, Portal> portals = level->getPortals();
+        const std::map<std::string /* object ID */, Portal> portals = level->GetPortals();
         for (auto const& portal : portals)
         {
             if (portal.first == obj.GetId())
@@ -359,7 +359,7 @@ private:
     {
         if (!isPassing)
         {
-            const std::map<std::string /* object ID */, Object> objects = level->getObjects();
+            const std::map<std::string /* object ID */, Object> objects = level->GetObjects();
             for (auto const& it : objects)
             {
                 if (CollisionHandler::check_collision(dummy_player, it.second))
@@ -371,7 +371,7 @@ private:
 
 
         bool touched_any = false;
-        const std::map<std::string /* object ID */, Portal> portals = level->getPortals();
+        const std::map<std::string /* object ID */, Portal> portals = level->GetPortals();
         for (auto & it : portals)
         {
             if (CollisionHandler::check_collision(dummy_player, it.second))
@@ -416,7 +416,7 @@ private:
         
         float mint = FLT_MAX;
 
-        std::map<std::string /* object ID */, Object> levelObjects = level->getObjects();
+        std::map<std::string /* object ID */, Object> levelObjects = level->GetObjects();
 
         for (auto const& obj : levelObjects)
         {
@@ -436,7 +436,7 @@ private:
         }
 
         // check collision with portals
-        const std::map<std::string /* object ID */, Portal> portals = level->getPortals();
+        const std::map<std::string /* object ID */, Portal> portals = level->GetPortals();
         for (auto const& portal : portals)
         {
             float t = FLT_MAX;
@@ -472,11 +472,11 @@ private:
             while(dist >= minDistance)
             {
                 glm::vec3 obj_pos = ray.getOrigin() + (dist)*ray.getDirection();
-                const glm::mat4 oldWorldMat = level->getObjectPointer(updateObjectId)->GetWorldMat();
+                const glm::mat4 oldWorldMat = level->GetObjectPointer(updateObjectId)->GetWorldMat();
                 moveCreateObjectToPosition(obj_pos);
-                if (checkObjectCollision(level->getObject(updateObjectId)))
+                if (checkObjectCollision(level->GetObject(updateObjectId)))
                 {
-                    level->getObjectPointer(updateObjectId)->SetWorldMatrix(oldWorldMat);
+                    level->GetObjectPointer(updateObjectId)->SetWorldMatrix(oldWorldMat);
                 }
                 else
                 {
