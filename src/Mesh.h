@@ -58,7 +58,7 @@ public:
         this->textures = textures;
 
         // now that we have all the required data, set the vertex buffers and its attribute pointers.
-        setupMesh();
+        SetupMesh();
     }
 
     // render the mesh
@@ -109,7 +109,7 @@ private:
     unsigned int VBO, EBO;
 
     // initializes all the buffer objects/arrays
-    void setupMesh()
+    void SetupMesh()
     {
         // create buffers/arrays
         glGenVertexArrays(1, &VAO);
