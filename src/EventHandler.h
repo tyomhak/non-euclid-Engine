@@ -331,7 +331,7 @@ private:
             {
                 continue;
             }
-            if (CollisionHandler::check_collision(obj, it.second))
+            if (CollisionHandler::CheckCollision(obj, it.second))
             {
                 return true;
             }
@@ -345,14 +345,14 @@ private:
             {
                 continue;
             }
-            if (CollisionHandler::check_collision(obj, portal.second))
+            if (CollisionHandler::CheckCollision(obj, portal.second))
             {
                 return true;
             }
         }
 
         // check collision with player
-        return CollisionHandler::check_collision(player->GetCamera(), obj);
+        return CollisionHandler::CheckCollision(player->GetCamera(), obj);
     }
 
     bool checkMovement(Player dummy_player)
@@ -362,7 +362,7 @@ private:
             const std::map<std::string /* object ID */, Object> objects = level->GetObjects();
             for (auto const& it : objects)
             {
-                if (CollisionHandler::check_collision(dummy_player, it.second))
+                if (CollisionHandler::CheckCollision(dummy_player, it.second))
                 {
                     return true;
                 }
@@ -374,7 +374,7 @@ private:
         const std::map<std::string /* object ID */, Portal> portals = level->GetPortals();
         for (auto & it : portals)
         {
-            if (CollisionHandler::check_collision(dummy_player, it.second))
+            if (CollisionHandler::CheckCollision(dummy_player, it.second))
             {
                 if (!isPassing)
                 {
@@ -421,7 +421,7 @@ private:
         for (auto const& obj : levelObjects)
         {
             float t = FLT_MAX;
-            if (CollisionHandler::check_collision(ray, obj.second, t))
+            if (CollisionHandler::CheckCollision(ray, obj.second, t))
             {
                 if (obj.second.GetId() == updateObjectId)
                 {
@@ -440,7 +440,7 @@ private:
         for (auto const& portal : portals)
         {
             float t = FLT_MAX;
-            if (CollisionHandler::check_collision(ray, portal.second, t))
+            if (CollisionHandler::CheckCollision(ray, portal.second, t))
             {
                 if (portal.first == updateObjectId)
                 {

@@ -16,7 +16,7 @@ public:
     CollisionHandler() {};
 
     // intersection check of aabb with point
-    static bool check_collision(const Camera camera, const BoundaryBox box)
+    static bool CheckCollision(const Camera camera, const BoundaryBox box)
     {
         return (camera.GetPosition().x >= box.GetMinPoint().x && camera.GetPosition().x <= box.GetMaxPoint().x)
             && (camera.GetPosition().y >= box.GetMinPoint().y && camera.GetPosition().y <= box.GetMaxPoint().y)
@@ -24,19 +24,19 @@ public:
     }
 
     // intersection check of aabb with point
-    static bool check_collision(const Camera camera, const Object object)
+    static bool CheckCollision(const Camera camera, const Object object)
     {
-        return check_collision(camera, object.GetBoundaryBox());
+        return CheckCollision(camera, object.GetBoundaryBox());
     }
 
     // intersection check of aabb with point
-    static bool check_collision(const Player player, const Object object)
+    static bool CheckCollision(const Player player, const Object object)
     {
-        return check_collision(player.GetBoundaryBox(), object.GetBoundaryBox());
+        return CheckCollision(player.GetBoundaryBox(), object.GetBoundaryBox());
     }
 
     // intersection check of aabb with aabb
-    static bool check_collision(const BoundaryBox box1, const BoundaryBox box2)
+    static bool CheckCollision(const BoundaryBox box1, const BoundaryBox box2)
     {
         return (box1.GetMinPoint().x <= box2.GetMaxPoint().x && box1.GetMaxPoint().x >= box2.GetMinPoint().x)
             && (box1.GetMinPoint().y <= box2.GetMaxPoint().y && box1.GetMaxPoint().y >= box2.GetMinPoint().y)
@@ -44,12 +44,12 @@ public:
     }
 
     // intersection check of aabb with aabb
-    static bool check_collision(const Object object1, const Object object2)
+    static bool CheckCollision(const Object object1, const Object object2)
     {
-        return check_collision(object1.GetBoundaryBox(), object2.GetBoundaryBox());
+        return CheckCollision(object1.GetBoundaryBox(), object2.GetBoundaryBox());
     }
 
-    static bool check_collision(const Ray ray, const Object object, float &t)
+    static bool CheckCollision(const Ray ray, const Object object, float &t)
     {
         BoundaryBox box = object.GetBoundaryBox();
         glm::vec3 min = box.GetMinPoint();

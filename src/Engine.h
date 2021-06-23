@@ -161,13 +161,13 @@ public:
 
 	bool CheckPlayerCollision(const std::string id)
 	{
-		return CollisionHandler::check_collision(player, level.GetObjects().at(id));
+		return CollisionHandler::CheckCollision(player, level.GetObjects().at(id));
 	}
 	
 	bool CheckCubeCollision(const std::string id1, const std::string id2)
 	{
 		// TODO: handle case when element was not found in the map by ID
-		return CollisionHandler::check_collision(level.GetObjects().at(id1), level.GetObjects().at(id2));
+		return CollisionHandler::CheckCollision(level.GetObjects().at(id1), level.GetObjects().at(id2));
 	}
 
 private:
