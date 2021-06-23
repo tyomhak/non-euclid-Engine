@@ -69,7 +69,7 @@ public:
 			UpdateShaders();
 
 			level.Draw(player.GetCamera());
-			ui.render();
+			ui.Render();
 
 
 

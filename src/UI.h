@@ -55,7 +55,7 @@ public:
 		//createWindow("Window");
 	}
 
-	void createWindow(const char* window_name) 
+	void CreateWindow(const char* window_name) 
 	{
 		// Create a window called "My First Tool", with a menu bar.
 		ImGui::Begin(window_name, &tabs_active, ImGuiWindowFlags_MenuBar);
@@ -159,7 +159,7 @@ public:
 		ImGui::End();
 	}
 
-	void render()
+	void Render()
 	{
 		// feed inputs to dear imgui, start new frame
 		ImGuiIO& io = ImGui::GetIO();
@@ -167,7 +167,7 @@ public:
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
-		createWindow("Object Creation/Manipulation window");
+		CreateWindow("Object Creation/Manipulation window");
 
 
 		// Render dear imgui into screen
