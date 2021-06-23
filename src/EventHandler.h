@@ -28,20 +28,20 @@ public:
     }
 
 public:
-    void handleEvents(float deltaTime) {
+    void HandleEvents(float deltaTime) {
         // handle keyboard
-        processInput(deltaTime);
+        ProcessInput(deltaTime);
 
         // handle mouse
-        if (!cursorEnabled){    mouse_callback();   }
+        if (!cursorEnabled){    MouseCallback();   }
         //std::cout << selectedObjectId << std::endl;
         if (creativeEnabled)
         {
-            castRay();
+            CastRay();
         }
     }
 
-    void moveSelectedObjectToPosition(glm::vec3 position)
+    void MoveSelectedObjectToPosition(glm::vec3 position)
     {
         if (underViewObjectId == "None")
         {
@@ -50,7 +50,7 @@ public:
         level->GetObjectPointer(underViewObjectId)->SetPosition(position);
     }
 
-    void moveCreateObjectToPosition(glm::vec3 position)
+    void MoveCreateObjectToPosition(glm::vec3 position)
     {
         if (updateObjectId == "None")
         {
@@ -68,14 +68,14 @@ public:
         glViewport(0, 0, width, height);
     }
 
-    void saveObject()
+    void SaveObject()
     {
         creativeEnabled = false;
         underViewObjectId = "None";
         updateObjectId = "None";
     }
 
-    void selectObject()
+    void SelectObject()
     {
         if (underViewObjectId == "None")
         {
@@ -84,18 +84,18 @@ public:
         updateObjectId = underViewObjectId;
     }
 
-    void deleteObject()
+    void DeleteObject()
     {
         level->DeleteObject(underViewObjectId);
     }
 
     // add the object into the level and return the id of created object
-    string addObject(string name, glm::vec3 Position)
+    string AddObject(string name, glm::vec3 Position)
     {
         return level->AddObject(name, Position);
     }
 
-    void addPortals()
+    void AddPortals()
     {
         Ray ray(&player->GetCamera(), window);
         glm::vec3 locationFirst = ray.GetOrigin() + (minDistance + 1.0f) * ray.GetDirection();
@@ -107,7 +107,7 @@ public:
 private:
     // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
-    void processInput(float deltaTime)
+    void ProcessInput(float deltaTime)
     {
         if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
             glfwSetWindowShouldClose(window, true);
@@ -119,7 +119,7 @@ private:
             if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
             {
                 dummy_player.Move(FORWARD, deltaTime);
-                if (!checkMovement(dummy_player)) 
+                if (!CheckMovement(dummy_player)) 
                 {
                     player->Move(FORWARD, deltaTime);
                 }
@@ -127,7 +127,7 @@ private:
             if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
             {
                 dummy_player.Move(BACKWARD, deltaTime);
-                if (!checkMovement(dummy_player))
+                if (!CheckMovement(dummy_player))
                 {
                     player->Move(BACKWARD, deltaTime);
                 }
@@ -135,7 +135,7 @@ private:
             if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
             {
                 dummy_player.Move(STRAFELEFT, deltaTime);
-                if(!checkMovement(dummy_player))
+                if(!CheckMovement(dummy_player))
                 {
                     player->Move(STRAFELEFT, deltaTime);
                 }
@@ -143,7 +143,7 @@ private:
             if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
             {
                 dummy_player.Move(STRAFERIGHT, deltaTime);
-                if (!checkMovement(dummy_player))
+                if (!CheckMovement(dummy_player))
                 {
                     player->Move(STRAFERIGHT, deltaTime);
                 }
@@ -151,7 +151,7 @@ private:
             if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
             {
                 dummy_player.Move(UPWARD, deltaTime);
-                if (!checkMovement(dummy_player))
+                if (!CheckMovement(dummy_player))
                 {
                     player->Move(UPWARD, deltaTime * 2);
                 }
@@ -160,7 +160,7 @@ private:
             //if (true)
             {
                 dummy_player.Move(DOWNWARD, deltaTime);
-                if (!checkMovement(dummy_player))
+                if (!CheckMovement(dummy_player))
                 {
                     player->Move(DOWNWARD, deltaTime);
                 }
@@ -196,7 +196,7 @@ private:
             // place Object
             if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS)
             {
-                saveObject();
+                SaveObject();
             }
 
             if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
@@ -283,7 +283,7 @@ private:
             else
             {
                 creativeEnabled = false;
-                saveObject();
+                SaveObject();
             }
         }
         oldStateE = newStateE;
@@ -293,7 +293,7 @@ private:
         int newStateR = glfwGetKey(window, GLFW_KEY_R);
         if (newStateR == GLFW_RELEASE && oldStateR == GLFW_PRESS) 
         {
-            selectObject();
+            SelectObject();
         }
         oldStateR = newStateR;
 
@@ -321,7 +321,7 @@ private:
 
     }
 
-    bool checkObjectCollision(Object obj) const
+    bool CheckObjectCollision(Object obj) const
     {
         // check collision with objects
         const std::map<std::string /* object ID */, Object> objects = level->GetObjects();
@@ -355,7 +355,7 @@ private:
         return CollisionHandler::CheckCollision(player->GetCamera(), obj);
     }
 
-    bool checkMovement(Player dummy_player)
+    bool CheckMovement(Player dummy_player)
     {
         if (!isPassing)
         {
@@ -394,7 +394,7 @@ private:
         return false;
     }
     
-    void mouse_callback()
+    void MouseCallback()
     {
         double xpos;
         double ypos;
@@ -410,7 +410,7 @@ private:
         player->GetCamera().ProcessMouseMovement(xoffset, yoffset);
     }
 
-    void castRay()
+    void CastRay()
     {
         Ray ray(&player->GetCamera(), window);
         
@@ -473,8 +473,8 @@ private:
             {
                 glm::vec3 obj_pos = ray.GetOrigin() + (dist)*ray.GetDirection();
                 const glm::mat4 oldWorldMat = level->GetObjectPointer(updateObjectId)->GetWorldMat();
-                moveCreateObjectToPosition(obj_pos);
-                if (checkObjectCollision(level->GetObject(updateObjectId)))
+                MoveCreateObjectToPosition(obj_pos);
+                if (CheckObjectCollision(level->GetObject(updateObjectId)))
                 {
                     level->GetObjectPointer(updateObjectId)->SetWorldMatrix(oldWorldMat);
                 }

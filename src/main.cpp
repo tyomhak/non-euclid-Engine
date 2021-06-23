@@ -17,7 +17,7 @@ int main()
 	engine.AddPortal(locationFirst, locationSecond);
 
 	// portals pair creation
-	//engine.addPortal(locationFirst, locationSecond);
+	//engine.AddPortal(locationFirst, locationSecond);
 
 	engine.Render();
 

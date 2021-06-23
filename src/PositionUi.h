@@ -27,7 +27,7 @@ public:
 	// 	ImGui::End();
 
 
-	// 	eventHandler->moveSelectedObjectToPosition(glm::vec3(position[0], position[1], position[2]));
+	// 	eventHandler->MoveSelectedObjectToPosition(glm::vec3(position[0], position[1], position[2]));
 
 	// }
 

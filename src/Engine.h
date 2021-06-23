@@ -58,7 +58,7 @@ public:
 			lastFrameTime = currentTime;
 			// input
 			// -----
-			eventHandler.handleEvents(deltaTime);
+			eventHandler.HandleEvents(deltaTime);
 
 			// render
 			// -----
