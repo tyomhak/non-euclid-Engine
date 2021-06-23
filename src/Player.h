@@ -11,53 +11,53 @@ public:
 
 	Player() : camera(), boundaryBox()
 	{
-		updateBoundaryBox();
+		UpdateBoundaryBox();
 	}
 
 	Player(Camera camera_) : camera(camera_), boundaryBox()
 	{
-		updateBoundaryBox();
+		UpdateBoundaryBox();
 	}
 
-	void move(MoveDirection direction, float deltaTime ) 
+	void Move(MoveDirection direction, float deltaTime ) 
 	{
 		camera.ProcessKeyboard(direction, deltaTime);
-		updateBoundaryBox();
+		UpdateBoundaryBox();
 	}
 
-	Player getCopy() const 
+	Player GetCopy() const 
 	{
 		return Player(camera);
 	}
 
-	BoundaryBox getBoundaryBox() const
+	BoundaryBox GetBoundaryBox() const
 	{
 		return boundaryBox;
 	}
 
-	Camera& getCamera()
+	Camera& GetCamera()
 	{
 		return camera;
 	}
 
-	void setCamera(Camera cam)
+	void SetCamera(Camera cam)
 	{
 		camera = cam;
-		updateBoundaryBox();
+		UpdateBoundaryBox();
 	}
 
 
-	void setHeight(float h)
+	void SetHeight(float h)
 	{
 		height = h;
 	}
 
-	void setRadius(float r)
+	void SetRadius(float r)
 	{
 		radius = r;
 	}
 
-	float getRadius() const
+	float GetRadius() const
 	{
 		return radius;
 	}
@@ -70,7 +70,7 @@ private:
 	* This function calculates the minimum point of the body  
 	* and the maximum point of the head to create a boundary box
 	**/
-	void updateBoundaryBox() 
+	void UpdateBoundaryBox() 
 	{
 		float headHeight = height / 6;
 		// we were high, we are sorry

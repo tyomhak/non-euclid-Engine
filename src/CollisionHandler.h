@@ -32,7 +32,7 @@ public:
     // intersection check of aabb with point
     static bool check_collision(const Player player, const Object object)
     {
-        return check_collision(player.getBoundaryBox(), object.GetBoundaryBox());
+        return check_collision(player.GetBoundaryBox(), object.GetBoundaryBox());
     }
 
     // intersection check of aabb with aabb
@@ -109,12 +109,12 @@ private:
     // deprecated
     static bool check_radius_collision(const Player player, const Object object) 
     {
-        float distance_from_centers = glm::distance(player.getBoundaryBox().getCenterPoint(), object.GetBoundaryBox().getCenterPoint());
+        float distance_from_centers = glm::distance(player.GetBoundaryBox().getCenterPoint(), object.GetBoundaryBox().getCenterPoint());
         float distance_from_edges = distance_from_centers
-                                        - (distance(player.getBoundaryBox().getMinPoint(), player.getBoundaryBox().getMaxPoint()) / 2)
+                                        - (distance(player.GetBoundaryBox().getMinPoint(), player.GetBoundaryBox().getMaxPoint()) / 2)
                                         - (distance(object.GetBoundaryBox().getMinPoint(), object.GetBoundaryBox().getMaxPoint()) / 2);
 
-        return player.getRadius() > distance_from_edges;
+        return player.GetRadius() > distance_from_edges;
     }
 };
 

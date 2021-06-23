@@ -97,7 +97,7 @@ public:
 
     void addPortals()
     {
-        Ray ray(&player->getCamera(), window);
+        Ray ray(&player->GetCamera(), window);
         glm::vec3 locationFirst = ray.getOrigin() + (minDistance + 1.0f) * ray.getDirection();
         glm::vec3 locationSecond = ray.getOrigin() + (minDistance + 3.0f) * ray.getDirection();
         // portals pair creation
@@ -113,56 +113,56 @@ private:
             glfwSetWindowShouldClose(window, true);
         else
         {
-            Player dummy_player = player->getCopy();
+            Player dummy_player = player->GetCopy();
             if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
                 deltaTime *= 2.0f;
             if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
             {
-                dummy_player.move(FORWARD, deltaTime);
+                dummy_player.Move(FORWARD, deltaTime);
                 if (!checkMovement(dummy_player)) 
                 {
-                    player->move(FORWARD, deltaTime);
+                    player->Move(FORWARD, deltaTime);
                 }
             }
             if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
             {
-                dummy_player.move(BACKWARD, deltaTime);
+                dummy_player.Move(BACKWARD, deltaTime);
                 if (!checkMovement(dummy_player))
                 {
-                    player->move(BACKWARD, deltaTime);
+                    player->Move(BACKWARD, deltaTime);
                 }
             }
             if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
             {
-                dummy_player.move(STRAFELEFT, deltaTime);
+                dummy_player.Move(STRAFELEFT, deltaTime);
                 if(!checkMovement(dummy_player))
                 {
-                    player->move(STRAFELEFT, deltaTime);
+                    player->Move(STRAFELEFT, deltaTime);
                 }
             }
             if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
             {
-                dummy_player.move(STRAFERIGHT, deltaTime);
+                dummy_player.Move(STRAFERIGHT, deltaTime);
                 if (!checkMovement(dummy_player))
                 {
-                    player->move(STRAFERIGHT, deltaTime);
+                    player->Move(STRAFERIGHT, deltaTime);
                 }
             }
             if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
             {
-                dummy_player.move(UPWARD, deltaTime);
+                dummy_player.Move(UPWARD, deltaTime);
                 if (!checkMovement(dummy_player))
                 {
-                    player->move(UPWARD, deltaTime * 2);
+                    player->Move(UPWARD, deltaTime * 2);
                 }
             }
             if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
             //if (true)
             {
-                dummy_player.move(DOWNWARD, deltaTime);
+                dummy_player.Move(DOWNWARD, deltaTime);
                 if (!checkMovement(dummy_player))
                 {
-                    player->move(DOWNWARD, deltaTime);
+                    player->Move(DOWNWARD, deltaTime);
                 }
             }
 
@@ -201,12 +201,12 @@ private:
 
             if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
             {
-                LevelHandler::WriteLevel("temp_level", *level, player->getCamera());
+                LevelHandler::WriteLevel("temp_level", *level, player->GetCamera());
             }
 
             if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
             {
-                Level newLevel = LevelHandler::ReadLevel("temp_level.lev", player->getCamera(), *portalShader, *objectShader);
+                Level newLevel = LevelHandler::ReadLevel("temp_level.lev", player->GetCamera(), *portalShader, *objectShader);
                 *level = newLevel;
             }
 
@@ -352,7 +352,7 @@ private:
         }
 
         // check collision with player
-        return CollisionHandler::check_collision(player->getCamera(), obj);
+        return CollisionHandler::check_collision(player->GetCamera(), obj);
     }
 
     bool checkMovement(Player dummy_player)
@@ -378,7 +378,7 @@ private:
             {
                 if (!isPassing)
                 {
-                    player->setCamera(it.second.GetPairCamera(dummy_player.getCamera()));
+                    player->SetCamera(it.second.GetPairCamera(dummy_player.GetCamera()));
                 }
                 isPassing = true;
                 touched_any = true;
@@ -407,12 +407,12 @@ private:
         lastMouseX = (float)xpos;
         lastMouseY = (float)ypos;
 
-        player->getCamera().ProcessMouseMovement(xoffset, yoffset);
+        player->GetCamera().ProcessMouseMovement(xoffset, yoffset);
     }
 
     void castRay()
     {
-        Ray ray(&player->getCamera(), window);
+        Ray ray(&player->GetCamera(), window);
         
         float mint = FLT_MAX;
 
