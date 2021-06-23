@@ -23,13 +23,13 @@ public:
 		ui(window.GetWindow(), &eventHandler)
 
 	{
-		setupWindow();
-		setupShaders();
+		SetupWindow();
+		SetupShaders();
 	}
 
 public:
 
-	void render()
+	void Render()
 	{
 		float previousTime = (float)glfwGetTime();
 		int frameCount = 0;
@@ -50,7 +50,7 @@ public:
 			}
 			++frameCount;
 
-			//tempTest();
+			//TempTest();
 
 			// Smooth Movement
 			// ---------------
@@ -66,7 +66,7 @@ public:
 			glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			updateShaders();
+			UpdateShaders();
 
 			level.Draw(player.getCamera());
 			ui.render();
@@ -84,7 +84,7 @@ public:
 	// temporary function for testing stuff
 	// made with purpose to not clutter the render loop
 	// to be deleted later
-	void tempTest() 
+	void TempTest() 
 	{
 		bool objects_collision = false;
 		bool camera_collision = false;
@@ -100,7 +100,7 @@ public:
 		{
 			//moveObject(moveRight, "cube1");
 			//moveObject(moveLeft, "cube2");
-			moveObject(moveLeft, "cube2");
+			MoveObject(moveLeft, "cube2");
 		}
 
 		// camera collision check
@@ -126,17 +126,17 @@ public:
 
 	}
 
-	void addObject(std::string objectName, glm::vec3 location)
+	void AddObject(std::string objectName, glm::vec3 location)
 	{
 		level.AddObject(objectName, location);
 	}
 
-	void addPortal(Portal first, Portal second)
+	void AddPortal(Portal first, Portal second)
 	{
 		level.AddPortalPair(first, second);
 	}
 
-	void addPortal(glm::mat4 locationFirst, glm::mat4 locationSecond, float yawFirst = -90.0f, float yawSecond = -90.0f)
+	void AddPortal(glm::mat4 locationFirst, glm::mat4 locationSecond, float yawFirst = -90.0f, float yawSecond = -90.0f)
 	{
 		Portal first = ObjectHandler::GetPortal(locationFirst);
 		Portal second = ObjectHandler::GetPortal(locationSecond);
@@ -147,24 +147,24 @@ public:
 		level.AddPortalPair(first, second);
 	}
 
-	void moveObject(glm::vec3 direction, std::string id)
+	void MoveObject(glm::vec3 direction, std::string id)
 	{
-		Object* objectToMove = findObjectById(id);
+		Object* objectToMove = FindObjectById(id);
 		objectToMove->Move(direction);
 	}
 
-	void rotateObject(glm::vec3 direction, float angle, std::string id)
+	void RotateObject(glm::vec3 direction, float angle, std::string id)
 	{
-		Object* objectToMove = findObjectById(id);
+		Object* objectToMove = FindObjectById(id);
 		objectToMove->rotate(angle, direction);
 	}
 
-	bool check_player_collision(const std::string id)
+	bool CheckPlayerCollision(const std::string id)
 	{
 		return CollisionHandler::check_collision(player, level.GetObjects().at(id));
 	}
 	
-	bool check_cube_collision(const std::string id1, const std::string id2)
+	bool CheckCubeCollision(const std::string id1, const std::string id2)
 	{
 		// TODO: handle case when element was not found in the map by ID
 		return CollisionHandler::check_collision(level.GetObjects().at(id1), level.GetObjects().at(id2));
@@ -172,14 +172,14 @@ public:
 
 private:
 
-	Object* findObjectById(std::string id)
+	Object* FindObjectById(std::string id)
 	{
 		return &level.GetObjects().at(id);
 	}
 
 private:
 
-	void updateShaders()
+	void UpdateShaders()
 	{
 		glm::mat4 view = player.getCamera().getViewMatrix();
 		glm::mat4 projection = glm::perspective(glm::radians(90.0f), window.GetWidth() / window.GetHeight(), 0.1f, 100.0f);	//perspective view
@@ -196,20 +196,20 @@ private:
 		//portalShader.unbind();
 	}
 
-	void checkSave()
+	void CheckSave()
 	{
 		if (glfwGetKey(window.GetWindow(), GLFW_KEY_P) == GLFW_PRESS)
 		{
-			saveWorld();
+			SaveWorld();
 		}
 	}
 
-	void saveWorld()
+	void SaveWorld()
 	{
 		LevelHandler::WriteLevel("./Alternative", level, player.getCamera());
 	}
 
-	void setupShaders()
+	void SetupShaders()
 	{
 		glm::mat4 view = player.getCamera().getViewMatrix();
 		glm::mat4 projection = glm::perspective(glm::radians(90.0f), window.GetWidth() / window.GetHeight(), 0.1f, 100.0f);		//perspective view
@@ -225,7 +225,7 @@ private:
 
 	}
 
-	void setupWindow()
+	void SetupWindow()
 	{
 		glfwMakeContextCurrent(window.GetWindow());
 		// resizing controls
