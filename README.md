@@ -8,3 +8,4 @@ Capstone Project for AUA
 - glm
 - KHR
 
+Installation instructions: https://github.com/tyomhak/non-euclid-Engine/blob/main/docs/WindowsBuildTutorial.md
