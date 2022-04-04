@@ -8,3 +8,6 @@ Capstone Project for AUA
 - glm
 - KHR
 
+
+# Building in Windows
+You can find an explanation in the [docs file](./docs/WindowsBuildTutorial.md).
