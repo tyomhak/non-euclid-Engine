@@ -28,67 +28,79 @@
     <Filter Include="src\external\stb_image">
       <UniqueIdentifier>{44507f17-55ef-4427-ad17-bced8a659543}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Engine">
+      <UniqueIdentifier>{8f32ed61-6018-4b05-86f3-f0055a4455f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Engine\Object">
+      <UniqueIdentifier>{13263d4c-58b8-4ea4-9270-ca41921c1cc4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Engine\Player">
+      <UniqueIdentifier>{05952d0f-7d42-414f-a3d0-ecefec5bb4a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\UI">
+      <UniqueIdentifier>{18a053b3-aef3-4d66-8949-c2061c5acfcd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Engine\Object\Portal">
+      <UniqueIdentifier>{f1cd50ee-7196-483b-842d-b88fb106cbb1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\src\BoundaryBox.h">
-      <Filter>src</Filter>
+    <ClInclude Include="..\..\..\..\src\Engine\Object\BoundaryBox.h">
+      <Filter>src\Engine\Object</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\Camera.h">
-      <Filter>src</Filter>
+    <ClInclude Include="..\..\..\..\src\Engine\Object\Level.h">
+      <Filter>src\Engine\Object</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\CollisionHandler.h">
-      <Filter>src</Filter>
+    <ClInclude Include="..\..\..\..\src\Engine\Object\Mesh.h">
+      <Filter>src\Engine\Object</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\Engine.h">
-      <Filter>src</Filter>
+    <ClInclude Include="..\..\..\..\src\Engine\Object\Model.h">
+      <Filter>src\Engine\Object</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\EventHandler.h">
-      <Filter>src</Filter>
+    <ClInclude Include="..\..\..\..\src\Engine\Object\Object.h">
+      <Filter>src\Engine\Object</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\IncludeHeaders.h">
-      <Filter>src</Filter>
+    <ClInclude Include="..\..\..\..\src\Engine\Object\ObjHandler.h">
+      <Filter>src\Engine\Object</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\Level.h">
-      <Filter>src</Filter>
+    <ClInclude Include="..\..\..\..\src\Engine\Player\Camera.h">
+      <Filter>src\Engine\Player</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\Mesh.h">
-      <Filter>src</Filter>
+    <ClInclude Include="..\..\..\..\src\Engine\Player\Move.h">
+      <Filter>src\Engine\Player</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\Model.h">
-      <Filter>src</Filter>
+    <ClInclude Include="..\..\..\..\src\Engine\Player\Player.h">
+      <Filter>src\Engine\Player</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\Move.h">
-      <Filter>src</Filter>
+    <ClInclude Include="..\..\..\..\src\Engine\Object\CollisionHandler.h">
+      <Filter>src\Engine\Object</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\Object.h">
-      <Filter>src</Filter>
+    <ClInclude Include="..\..\..\..\src\Engine\Object\Ray.h">
+      <Filter>src\Engine\Object</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\ObjHandler.h">
-      <Filter>src</Filter>
+    <ClInclude Include="..\..\..\..\src\Engine\Engine.h">
+      <Filter>src\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\Player.h">
-      <Filter>src</Filter>
+    <ClInclude Include="..\..\..\..\src\Engine\EventHandler.h">
+      <Filter>src\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\Portal.h">
-      <Filter>src</Filter>
+    <ClInclude Include="..\..\..\..\src\Engine\Shader.h">
+      <Filter>src\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\PositionUi.h">
-      <Filter>src</Filter>
+    <ClInclude Include="..\..\..\..\src\Engine\Window.h">
+      <Filter>src\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\Ray.h">
-      <Filter>src</Filter>
+    <ClInclude Include="..\..\..\..\src\UI\UI.h">
+      <Filter>src\UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\Shader.h">
-      <Filter>src</Filter>
+    <ClInclude Include="..\..\..\..\src\UI\UiWindow.h">
+      <Filter>src\UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\UI.h">
-      <Filter>src</Filter>
+    <ClInclude Include="..\..\..\..\src\Engine\Object\Portal\Portal.h">
+      <Filter>src\Engine\Object\Portal</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\UiWindow.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\src\Window.h">
-      <Filter>src</Filter>
+    <ClInclude Include="..\..\..\..\src\Engine\IncludeHeaders.h">
+      <Filter>src\Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -121,6 +133,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\..\src\external\stb_image\stb_image.cpp">
       <Filter>src\external\stb_image</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\Engine\Engine.cpp">
+      <Filter>src\Engine</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
