@@ -6,7 +6,9 @@ class BoundaryBox
 {
 
 public:
-	BoundaryBox() : minPoint(), maxPoint()
+	BoundaryBox(): 
+		minPoint(), 
+		maxPoint()
 	{
 
 	}

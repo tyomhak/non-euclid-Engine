@@ -39,5 +39,4 @@ private:
     static int id;
 };
 
-int ObjectHandler::id = 0;
-std::unordered_map<string, Model> ObjectHandler::models;
+

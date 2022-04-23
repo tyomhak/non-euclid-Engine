@@ -134,7 +134,7 @@
     <PostBuildEvent>
       <Command>copy "$(SolutionDir)..\..\..\libs\Win\$(Configuration)\assimp.dll" "$(TargetDir)"
 
-xcopy /e /k /h /i "$(SolutionDir)..\..\..\data" "$(TargetDir)\data"</Command>
+xcopy /e /k /h /i /Y "$(SolutionDir)..\..\..\data" "$(TargetDir)\data"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -157,7 +157,7 @@ xcopy /e /k /h /i "$(SolutionDir)..\..\..\data" "$(TargetDir)\data"</Command>
     <PostBuildEvent>
       <Command>copy "$(SolutionDir)..\..\..\libs\Win\$(Configuration)\assimp.dll" "$(TargetDir)"
 
-xcopy /e /k /h /i "$(SolutionDir)..\..\..\data" "$(TargetDir)\data"</Command>
+xcopy /e /k /h /i /Y "$(SolutionDir)..\..\..\data" "$(TargetDir)\data"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -186,6 +186,26 @@ xcopy /e /k /h /i "$(SolutionDir)..\..\..\data" "$(TargetDir)\data"</Command>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\src\Engine\EventHandler.cpp" />
+    <ClCompile Include="..\..\..\..\src\Engine\Object\BoundaryBox.cpp" />
+    <ClCompile Include="..\..\..\..\src\Engine\Object\CollisionHandler.cpp" />
+    <ClCompile Include="..\..\..\..\src\Engine\Object\Level.cpp" />
+    <ClCompile Include="..\..\..\..\src\Engine\Object\Mesh.cpp" />
+    <ClCompile Include="..\..\..\..\src\Engine\Object\Model.cpp" />
+    <ClCompile Include="..\..\..\..\src\Engine\Object\Object.cpp" />
+    <ClCompile Include="..\..\..\..\src\Engine\Object\ObjHandler.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\Engine\Object\Portal\Portal.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\Engine\Object\Ray.cpp" />
+    <ClCompile Include="..\..\..\..\src\Engine\Player\Camera.cpp" />
+    <ClCompile Include="..\..\..\..\src\Engine\Player\Player.cpp" />
+    <ClCompile Include="..\..\..\..\src\Engine\Shader.cpp" />
+    <ClCompile Include="..\..\..\..\src\Engine\Window.cpp" />
     <ClCompile Include="..\..\..\..\src\external\glad\glad.c" />
     <ClCompile Include="..\..\..\..\src\external\imgui\imgui.cpp" />
     <ClCompile Include="..\..\..\..\src\external\imgui\imgui_demo.cpp" />
