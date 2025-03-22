@@ -74,7 +74,7 @@ public:
 			ImGui::BeginChild("Scrolling");			// enable scrolling in the window
 			ImGui::BeginTable("Instructions", 1);	// create single table of values
 			
-			for (auto &row : help_table)
+			for (const auto &row : help_table)
 			{
 				ImGui::TableNextRow();
 				ImGui::TableSetColumnIndex(0);

@@ -3,12 +3,11 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-
-#include "Level.h"
-#include "ObjHandler.h"
-
 #include <map>
 #include <set>
+
+#include "Portal.h"
+#include "ObjHandler.h"
 
 class Level
 {
@@ -170,6 +169,9 @@ public:
         {
             return levelPortals.find(id)->second;
         }
+
+        // TODO: temporary fix. Need to handle this case better.
+        return levelObjects.begin()->second;
     }
 
     void DrawPortals(Camera &camera)

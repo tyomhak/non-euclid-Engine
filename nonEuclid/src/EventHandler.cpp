@@ -1,4 +1,4 @@
 #include "EventHandler.h"
 
-string EventHandler::underViewObjectId("None");
-string EventHandler::updateObjectId("None");
+std::string EventHandler::underViewObjectId("None");
+std::string EventHandler::updateObjectId("None");
