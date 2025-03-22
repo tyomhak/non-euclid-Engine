@@ -11,11 +11,12 @@ set(SOURCES
     src/Camera.h
     src/CollisionHandler.h
     src/Engine.h
+    src/Engine.cpp
     src/EventHandler.h
-    src/IncludeHeaders.h
     src/Level.h
     src/Mesh.h
     src/Model.h
+    src/Model.cpp
     src/Move.h
     src/ObjHandler.h
     src/Object.h
@@ -26,6 +27,7 @@ set(SOURCES
     src/Shader.h
     src/UI.h
     src/UiWindow.h
+    src/UiWindow.cpp
     src/Window.h
     src/main.cpp
     )
@@ -41,7 +43,7 @@ target_link_libraries(nonEuclid assimp)
 # Copy Shaders/Compute.glsl to the same directory as the executable
 add_custom_command(
     TARGET nonEuclid POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_SOURCE_DIR}/nonEuclid/data
         $<TARGET_FILE_DIR:nonEuclid>/data
 )

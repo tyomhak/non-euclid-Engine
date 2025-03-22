@@ -1,7 +1,6 @@
 #ifndef AABB_COLLISION
 #define AABB_COLLISION
 
-#include "IncludeHeaders.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -61,12 +60,12 @@ public:
         float tmin = (min.x - orig.x) / dir.x;
         float tmax = (max.x - orig.x) / dir.x;
 
-        if (tmin > tmax) swap(tmin, tmax);
+        if (tmin > tmax) std::swap(tmin, tmax);
 
         float tymin = (min.y - orig.y) / dir.y;
         float tymax = (max.y - orig.y) / dir.y;
 
-        if (tymin > tymax) swap(tymin, tymax);
+        if (tymin > tymax) std::swap(tymin, tymax);
 
         if ((tmin > tymax) || (tymin > tmax))
             return false;
@@ -80,7 +79,7 @@ public:
         float tzmin = (min.z - orig.z) / dir.z;
         float tzmax = (max.z - orig.z) / dir.z;
 
-        if (tzmin > tzmax) swap(tzmin, tzmax);
+        if (tzmin > tzmax) std::swap(tzmin, tzmax);
 
         if ((tmin > tzmax) || (tzmin > tmax))
             return false;

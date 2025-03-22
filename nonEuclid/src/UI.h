@@ -1,15 +1,14 @@
 #pragma once
 
-#include "IncludeHeaders.h"
-#include "UiWindow.h"
-#include "PositionUi.h"
-
 #include <string>
 #include <vector>
 
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
+
+#include "UiWindow.h"
+#include "PositionUi.h"
 
 class UI
 {
@@ -21,7 +20,7 @@ private:
 	bool helper_window_active = false;
 	short tabs_index = 0;
 	ImVec2 cursor_pos = { 0, 250 };	// make this dynamics later to set the cursor position once and forever
-	vector<vector<const char*>> help_table = {
+	std::vector<std::vector<const char*>> help_table = {
 		{ "W",			 "move Forward" },
 		{ "S",			 "move Backward" },
 		{ "A",			 "move Left" },

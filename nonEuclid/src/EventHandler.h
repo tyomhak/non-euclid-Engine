@@ -1,8 +1,6 @@
 #pragma once
 
-
 #include "Camera.h"
-#include "IncludeHeaders.h"
 #include "CollisionHandler.h"
 #include "Player.h"
 #include "Level.h"
@@ -90,7 +88,7 @@ public:
     }
 
     // add the object into the level and return the id of created object
-    string AddObject(string name, glm::vec3 Position)
+    std::string AddObject(const std::string& name, glm::vec3 Position)
     {
         return level->AddObject(name, Position);
     }
@@ -512,8 +510,8 @@ public:
     bool cursorEnabled;
     bool creativeEnabled;
     
-    static string underViewObjectId;
-    static string updateObjectId;
+    static std::string underViewObjectId;
+    static std::string updateObjectId;
 
     Shader *objectShader;
     Shader *portalShader;
@@ -521,5 +519,4 @@ public:
     bool isPortalVisible = true;
 };
 
-string EventHandler::underViewObjectId("None");
-string EventHandler::updateObjectId("None");
+

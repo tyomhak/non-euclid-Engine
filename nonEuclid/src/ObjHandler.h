@@ -7,17 +7,17 @@
 
 class ObjectHandler
 {
-    public:
+public:
     ObjectHandler(){};
 
-    static std::unordered_map<string, Model> models;
+    static std::unordered_map<std::string, Model> models;
 
-    static Object GetObject(string type, glm::mat4 worldMatrix = glm::mat4(1.0f))
+    static Object GetObject(const std::string& type, glm::mat4 worldMatrix = glm::mat4(1.0f))
     {
         
         if (models.find(type) == models.end())
         {
-            string path = "./data/models/" + type + "/" + type + ".obj";
+            std::string path = "./data/models/" + type + "/" + type + ".obj";
             models.emplace(std::make_pair(type, Model(path)));
         }
         id += 1;
@@ -26,10 +26,10 @@ class ObjectHandler
 
     static Portal GetPortal(glm::mat4 worldMatrix = glm::mat4(1.0f))
     {
-        string type = "portal";
+        std::string type = "portal";
         if (models.find("portal") == models.end())
         {
-            string path = "./data/models/" + type + "/" + type + ".obj";
+            std::string path = "./data/models/" + type + "/" + type + ".obj";
             models.emplace(std::make_pair(type, Model(path)));
         }
         id += 1;
@@ -40,5 +40,3 @@ private:
     static int id;
 };
 
-int ObjectHandler::id = 0;
-std::unordered_map<string, Model> ObjectHandler::models;

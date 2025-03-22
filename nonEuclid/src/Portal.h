@@ -6,16 +6,17 @@
 
 #include <iomanip>
 
-unsigned int texture_width = 1920;
-unsigned int texture_height = 1080;
 
-unsigned int max_depth = 2;
+extern unsigned int texture_width;
+extern unsigned int texture_height;
+
+extern unsigned int max_depth;
 
 
 class Portal: public Object 
 {
 public:
-    Portal(Model &_model, string _modelType, std::string id, glm::mat4 _worldMatrix = glm::mat4(1.0f)):
+    Portal(Model &_model, const std::string& _modelType, std::string id, glm::mat4 _worldMatrix = glm::mat4(1.0f)):
     Object(_model, _modelType, id, _worldMatrix)
     {
         SetupPortal();
@@ -194,5 +195,3 @@ private:
 
     }
 };
-
-std::vector<float> Portal::portalBackground = std::vector<float>(3, 0.1f);
