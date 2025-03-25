@@ -1,17 +1,15 @@
 #pragma once
 
-#include "UiWindow.h"
-#include "IncludeHeaders.h"
 #include <string>
+#include "UiWindow.h"
 
 class PositionUi: protected UiWindow
 {
 public:
-	PositionUi(std::string _name, EventHandler* _eventHandler) :
-		UiWindow(_name, _eventHandler)
-	{
-		my_tool_active = true;
-	}
+	PositionUi(std::string _name, EventHandler* _eventHandler) 
+		: UiWindow(_name, _eventHandler)
+		, my_tool_active(true)
+	{}
 
 	// void Render()
 	// {

@@ -3,12 +3,11 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-
-#include "Level.h"
-#include "ObjHandler.h"
-
 #include <map>
 #include <set>
+
+#include "Portal.h"
+#include "ObjHandler.h"
 
 class Level
 {
@@ -29,12 +28,12 @@ public:
     Shader *GetPortalShaderPtr() { return portalShader; }
     Shader *GetObjectShaderPtr() { return objectShader; }
         
-    string AddObject(std::string name, glm::vec3 position)
+    std::string AddObject(std::string name, glm::vec3 position)
     {
         glm::mat4 location(1.0f);
         location = glm::translate(location, position);
         Object obj = ObjectHandler::GetObject(name, location);
-        string id = obj.GetId();
+        std::string id = obj.GetId();
         levelObjects.emplace(id, obj);
         return id;
     }
@@ -90,7 +89,7 @@ public:
 
         if (levelPortals.find(id) != levelPortals.end())
         {
-            string pairId = levelPortals.find(id)->second.GetPairPtr()->GetId();
+            std::string pairId = levelPortals.find(id)->second.GetPairPtr()->GetId();
             levelPortals.erase(id);
             levelPortals.erase(pairId);
         }
@@ -141,7 +140,7 @@ public:
         return levelPortals;
     }
 
-    Object* GetObjectPointer(string id)
+    Object* GetObjectPointer(const std::string& id)
     {
         std::map<std::string /* object ID */, Object>::iterator it = levelObjects.find(id);
         if (it != levelObjects.end())
@@ -157,7 +156,7 @@ public:
         return nullptr;
     }
 
-    Object GetObject(string id)
+    Object GetObject(const std::string& id)
     {
         std::map<std::string /* object ID */, Object>::iterator it = levelObjects.find(id);
         if (it != levelObjects.end())
@@ -170,6 +169,9 @@ public:
         {
             return levelPortals.find(id)->second;
         }
+
+        // TODO: temporary fix. Need to handle this case better.
+        return levelObjects.begin()->second;
     }
 
     void DrawPortals(Camera &camera)
@@ -191,12 +193,12 @@ class LevelHandler
 private:
 
 public:
-    static Level ReadLevel(string path, Camera &myCamera, Shader &portalShader, Shader &objectShader)
+    static Level ReadLevel(std::string path, Camera &myCamera, Shader &portalShader, Shader &objectShader)
     {
         Level myLevel = Level(portalShader, objectShader);
 
-        string line;
-        ifstream myLevelFile(path);
+        std::string line;
+        std::ifstream myLevelFile(path);
 
         glm::mat4 worldMatrix(1.0f);
         glm::mat4 worldMatrixBackup(1.0f);
@@ -205,7 +207,7 @@ public:
         {
             if (line[0] == 'o')
             {
-                string objType = line.substr(2);
+                std::string objType = line.substr(2);
 
                 for (int i = 0; i < 4; ++i)
                 {
@@ -290,9 +292,9 @@ public:
         return myLevel;
     }
 
-    static void WriteLevel(string fileName, Level &level, Camera myCamera)
+    static void WriteLevel(const std::string& fileName, Level &level, Camera myCamera)
     {
-        ofstream newLevel(fileName + ".lev");
+        std::ofstream newLevel(fileName + ".lev");
 
         newLevel << "camera\n";
         for (int i = 0; i < 3; ++i)
@@ -357,7 +359,7 @@ public:
         newLevel.close();
     }
 
-    static void WriteLevel(string fileName, Level &level)
+    static void WriteLevel(const std::string& fileName, Level &level)
     {
         return WriteLevel(fileName, level, level.GetCamera());
     }

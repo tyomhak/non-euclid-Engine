@@ -1,21 +1,16 @@
 #pragma once
 
+// #include <iomanip>
+
 #include "Object.h"
 #include "Camera.h"
-#include "EventHandler.h"
-
-#include <iomanip>
-
-unsigned int texture_width = 1920;
-unsigned int texture_height = 1080;
-
-unsigned int max_depth = 2;
+// #include "EventHandler.h"
 
 
-class Portal: public Object 
+class Portal : public Object 
 {
 public:
-    Portal(Model &_model, string _modelType, std::string id, glm::mat4 _worldMatrix = glm::mat4(1.0f)):
+    Portal(Model &_model, const std::string& _modelType, std::string id, glm::mat4 _worldMatrix = glm::mat4(1.0f)):
     Object(_model, _modelType, id, _worldMatrix)
     {
         SetupPortal();
@@ -153,6 +148,7 @@ public:
 
 public:
     static std::vector<float> portalBackground;
+
 private:
     Portal *pair_portal;
     Shader *objectShader;
@@ -193,6 +189,10 @@ private:
         glBindTexture(GL_TEXTURE_2D, 0);
 
     }
-};
 
-std::vector<float> Portal::portalBackground = std::vector<float>(3, 0.1f);
+private:
+
+    unsigned int texture_width = 1920;
+    unsigned int texture_height = 1080;
+    unsigned int max_depth = 2;
+};

@@ -6,25 +6,23 @@
 #include <sstream>
 #include <vector>
 #include <string>
-#include "IncludeHeaders.h"
 
 #include <glm/vec3.hpp> 
 #include <glm/vec4.hpp> 
 #include <glm/mat4x4.hpp> 
 #include <glm/gtc/matrix_transform.hpp>
 
-using namespace std;
-
 class Shader
 {
 public:
-	Shader(string vertexShader, string geometryShader, string fragmentShader) {
-		string vertexSource = ParseShader(vertexShader);
-		string geometrySource = "";
+	Shader(const std::string& vertexShader, const std::string& geometryShader, const std::string& fragmentShader) 
+	{
+		std::string vertexSource = ParseShader(vertexShader);
+		std::string geometrySource = "";
 		if (geometryShader != "") {
 			geometrySource = ParseShader(geometryShader);
 		}
-		string fragmentSource = ParseShader(fragmentShader);
+		std::string fragmentSource = ParseShader(fragmentShader);
 		ID = CreateShader(vertexSource, geometrySource, fragmentSource);
 	}
 
