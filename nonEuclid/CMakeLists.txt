@@ -12,30 +12,30 @@ set(SOURCES
     src/CollisionHandler.h
 
     src/Engine.h
-    # src/Engine.cpp
+    src/Engine.cpp
     
     src/EventHandler.h
-    # src/EventHandler.cpp
+    src/EventHandler.cpp
 
     src/Level.h
 
     src/Mesh.h
 
     src/Model.h
-    # src/Model.cpp
+    src/Model.cpp
     
     src/Move.h
 
     src/ObjHandler.h
-    # src/ObjectHandler.cpp
+    src/ObjectHandler.cpp
 
     src/Object.h
-    # src/Object.cpp
+    src/Object.cpp
 
     src/Player.h
 
     src/Portal.h
-    # src/Portal.cpp
+    src/Portal.cpp
 
     src/PositionUi.h
     src/Ray.h
@@ -43,7 +43,7 @@ set(SOURCES
     src/UI.h
 
     src/UiWindow.h
-    # src/UiWindow.cpp
+    src/UiWindow.cpp
     
     src/Window.h
     
