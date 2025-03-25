@@ -1,8 +1,5 @@
 #pragma once
 
-#include <fstream>
-#include <iostream>
-
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 
@@ -12,91 +9,48 @@ class Window
 {
 public:
 
-	Window() :
-		width(1920),
-		height(1080)
+	Window() : Window(1920, 1080)
+	{}
+
+	Window(float width, float height) 
+		: _width(width)
+		, _height(height)
 	{
-		InitializeWindow((int)width, (int)height);
+		InitializeWindow();
 	}
 
-	Window(int wid, int hei) :
-		width((float)wid),
-		height((float)hei)
+	~Window()
 	{
-		InitializeWindow(wid, hei);
+		glfwDestroyWindow(_glfwWindow);
+		glfwTerminate();
 	}
 
 public:
 	GLFWwindow* GetWindow() const
 	{
-		return window;
+		return _glfwWindow;
 	}
 
-	float GetWidth() const
+	int GetWidth() const
 	{
-		return width;
+		return _width;
 	}
 
 	float GetHeight() const
 	{
-		return height;
+		return _height;
 	}
 	float GetAspectRatio() const
 	{
-		return width / height;
+		return (float)_width / (float)_height;
 	}
 
 
 private:
-	void InitializeWindow(int width, int height)
-	{
-		/* Initialize the library */
-		if (!glfwInit()) { return; }
-
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-		#ifdef __APPLE__
-				glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-		#endif
-
-		/* Create a windowed mode window and its OpenGL context */
-		//window = glfwCreateWindow(width, height, "LearnOpenGL", glfwGetPrimaryMonitor(), NULL);
-		window = glfwCreateWindow(width, height, "LearnOpenGL", NULL, NULL);
-
-		if (!window)
-		{
-			std::cout << "Failed to create GLFW window" << std::endl;
-			glfwTerminate();
-			return;
-		}
-
-		glfwSwapInterval(1);
-		/* Make the window's context current */
-		glfwMakeContextCurrent(window);
-
-		// glad: load all OpenGL function pointers
-		// ---------------------------------------
-		// if (!gladLoadGLLoader((GLADloadfunc)glfwGetProcAddress))
-		if (!gladLoaderLoadGL())
-		{
-			std::cout << "Failed to initialize GLAD" << std::endl;
-			return;
-		}
-
-		// flip textures on y-axis
-		stbi_set_flip_vertically_on_load(true);
-
-
-		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_CULL_FACE);
-		// glCullFace(GL_BACK);
-		// glFrontFace(GL_CW); 
-	}
+	void InitializeWindow();
 
 private:
-	float width;
-	float height;
-	GLFWwindow* window;
+	int _width;
+	int _height;
+	GLFWwindow* _glfwWindow;
 };

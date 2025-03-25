@@ -12,15 +12,10 @@
 
 struct Vertex 
 {
-    // position
     glm::vec3 Position;
-    // normal
     glm::vec3 Normal;
-    // texCoords
     glm::vec2 TexCoords;
-    // tangent
     glm::vec3 Tangent;
-    // bitangent
     glm::vec3 Bitangent;
 };
 
@@ -48,16 +43,13 @@ public:
     Material             material;
     unsigned int VAO;
 
-    // constructor
-    Mesh(const std::vector<Vertex>& vertices, 
-        const std::vector<unsigned int>& indices, 
-        const std::vector<Texture>& textures)
+    Mesh(const std::vector<Vertex>& vertices_, 
+        const std::vector<unsigned int>& indices_, 
+        const std::vector<Texture>& textures_)
+        : vertices(vertices_)
+        , indices(indices_)
+        , textures(textures_)
     {
-        this->vertices = vertices;
-        this->indices = indices;
-        this->textures = textures;
-
-        // now that we have all the required data, set the vertex buffers and its attribute pointers.
         SetupMesh();
     }
 

@@ -46,9 +46,17 @@ set(SOURCES
     src/UiWindow.cpp
     
     src/Window.h
+    src/Window.cpp
     
     src/main.cpp
+
+    
     )
+
+set(SHADERS_SOURCES 
+    data/shaders/object.vert
+    data/shaders/object.frag
+)
 
 add_executable(nonEuclid ${IMGUI_SOURCES} ${SOURCES} )
 target_link_libraries(nonEuclid PRIVATE glfw)
@@ -61,9 +69,17 @@ target_link_libraries(nonEuclid PRIVATE assimp)
 #     nonEuclid PROPERTIES
 #     VS_DEBUGGER_WORKING_DIRECTORY "${nonEuclid_BINARY_DIR}")
 
+set(RESOURCE_FILES
+  resourcefile.txt
+  appresourcedir/appres.txt)
+
 set_target_properties(nonEuclid PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "$<TARGET_FILE_DIR:nonEuclid>"
                                                VS_DEBUGGER_COMMAND           "$<TARGET_FILE:nonEuclid>"
-                                               VS_DEBUGGER_ENVIRONMENT       "PATH=%PATH%;${CMAKE_PREFIX_PATH}/bin")
+                                               VS_DEBUGGER_ENVIRONMENT       "PATH=%PATH%;${CMAKE_PREFIX_PATH}/bin"
+                                               RESOURCE "${RESOURCE_FILES}"
+)
+
+
 
 
 # Copy Shaders/Compute.glsl to the same directory as the executable
