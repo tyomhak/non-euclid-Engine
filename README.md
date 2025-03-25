@@ -1,13 +1,11 @@
 # Non-Euclidean Engine
 Capstone Project for AUA
 
-## Necessary Libraries to Run this ##
-- glfw
-- glad
-- libassimp
-- glm
-- KHR
+# Installing
+```
+mkdir build; cd build;
+cmake ..
+cmake --build .
+```
 
-
-# Building in Windows
-You can find an explanation in the [docs file](./docs/WindowsBuildTutorial.md).
+> [!WARNING] You might need to manually install python and jinja2 (`pip install jinja2`), if cmake config/build fails.
