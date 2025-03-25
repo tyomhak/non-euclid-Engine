@@ -8,4 +8,5 @@ cmake ..
 cmake --build .
 ```
 
-> [!WARNING] You might need to manually install python and jinja2 (`pip install jinja2`), if cmake config/build fails.
+> [!WARNING] 
+> You might need to manually install python and jinja2 (`pip install jinja2`), if cmake config/build fails.
