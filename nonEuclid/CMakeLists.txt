@@ -10,38 +10,66 @@ set(SOURCES
     src/BoundaryBox.h
     src/Camera.h
     src/CollisionHandler.h
+
     src/Engine.h
+    # src/Engine.cpp
+    
     src/EventHandler.h
-    src/IncludeHeaders.h
+    # src/EventHandler.cpp
+
     src/Level.h
+
     src/Mesh.h
+
     src/Model.h
+    # src/Model.cpp
+    
     src/Move.h
+
     src/ObjHandler.h
+    # src/ObjectHandler.cpp
+
     src/Object.h
+    # src/Object.cpp
+
     src/Player.h
+
     src/Portal.h
+    # src/Portal.cpp
+
     src/PositionUi.h
     src/Ray.h
     src/Shader.h
     src/UI.h
+
     src/UiWindow.h
+    # src/UiWindow.cpp
+    
     src/Window.h
+    
     src/main.cpp
     )
 
 add_executable(nonEuclid ${IMGUI_SOURCES} ${SOURCES} )
-target_link_libraries(nonEuclid glfw)
-target_link_libraries(nonEuclid glad)
-target_link_libraries(nonEuclid glm)
-target_link_libraries(nonEuclid imgui_lib)
-target_link_libraries(nonEuclid assimp)
+target_link_libraries(nonEuclid PRIVATE glfw)
+target_link_libraries(nonEuclid PRIVATE glad)
+target_link_libraries(nonEuclid PRIVATE glm)
+target_link_libraries(nonEuclid PRIVATE imgui_lib)
+target_link_libraries(nonEuclid PRIVATE assimp)
+ 
+# set_target_properties(
+#     nonEuclid PROPERTIES
+#     VS_DEBUGGER_WORKING_DIRECTORY "${nonEuclid_BINARY_DIR}")
+
+set_target_properties(nonEuclid PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "$<TARGET_FILE_DIR:nonEuclid>"
+                                               VS_DEBUGGER_COMMAND           "$<TARGET_FILE:nonEuclid>"
+                                               VS_DEBUGGER_ENVIRONMENT       "PATH=%PATH%;${CMAKE_PREFIX_PATH}/bin")
 
 
 # Copy Shaders/Compute.glsl to the same directory as the executable
 add_custom_command(
     TARGET nonEuclid POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_SOURCE_DIR}/nonEuclid/data
         $<TARGET_FILE_DIR:nonEuclid>/data
 )
