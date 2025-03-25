@@ -12,36 +12,7 @@
 
 class UI
 {
-private:
-	// attributes of buttons
-	const char* objects_menu_items[4]{ "", "cube", "backpack", "portal" };
-	int selected_object_item = 0;
-	bool tabs_active = true;
-	bool helper_window_active = false;
-	short tabs_index = 0;
-	ImVec2 cursor_pos = { 0, 250 };	// make this dynamics later to set the cursor position once and forever
-	std::vector<std::vector<const char*>> help_table = {
-		{ "W",			 "move Forward" },
-		{ "S",			 "move Backward" },
-		{ "A",			 "move Left" },
-		{ "D",			 "move Right" },
-		{ "SPACE",		 "move Up" },
-		{ "CTRL",		 "move Down" },
-		{ "SHIFT(hold)", "move faster" },
-		{ "C",			 "enable/disable 'Creative' mode" },
-		{ "E",			 "enable/disable object selection" },
-		{ "R",			 "select pointed object for manipulation" },
-		{ "ARROW UP",	 "move Forward the selected object" },
-		{ "ARROW DOWN",	 "move Backward the selected object" },
-		{ "ENTER",		 "place selected object" },
-		{ "L",			 "switch ON 'Strips' mode" },
-		{ "F",			 "switch OFF 'Strips' mode" },
-		{ "ESC",		 "quit" }
-	};
-
-
 public:
-
 	UI(GLFWwindow* _window, EventHandler* _eventHandler) :
 		window(_window),
 		eventHandler(_eventHandler)
@@ -51,7 +22,7 @@ public:
 		ImGuiIO& io = ImGui::GetIO();
 		// Setup Platform/Renderer bindings
 		ImGui_ImplGlfw_InitForOpenGL(window, true);
-		ImGui_ImplOpenGL3_Init(glsl_version);
+		ImGui_ImplOpenGL3_Init(glsl_version.c_str());
 		// Setup Dear ImGui style
 		ImGui::StyleColorsDark();
 
@@ -74,17 +45,17 @@ public:
 			ImGui::BeginChild("Scrolling");			// enable scrolling in the window
 			ImGui::BeginTable("Instructions", 1);	// create single table of values
 			
-			for (const auto &row : help_table)
+			for (const auto &[key, description] : help_table)
 			{
 				ImGui::TableNextRow();
 				ImGui::TableSetColumnIndex(0);
-				ImGui::Text(row[0]);
+				ImGui::Text(key.c_str());
 
 				ImGui::SameLine(80.0f);
 				ImGui::Text("--");
 
 				ImGui::SameLine(120.0f);
-				ImGui::Text(row[1]);
+				ImGui::Text(description.c_str());
 			};
 
 			ImGui::EndTable();
@@ -180,8 +151,35 @@ public:
 	}
 
 private:
-	const char* glsl_version = "#version 130";
+	const std::string glsl_version = "#version 130";
 	std::vector<UiWindow*> uiWindows;
 	GLFWwindow* window;
 	EventHandler* eventHandler;
+
+	// attributes of buttons
+	const char* objects_menu_items[4]{ "", "cube", "backpack", "portal" };
+	int selected_object_item = 0;
+	bool tabs_active = true;
+	bool helper_window_active = false;
+	short tabs_index = 0;
+	ImVec2 cursor_pos = { 0, 250 };	// make this dynamics later to set the cursor position once and forever
+
+	std::map<std::string, std::string> help_table {
+		{ "W",			 "move Forward" },
+		{ "S",			 "move Backward" },
+		{ "A",			 "move Left" },
+		{ "D",			 "move Right" },
+		{ "SPACE",		 "move Up" },
+		{ "CTRL",		 "move Down" },
+		{ "SHIFT(hold)", "move faster" },
+		{ "C",			 "enable/disable 'Creative' mode" },
+		{ "E",			 "enable/disable object selection" },
+		{ "R",			 "select pointed object for manipulation" },
+		{ "ARROW UP",	 "move Forward the selected object" },
+		{ "ARROW DOWN",	 "move Backward the selected object" },
+		{ "ENTER",		 "place selected object" },
+		{ "L",			 "switch ON 'Strips' mode" },
+		{ "F",			 "switch OFF 'Strips' mode" },
+		{ "ESC",		 "quit" }
+	};
 };
