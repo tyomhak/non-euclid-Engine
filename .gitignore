@@ -33,6 +33,7 @@
 
 cmake-build-debug/*
 /build
+/out
 
 imgui.ini
 .idea/.name
@@ -40,6 +41,7 @@ imgui.ini
 .idea/modules.xml
 .idea/non-euclid-Engine.iml
 .idea/vcs.xml
+.vs
 .vscode/launch.json
 .vscode/settings.json
 .vscode/tasks.json
