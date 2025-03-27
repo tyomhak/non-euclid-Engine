@@ -1,21 +1,10 @@
-#ifndef MODEL_H
-#define MODEL_H
+#pragma once
 
 #include <string>
-#include <fstream>
-#include <sstream>
-#include <iostream>
-#include <map>
 #include <vector>
 
-#include <glad/gl.h> 
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <assimp/Importer.hpp>
 #include <assimp/scene.h>
-#include <assimp/postprocess.h>
-
-#include "stb_image.h"
 
 #include "Mesh.h"
 
@@ -45,4 +34,3 @@ public:
     bool gammaCorrection;
 };
 
-#endif

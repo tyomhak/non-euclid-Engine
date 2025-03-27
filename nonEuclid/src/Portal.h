@@ -1,11 +1,9 @@
 #pragma once
 
-// #include <iomanip>
+#include <map>
 
 #include "Object.h"
 #include "Camera.h"
-// #include "EventHandler.h"
-
 
 class Portal : public Object 
 {

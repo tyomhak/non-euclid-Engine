@@ -1,5 +1,15 @@
 #include "Model.h"
 
+#include <fstream>
+#include <sstream>
+#include <iostream>
+
+#include <assimp/Importer.hpp>
+#include <assimp/postprocess.h>
+
+#include "stb_image.h"
+
+
 unsigned int TextureFromFile(const char *path, const std::string& directory, bool gamma)
 {
     std::string filename = std::string(path);
