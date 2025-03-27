@@ -1,7 +1,12 @@
 #include "Engine.h"
 
+#include <string>
+
+// #include <glm/gtc/matrix_transform.hpp>
+// #include <glm/gtc/type_ptr.hpp>
+#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include <glm/geometric.hpp>
 
 
 Engine::Engine() 
@@ -14,6 +19,8 @@ Engine::Engine()
     , ui(window.GetWindow(), &eventHandler)
 {
     SetupWindow();
+    window.SetIcon("./data/icons/Euclid.jpg");
+
     SetupShaders();
 }
 
@@ -173,7 +180,7 @@ Object* Engine::FindObjectById(std::string id)
 void Engine::UpdateShaders()
 {
     glm::mat4 view = player.GetCamera().GetViewMatrix();
-    glm::mat4 projection = glm::perspective(glm::radians(90.0f), window.GetWidth() / window.GetHeight(), 0.1f, 100.0f);	//perspective view
+    glm::mat4 projection = glm::perspective(glm::radians(90.0f), window.GetAspectRatio(), 0.1f, 100.0f);	//perspective view
     glm::mat4 model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
     model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
     glm::mat4 mvp = projection* view* model;
@@ -204,7 +211,7 @@ void Engine::SaveWorld()
 void Engine::SetupShaders()
 {
     glm::mat4 view = player.GetCamera().GetViewMatrix();
-    glm::mat4 projection = glm::perspective(glm::radians(90.0f), window.GetWidth() / window.GetHeight(), 0.1f, 100.0f);		//perspective view
+    glm::mat4 projection = glm::perspective(glm::radians(90.0f), window.GetAspectRatio(), 0.1f, 100.0f);		//perspective view
     glm::mat4 model = glm::mat4(1.0f);
 
     objectShader.SetView(view);

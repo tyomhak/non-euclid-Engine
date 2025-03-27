@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <map>
 
 #include "Object.h"
@@ -134,7 +135,6 @@ public:
 
         glm::vec3 newPosition = glm::vec3(view[3][0], view[3][1], view[3][2]);
 
-        // Inverse (instead of line 69)
         view = glm::inverse(view);
         
         GLfloat yawDiff = yaw - mainCamera.Yaw;

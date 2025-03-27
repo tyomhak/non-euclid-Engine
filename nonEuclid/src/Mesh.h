@@ -1,5 +1,4 @@
-#ifndef MESH_H
-#define MESH_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -36,13 +35,6 @@ struct Material
 
 class Mesh {
 public:
-    // mesh Data
-    std::vector<Vertex>       vertices;
-    std::vector<unsigned int> indices;
-    std::vector<Texture>      textures;
-    Material             material;
-    unsigned int VAO;
-
     Mesh(const std::vector<Vertex>& vertices_, 
         const std::vector<unsigned int>& indices_, 
         const std::vector<Texture>& textures_)
@@ -78,7 +70,7 @@ public:
                 number = std::to_string(heightNr++); // transfer unsigned int to stream
 
             // now set the sampler to the correct texture unit
-            glUniform1i(glGetUniformLocation(shader.ID, (name + number).c_str()), i);
+            glUniform1i(glGetUniformLocation(shader.GetProgramID(), (name + number).c_str()), i);
             // and finally bind the texture
             glBindTexture(GL_TEXTURE_2D, textures[i].id);
         }
@@ -97,9 +89,6 @@ public:
     }
 
 private:
-    // render data 
-    unsigned int VBO, EBO;
-
     // initializes all the buffer objects/arrays
     void SetupMesh()
     {
@@ -138,6 +127,14 @@ private:
 
         glBindVertexArray(0);
     }
-};
 
-#endif
+private:
+    std::vector<Texture> textures;
+    Material material;
+    unsigned int VBO, EBO;
+
+public:
+    unsigned int VAO;
+    std::vector<unsigned int> indices;
+    std::vector<Vertex>       vertices;
+};

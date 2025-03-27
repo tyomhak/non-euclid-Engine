@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "stb_image.h"
+
 void Window::InitializeWindow()
 {
 	if (glfwInit() != GLFW_TRUE) { return; }
@@ -15,15 +17,20 @@ void Window::InitializeWindow()
 #endif
 
 	/* Create a windowed mode window and its OpenGL context */
-	//window = glfwCreateWindow(width, height, "LearnOpenGL", glfwGetPrimaryMonitor(), NULL);
-	_glfwWindow = glfwCreateWindow(_width, _height, "LearnOpenGL", NULL, NULL);
-
+	const bool fullscreen = false;
+	GLFWmonitor* monitor = fullscreen ? glfwGetPrimaryMonitor() : nullptr;
+	_glfwWindow = glfwCreateWindow(_width, _height, "Non Euclid Engine", monitor, NULL);
 	if (!_glfwWindow)
 	{
-		std::cout << "Failed to create GLFW window" << std::endl;
+		std::cerr << "Failed to create GLFW window" << std::endl;
 		glfwTerminate();
 		return;
 	}
+
+	GLFWimage images[1]; 
+	images[0].pixels = stbi_load("./data/icons/Euclid.jpg", &images[0].width, &images[0].height, 0, 4); //rgba channels 
+	glfwSetWindowIcon(_glfwWindow, 1, images); 
+	stbi_image_free(images[0].pixels);
 
 	glfwSwapInterval(1);
 	/* Make the window's context current */
@@ -34,7 +41,7 @@ void Window::InitializeWindow()
 	// if (!gladLoadGLLoader((GLADloadfunc)glfwGetProcAddress))
 	if (!gladLoaderLoadGL())
 	{
-		std::cout << "Failed to initialize GLAD" << std::endl;
+		std::cerr << "Failed to initialize GLAD" << std::endl;
 		return;
 	}
 
@@ -46,4 +53,16 @@ void Window::InitializeWindow()
 	glEnable(GL_CULL_FACE);
 	// glCullFace(GL_BACK);
 	// glFrontFace(GL_CW); 
+}
+
+
+
+void Window::SetIcon(const std::string& iconPath)
+{
+	stbi_set_flip_vertically_on_load(false);
+	GLFWimage images[1];
+	images[0].pixels = stbi_load(iconPath.c_str(), &images[0].width, &images[0].height, 0, 4); //rgba channels 
+	glfwSetWindowIcon(_glfwWindow, 1, images); 
+	stbi_image_free(images[0].pixels);
+	stbi_set_flip_vertically_on_load(true);
 }

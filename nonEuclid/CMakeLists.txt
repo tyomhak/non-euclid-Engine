@@ -39,7 +39,10 @@ set(SOURCES
 
     src/PositionUi.h
     src/Ray.h
+
     src/Shader.h
+    src/Shader.cpp
+
     src/UI.h
 
     src/UiWindow.h

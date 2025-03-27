@@ -126,7 +126,6 @@ public:
     void Draw(Camera &mainCamera) 
     {
         DrawPortals(mainCamera);
-        objectShader->Bind();        // don't know why, but deleting this breaks shit.
         DrawObjects(mainCamera, objectShader);
     }
 

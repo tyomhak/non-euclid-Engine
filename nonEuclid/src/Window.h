@@ -1,14 +1,14 @@
 #pragma once
 
+#include <string>
+
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 
-#include "stb_image.h"
 
 class Window
 {
 public:
-
 	Window() : Window(1920, 1080)
 	{}
 
@@ -21,30 +21,21 @@ public:
 
 	~Window()
 	{
-		glfwDestroyWindow(_glfwWindow);
 		glfwTerminate();
 	}
 
 public:
-	GLFWwindow* GetWindow() const
-	{
-		return _glfwWindow;
-	}
+	GLFWwindow* GetWindow() const { return _glfwWindow; }
 
-	int GetWidth() const
-	{
-		return _width;
-	}
+	int GetWidth() const { return _width; }
+	int GetHeight() const { return _height; }
 
-	float GetHeight() const
-	{
-		return _height;
-	}
 	float GetAspectRatio() const
 	{
 		return (float)_width / (float)_height;
 	}
 
+	void SetIcon(const std::string& iconPath);
 
 private:
 	void InitializeWindow();
