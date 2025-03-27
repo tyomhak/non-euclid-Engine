@@ -1,26 +1,12 @@
 #pragma once
 
-// #include <glm/glm.hpp>
-// #include <glm/gtc/matrix_transform.hpp>
-// #include <glm/gtc/type_ptr.hpp>
-
 #include "Model.h"
 #include "Shader.h"
 #include "BoundaryBox.h"
 
 class Object
 {
-protected:
-    glm::mat4 worldMatrix;
-    std::string ID;
-    BoundaryBox boundaryBox;
-    /* data */
-
 public:
-    Model* model;
-    const std::string modelType;
-    GLfloat yaw = -90.0f;
-
     Object (Model &_model, const std::string& _modelType, std::string id, glm::mat4 _worldMatrix = glm::mat4(1.0f));
 
     ~Object();
@@ -92,34 +78,6 @@ public:
         worldMatrix = glm::scale(worldMatrix, glm::vec3(scale_value, scale_value, scale_value));
     } 
 
-    std::vector<glm::vec3> GetVerticesWorldSpace()
-    {
-        std::vector<glm::vec3> all_vertices;
-        for (auto& mesh : model->meshes)
-        {
-            for (auto& point : mesh.vertices)
-            {
-                all_vertices.push_back(glm::vec4(point.Position, 1.0f) * worldMatrix);
-            }
-        }
-
-        return all_vertices;
-    }
-
-    std::vector<glm::vec3> GetVertices()
-    {
-        std::vector<glm::vec3> all_vertices;
-        for (auto &mesh : model->meshes)
-        {
-            for (auto &point : mesh.vertices)
-            {
-                all_vertices.push_back(glm::vec4(point.Position, 1.0f) * worldMatrix);
-            }
-        }
-
-        return all_vertices;
-    }
-
     const glm::mat4 GetWorldMat() const { return worldMatrix; }
     void SetWorldMatrix(glm::mat4 newLocation);
 
@@ -128,5 +86,15 @@ private:
     void UpdateMinMaxPoints();
     void UpdateMinMaxPointsWorld();
 
+
+public:
+    Model* model;
+    const std::string modelType;
+    GLfloat yaw = -90.0f;
+
+protected:
+    glm::mat4 worldMatrix;
+    std::string ID;
+    BoundaryBox boundaryBox;
 };
 
