@@ -65,9 +65,6 @@ target_link_libraries(nonEuclid PRIVATE glm)
 target_link_libraries(nonEuclid PRIVATE imgui_lib)
 target_link_libraries(nonEuclid PRIVATE assimp)
  
-# set_target_properties(
-#     nonEuclid PROPERTIES
-#     VS_DEBUGGER_WORKING_DIRECTORY "${nonEuclid_BINARY_DIR}")
 
 set(RESOURCE_FILES
   resourcefile.txt
@@ -78,8 +75,6 @@ set_target_properties(nonEuclid PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "$<TARG
                                                VS_DEBUGGER_ENVIRONMENT       "PATH=%PATH%;${CMAKE_PREFIX_PATH}/bin"
                                                RESOURCE "${RESOURCE_FILES}"
 )
-
-
 
 
 # Copy Shaders/Compute.glsl to the same directory as the executable
