@@ -4,6 +4,7 @@
 
 #include <glm/glm.hpp>
 
+#include "InspectorWindow.h"
 
 Engine::Engine() 
     : window()
@@ -12,7 +13,7 @@ Engine::Engine()
     , objectShader("./data/shaders/Object_Vertex.shader", "", "./data/shaders/Object_Fragment.shader")
     , portalShader("./data/shaders/Portal_Vertex.shader", "", "./data/shaders/Portal_Fragment.shader")
     , eventHandler(&player, &level, window.GetNativeWindow(), window.GetWidth() / 2, window.GetHeight() / 2, &objectShader, &portalShader)
-    , ui(&window, &eventHandler)
+    , _ui_window(new ui::InspectorWindow(&window, &eventHandler))
 {
     SetupWindow();
     window.SetIcon("./data/icons/Euclid.jpg");
@@ -60,9 +61,8 @@ void Engine::Render()
         UpdateShaders();
 
         level.Draw(player.GetCamera());
-        ui.Render();
-
-
+        if (_ui_window)
+            _ui_window->Render();
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------

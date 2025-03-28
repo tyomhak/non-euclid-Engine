@@ -40,7 +40,7 @@ private:
 
 private:
 	Window window;
-	UIWindow ui;
+	std::unique_ptr<ui::UIWindow> _ui_window{nullptr};
 	
 	Level level;
 	Player player;

@@ -18,6 +18,9 @@ set(SOURCES
     src/physics/Ray.h
 
     src/ui/UIWindow.h
+    src/ui/UIWindow.cpp
+    src/ui/InspectorWindow.h
+    src/ui/InspectorWindow.cpp
 
 
     src/Camera.h
