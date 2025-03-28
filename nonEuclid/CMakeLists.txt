@@ -40,15 +40,10 @@ set(SOURCES
     src/Portal.h
     src/Portal.cpp
 
-    src/PositionUi.h
-
     src/Shader.h
     src/Shader.cpp
 
     src/UI.h
-
-    src/UiWindow.h
-    src/UiWindow.cpp
     
     src/Window.h
     src/Window.cpp

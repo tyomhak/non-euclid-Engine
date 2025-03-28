@@ -7,8 +7,6 @@
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 
-#include "UiWindow.h"
-#include "PositionUi.h"
 
 class UI
 {
@@ -152,8 +150,8 @@ public:
 
 private:
 	const std::string glsl_version = "#version 130";
-	std::vector<UiWindow*> uiWindows;
 	GLFWwindow* window;
+	Window* _parent_window{nullptr};
 	EventHandler* eventHandler;
 
 	// attributes of buttons

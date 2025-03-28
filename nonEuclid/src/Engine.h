@@ -40,14 +40,13 @@ private:
 
 private:
 	Window window;
-	Player player;
-
+	UI ui;
+	
 	Level level;
+	Player player;
 	
 	EventHandler eventHandler;
 
 	Shader objectShader;
 	Shader portalShader;
-
-	UI ui;
 };
