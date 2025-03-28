@@ -3,6 +3,12 @@ include(ExternalProject)
 
 set(SOURCE_DIR "src")
 
+set(INCLUDE_DIRS 
+    src
+    src/physics
+    src/ui
+)
+
 set(SOURCES
     src/utils/stb_image.h
     src/utils/stb_image.cpp
@@ -10,6 +16,8 @@ set(SOURCES
     src/physics/BoundaryBox.h
     src/physics/CollisionHandler.h
     src/physics/Ray.h
+
+    src/ui/UIWindow.h
 
 
     src/Camera.h
@@ -43,14 +51,11 @@ set(SOURCES
     src/Shader.h
     src/Shader.cpp
 
-    src/UI.h
     
     src/Window.h
     src/Window.cpp
     
     src/main.cpp
-
-    
     )
 
 set(SHADERS_SOURCES 
@@ -59,7 +64,7 @@ set(SHADERS_SOURCES
 )
 
 add_executable(nonEuclid ${IMGUI_SOURCES} ${SOURCES} )
-target_include_directories(nonEuclid PRIVATE src/physics)
+target_include_directories(nonEuclid PRIVATE ${INCLUDE_DIRS})
 target_link_libraries(nonEuclid PRIVATE glfw)
 target_link_libraries(nonEuclid PRIVATE glad)
 target_link_libraries(nonEuclid PRIVATE glm)

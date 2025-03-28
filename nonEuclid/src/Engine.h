@@ -6,7 +6,7 @@
 #include "Window.h"
 #include "Shader.h"
 #include "Level.h"
-#include "UI.h"
+#include "UIWindow.h"
 
 class Engine {
 public:
@@ -40,7 +40,7 @@ private:
 
 private:
 	Window window;
-	UI ui;
+	UIWindow ui;
 	
 	Level level;
 	Player player;

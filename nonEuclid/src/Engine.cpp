@@ -2,11 +2,7 @@
 
 #include <string>
 
-// #include <glm/gtc/matrix_transform.hpp>
-// #include <glm/gtc/type_ptr.hpp>
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/geometric.hpp>
 
 
 Engine::Engine() 
@@ -15,8 +11,8 @@ Engine::Engine()
     , level(portalShader, objectShader)
     , objectShader("./data/shaders/Object_Vertex.shader", "", "./data/shaders/Object_Fragment.shader")
     , portalShader("./data/shaders/Portal_Vertex.shader", "", "./data/shaders/Portal_Fragment.shader")
-    , eventHandler(&player, &level, window.GetWindow(), window.GetWidth() / 2, window.GetHeight() / 2, &objectShader, &portalShader)
-    , ui(window.GetWindow(), &eventHandler)
+    , eventHandler(&player, &level, window.GetNativeWindow(), window.GetWidth() / 2, window.GetHeight() / 2, &objectShader, &portalShader)
+    , ui(&window, &eventHandler)
 {
     SetupWindow();
     window.SetIcon("./data/icons/Euclid.jpg");
@@ -33,7 +29,7 @@ void Engine::Render()
     float deltaTime = 0.0f;
 
 
-    while (!glfwWindowShouldClose(window.GetWindow()))
+    while (!glfwWindowShouldClose(window.GetNativeWindow()))
     {
         // Frame Counter
         float currentTime = (float)glfwGetTime();
@@ -70,7 +66,7 @@ void Engine::Render()
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
-        glfwSwapBuffers(window.GetWindow());
+        glfwSwapBuffers(window.GetNativeWindow());
         glfwPollEvents();
     }
     glfwTerminate();
@@ -197,7 +193,7 @@ void Engine::UpdateShaders()
 
 void Engine::CheckSave()
 {
-    if (glfwGetKey(window.GetWindow(), GLFW_KEY_P) == GLFW_PRESS)
+    if (glfwGetKey(window.GetNativeWindow(), GLFW_KEY_P) == GLFW_PRESS)
     {
         SaveWorld();
     }
@@ -226,12 +222,12 @@ void Engine::SetupShaders()
 
 void Engine::SetupWindow()
 {
-    glfwMakeContextCurrent(window.GetWindow());
+    glfwMakeContextCurrent(window.GetNativeWindow());
     // resizing controls
-    glfwSetFramebufferSizeCallback(window.GetWindow(), EventHandler::framebuffer_size_callback);
+    glfwSetFramebufferSizeCallback(window.GetNativeWindow(), EventHandler::framebuffer_size_callback);
     
     // Mouse controls
     // --------------
-    glfwSetInputMode(window.GetWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    // glfwSetInputMode(window.GetWindow(), GLFW_CURSOR, GLFW_CURSOR_CAPTURED);
+    glfwSetInputMode(window.GetNativeWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    // glfwSetInputMode(window.GetNativeWindow(), GLFW_CURSOR, GLFW_CURSOR_CAPTURED);
 }

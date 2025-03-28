@@ -8,23 +8,23 @@
 #include <imgui_impl_opengl3.h>
 
 
-class UI
+class UIWindow
 {
 public:
-	UI(GLFWwindow* _window, EventHandler* _eventHandler) :
-		window(_window),
+	UIWindow(Window* _window, EventHandler* _eventHandler) :
+		_parent_window(_window),
 		eventHandler(_eventHandler)
 	{
+		assert(_window != nullptr);
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO();
-		// Setup Platform/Renderer bindings
-		ImGui_ImplGlfw_InitForOpenGL(window, true);
-		ImGui_ImplOpenGL3_Init(glsl_version.c_str());
-		// Setup Dear ImGui style
-		ImGui::StyleColorsDark();
 
-		//createWindow("Window");
+		// Setup Platform/Renderer bindings
+		ImGui_ImplGlfw_InitForOpenGL(_parent_window->GetNativeWindow(), true);
+		ImGui_ImplOpenGL3_Init(glsl_version.c_str());
+
+		ImGui::StyleColorsDark();
 	}
 
 	void CreateWindow(const char* window_name) 
@@ -141,16 +141,14 @@ public:
 
 		CreateWindow("Object Creation/Manipulation window");
 
-
 		// Render dear imgui into screen
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
 	}
 
 private:
 	const std::string glsl_version = "#version 130";
-	GLFWwindow* window;
+	// GLFWwindow* window;
 	Window* _parent_window{nullptr};
 	EventHandler* eventHandler;
 

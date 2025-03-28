@@ -25,7 +25,7 @@ public:
 	}
 
 public:
-	GLFWwindow* GetWindow() const { return _glfwWindow; }
+	GLFWwindow* GetNativeWindow() { return _glfwWindow; }
 
 	int GetWidth() const { return _width; }
 	int GetHeight() const { return _height; }
