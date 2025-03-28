@@ -4,12 +4,15 @@ include(ExternalProject)
 set(SOURCE_DIR "src")
 
 set(SOURCES
-    src/stb_image.h
-    src/stb_image.cpp
+    src/utils/stb_image.h
+    src/utils/stb_image.cpp
     
-    src/BoundaryBox.h
+    src/physics/BoundaryBox.h
+    src/physics/CollisionHandler.h
+    src/physics/Ray.h
+
+
     src/Camera.h
-    src/CollisionHandler.h
 
     src/Engine.h
     src/Engine.cpp
@@ -38,7 +41,6 @@ set(SOURCES
     src/Portal.cpp
 
     src/PositionUi.h
-    src/Ray.h
 
     src/Shader.h
     src/Shader.cpp
@@ -62,6 +64,7 @@ set(SHADERS_SOURCES
 )
 
 add_executable(nonEuclid ${IMGUI_SOURCES} ${SOURCES} )
+target_include_directories(nonEuclid PRIVATE src/physics)
 target_link_libraries(nonEuclid PRIVATE glfw)
 target_link_libraries(nonEuclid PRIVATE glad)
 target_link_libraries(nonEuclid PRIVATE glm)

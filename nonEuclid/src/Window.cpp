@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "stb_image.h"
+#include "utils/stb_image.h"
 
 void Window::InitializeWindow()
 {
