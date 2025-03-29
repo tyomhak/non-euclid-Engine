@@ -27,11 +27,17 @@ UIWindow::~UIWindow()
 void UIWindow::_CreateWindow(const char* window_name) 
 {
     // Create a window called "My First Tool", with a menu bar.
-    ImGui::Begin(window_name, &tabs_active, ImGuiWindowFlags_MenuBar);
+    auto window_flags = ImGuiWindowFlags_NoResize
+            | ImGuiWindowFlags_NoCollapse
+            | ImGuiWindowFlags_NoMove
+            | ImGuiWindowFlags_MenuBar;
+    ImGui::SetNextWindowPos({0,0});
+    ImGui::SetNextWindowSize({360.0f, (float)_parent_window->GetHeight()});
+    ImGui::Begin(window_name, &tabs_active, window_flags);
 
     _DefineWindowContent();
 
-    ImGui::End();
+    ImGui::End(); 
 }
 
 void UIWindow::Render()

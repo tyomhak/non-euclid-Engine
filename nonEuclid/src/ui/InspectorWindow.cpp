@@ -13,18 +13,20 @@ void InspectorWindow::_DefineWindowContent()
 {
     // ImGui::SameLine(ImGui::GetWindowWidth() - 60.0f); // adds next functionality on the same line with RightAline
 
-    if (ImGui::Button("Help")) { 
-        helper_window_active = !helper_window_active; 
+    if (ImGui::Button(helper_window_active ? "Hide Input Map" : "Show Input Map")) { 
+        helper_window_active = !helper_window_active;
     }
     if (helper_window_active)
     {
-        ImGui::SetNextWindowSize({540, 315});
-        auto window_flags = ImGuiWindowFlags_NoResize;
-        if (ImGui::Begin("Helper: instructions", &helper_window_active, window_flags))
-        {
-            // ImGui::SeparatorText("ABOUT THIS DEMO:");
-            // ImGui::BulletText("Sections below are demonstrating many aspects of the library.");
-            
+        // ImGui::SetNextWindowSize({320, 290});
+        // if (ImGui::Begin("Helper: instructions", &helper_window_active, window_flags))
+        
+        auto child_flags = ImGuiChildFlags_ResizeX | ImGuiChildFlags_ResizeY;
+        auto window_flags = ImGuiWindowFlags_NoResize
+            | ImGuiWindowFlags_NoCollapse
+            | ImGuiWindowFlags_NoMove;
+        if (ImGui::BeginChild("Helper: instructions", {340,320}, child_flags, window_flags))
+        {            
             ImGui::BeginChild("Scrolling");			// enable scrolling in the window
 
             auto table_flags = ImGuiTableFlags_SizingFixedFit 
@@ -44,9 +46,10 @@ void InspectorWindow::_DefineWindowContent()
             ImGui::EndTable();
             ImGui::EndChild();
         }
-        ImGui::End();
+        ImGui::EndChild();
     }
 
+    ImGui::SeparatorText("Level Editor");
 
     // choosing object to be created
     ImGui::Combo("Choose object", &selected_object_item, objects_menu_items, IM_ARRAYSIZE(objects_menu_items));
@@ -72,7 +75,7 @@ void InspectorWindow::_DefineWindowContent()
         ImGui::Text("Functional will be added with next releases.");
     }
 
-    ImGui::SetCursorPos(cursor_pos);	// places upcoming attributes of the window on the place that is set by cursor
+    // ImGui::SetCursorPos(cursor_pos);	// places upcoming attributes of the window on the place that is set by cursor
 
     // Selected object status display
     ImGui::Text((" Update object ID: " + _eventHandler->updateObjectId).c_str());
