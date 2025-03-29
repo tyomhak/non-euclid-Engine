@@ -1,91 +1,100 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.28)
+include(FetchContent)
 
-SET(sampleName nonEuclid)
+project(nonEuclid)
 
-project(NonEuclid VERSION 0.1.0 LANGUAGES C CXX)
+set(CMAKE_CXX_STANDARD 20)
 
-SET(DEBUG_MODE "-g")
-SET(CMAKE_CXX_FLAGS "${DEBUG_MODE}")
+#
+# Dependencies
+#
 
-if(UNIX AND NOT APPLE)
-	set(LINUX TRUE)
+# GLFW
+find_package(glfw3 3.4 QUIET)
+if (NOT glfw3_FOUND)
+	FetchContent_Declare(
+		glfw3
+		# DOWNLOAD_EXTRACT_TIMESTAMP OFF
+		URL https://github.com/glfw/glfw/archive/refs/tags/3.4.tar.gz
+	)
+	FetchContent_GetProperties(glfw3)
+	if (NOT glfw3_POPULATED)
+		set(FETCHCONTENT_QUIET NO)
+		FetchContent_MakeAvailable(glfw3)
+		# FetchContent_Populate(glfw3)
+		# add_subdirectory(${glfw3_SOURCE_DIR} ${glfw3_BINARY_DIR})
+	endif()
 endif()
 
-include_directories(${CMAKE_SOURCE_DIR}/include)
 
-# libraries #
-#############
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/tools/cmake/)
 
-add_library(glad external/glad/glad.c include/glad/glad.h include/KHR/khrplatform.h)
-target_include_directories(glad PUBLIC include/glad/)
-
-add_library(stb_image external/stb_image/stb_image.cpp include/stb_image/stb_image.h)
-target_include_directories(stb_image PUBLIC include/stb_image)
-
-#file(GLOB IMGUI_SRC external/imgui/*.cpp  include/imgui/*.h )
-#add_library(imgui SHARED ${IMGUI_SRC})
-#target_include_directories(imgui PUBLIC include/imgui)
-
-add_library(imgui external/imgui/imgui.cpp external/imgui/imgui_demo.cpp external/imgui/imgui_draw.cpp external/imgui/imgui_impl_glfw.cpp external/imgui/imgui_impl_opengl3.cpp external/imgui/imgui_tables.cpp external/imgui/imgui_widgets.cpp include/imgui/imgui.h include/imgui/imconfig.h include/imgui/imgui_impl_glfw.h include/imgui/imgui_impl_opengl3.h include/imgui/imgui_internal.h include/imgui/imstb_rectpack.h include/imgui/imstb_textedit.h include/imgui/imstb_truetype.h)
-target_include_directories(imgui PUBLIC include/imgui)
-
+# OpenGL
 find_package(OpenGL REQUIRED)
 
-find_package(GLM REQUIRED)
-message(STATUS "GLM included at ${GLM_INCLUDE_DIR}")
+# GLAD
+FetchContent_Declare(
+    glad
+    GIT_REPOSITORY https://github.com/Dav1dde/glad
+    GIT_TAG        v2.0.6
+    GIT_SHALLOW    TRUE
+    GIT_PROGRESS   TRUE
+)
 
-find_package(GLFW3 REQUIRED)
-message(STATUS "Found GLFW3 in ${GLFW3_INCLUDE_DIR}")
+FetchContent_GetProperties(glad)
+if(NOT glad_POPULATED)
+    message("Fetching glad")
+    FetchContent_MakeAvailable(glad)
 
-find_package(ASSIMP REQUIRED)
-message(STATUS "Found ASSIMP in ${ASSIMP_INCLUDE_DIR}")
-
-
-if(LINUX)
-	set(OPEN_GL GL dl pthread X11)
-elseif(WIN32)
-	set(OPEN_GL opengl32)
+    add_subdirectory("${glad_SOURCE_DIR}/cmake" glad_cmake)
+    glad_add_library(glad REPRODUCIBLE EXCLUDE_FROM_ALL LOADER API gl:core=4.6 EXTENSIONS GL_ARB_bindless_texture GL_EXT_texture_compression_s3tc)
 endif()
 
-set(LIBS glfw3 ${OPEN_GL} assimp stb_image glad imgui)
 
 
-###########
-
-
-
-file(GLOB_RECURSE sources src/*.cpp src/*.c src/*.h src/*.hpp)
-file(GLOB_RECURSE data	data/models/*/* data/shaders/*)
-
-
-link_directories(${CMAKE_SOURCE_DIR}/libs)
-
-add_executable(${PROJECT_NAME} ${sources})
-
-target_link_libraries(${PROJECT_NAME} ${LIBS})
-
-add_custom_command(
-	TARGET ${PROJECT_NAME} PRE_BUILD
-	COMMAND ${CMAKE_COMMAND} -E copy_directory
-	   ${CMAKE_SOURCE_DIR}/data/ ${CMAKE_BINARY_DIR}/data)
-
-# Copy dlls
-if(WIN32)
-	add_custom_command(
-		TARGET ${PROJECT_NAME} POST_BUILD
-		COMMAND ${CMAKE_COMMAND} -E copy_directory
-			"${PROJECT_SOURCE_DIR}/libs/dlls"
-			$<TARGET_FILE_DIR:${PROJECT_NAME}>)
-		
-	add_custom_command(
-		TARGET ${PROJECT_NAME} POST_BUILD
-		COMMAND ${CMAKE_COMMAND} -E copy_directory
-			"${PROJECT_SOURCE_DIR}/data"
-			$<TARGET_FILE_DIR:${PROJECT_NAME}>/data)
-			
-
+# GLM
+find_package(glm 1.0.1 QUIET)
+if (NOT glm_FOUND)
+    FetchContent_Declare(
+            glm
+            DOWNLOAD_EXTRACT_TIMESTAMP OFF
+            URL https://github.com/g-truc/glm/archive/refs/tags/1.0.1.zip
+    )
+    FetchContent_GetProperties(glm)
+    if (NOT glm_POPULATED)
+        set(FETCHCONTENT_QUIET NO)
+		FetchContent_MakeAvailable(glm)
+        # FetchContent_Populate(glm)
+        # add_subdirectory(${glm_SOURCE_DIR} ${glm_BINARY_DIR})
+    endif()
 endif()
+set_target_properties(glm PROPERTIES FOLDER "Dependencies")
 
-#target_link_libraries(${PROJECT_NAME} PRIVATE glad)
-#target_link_libraries(${PROJECT_NAME} PRIVATE stb_image)
+
+# ASSIMP
+find_package(assimp 5.4.3 QUIET)
+if (NOT assimp_FOUND)
+	FetchContent_Declare(
+		assimp
+		DOWNLOAD_EXTRACT_TIMESTAMP OFF
+		URL https://github.com/assimp/assimp/archive/refs/tags/v5.4.3.zip
+	)
+	FetchContent_GetProperties(assimp)
+	if (NOT assimp_POPULATED)
+		set(FETCHCONTENT_QUET NO)
+		set(ASSIMP_BUILD_TESTS NO)
+		FetchContent_MakeAvailable(assimp)
+
+		# FetchContent_Populate(assimp)
+		# add_subdirectory(${assimp_SOURCE_DIR} ${assimp_BINARY_DIR})
+		# add_subdirectory("${assimp_SOURCE_DIR}/cmake" assimp_cmake)
+		# assimp_add_library(assimp REPRODUCIBLE EXCLUDE_FROM_ALL)
+	endif()
+endif()
+set_target_properties(assimp PROPERTIES FOLDER "Dependencies")
+
+#
+# Projects
+#
+add_subdirectory(external)
+add_subdirectory(nonEuclid)
+
