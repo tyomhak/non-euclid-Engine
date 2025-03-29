@@ -21,21 +21,19 @@ public:
 
 	void Render();
 	
-private:
-	void _CreateWindow(const char* window_name);
-
 protected:
-	virtual void _DefineWindowContent() = 0;
+	virtual void DefineWindow() = 0;
+
+private:
+	void Init();
+	void Destruct();
 
 private:
 	const std::string glsl_version = "#version 130";
-	ImGuiContext* _context;	
-	Window* _parent_window{nullptr};
-
-	bool tabs_active = true;
-
+	ImGuiContext* _context;
+	
 protected:
-	std::string _window_title{};
+	Window* _parent_window{nullptr};
 };
 
 }

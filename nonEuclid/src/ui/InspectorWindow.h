@@ -15,15 +15,19 @@ public:
     InspectorWindow(Window* window, EventHandler* eventHandler);
 
 protected:
-    void _DefineWindowContent() override;
+    void DefineWindow() override;
 
 private:
 	EventHandler* _eventHandler;
 
     const char* objects_menu_items[4]{ "", "cube", "backpack", "portal" };
 	int selected_object_item = 0;
-	bool helper_window_active = false;
+	
+    bool helper_window_active = false;
+
+	bool tabs_active = true;
 	short tabs_index = 0;
+
 	ImVec2 cursor_pos = { 0, 250 };
 
     const std::map<std::string, std::string> help_table {

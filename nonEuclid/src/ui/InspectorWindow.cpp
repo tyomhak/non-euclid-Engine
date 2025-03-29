@@ -6,12 +6,34 @@ InspectorWindow::InspectorWindow(Window* window, EventHandler* eventHandler)
     : UIWindow(window)
     , _eventHandler(eventHandler)
 {
-    _window_title = "Object Creation/Manipulation window";
+    ImGui::StyleColorsDark();
 }
 
-void InspectorWindow::_DefineWindowContent()
+void InspectorWindow::DefineWindow()
 {
+    static const std::string window_name{"Inspector"};
+
+    auto window_flags = ImGuiWindowFlags_NoResize
+            | ImGuiWindowFlags_NoCollapse
+            | ImGuiWindowFlags_NoMove
+            | ImGuiWindowFlags_MenuBar;
+    ImGui::SetNextWindowPos({0,0});
+    ImGui::SetNextWindowSize({360.0f, (float)_parent_window->GetHeight()});
+    ImGui::Begin(window_name.c_str(), &tabs_active, window_flags);
+
+    if (ImGui::BeginMenuBar())
+    {
+        if (ImGui::BeginMenu("Menu"))
+        {
+            ImGui::MenuItem("Console");
+        }
+
+        ImGui::EndMenuBar();
+    }
+    
     // ImGui::SameLine(ImGui::GetWindowWidth() - 60.0f); // adds next functionality on the same line with RightAline
+
+
 
     if (ImGui::Button(helper_window_active ? "Hide Input Map" : "Show Input Map")) { 
         helper_window_active = !helper_window_active;
@@ -25,26 +47,29 @@ void InspectorWindow::_DefineWindowContent()
         auto window_flags = ImGuiWindowFlags_NoResize
             | ImGuiWindowFlags_NoCollapse
             | ImGuiWindowFlags_NoMove;
-        if (ImGui::BeginChild("Helper: instructions", {340,320}, child_flags, window_flags))
+        if (ImGui::BeginChild("Helper: instructions", {360,320}, child_flags, window_flags))
         {            
-            ImGui::BeginChild("Scrolling");			// enable scrolling in the window
+            // ImGui::BeginChild("Scrolling");			// enable scrolling in the window
 
-            auto table_flags = ImGuiTableFlags_SizingFixedFit 
+            auto table_flags = ImGuiTableFlags_Resizable 
+                | ImGuiTableFlags_SizingFixedFit 
                 | ImGuiTableFlags_RowBg 
                 | ImGuiTableFlags_BordersOuter 
                 | ImGuiTableFlags_BordersInner;
-            ImGui::BeginTable("Input", 2, table_flags);
-            for (const auto& [key, description] : help_table)
+            if (ImGui::BeginTable("Input", 2, table_flags))
             {
-                ImGui::TableNextRow();
-                ImGui::TableSetColumnIndex(0);
-                ImGui::Text(key.c_str());
-                
-                ImGui::TableSetColumnIndex(1);
-                ImGui::Text(description.c_str());
+                for (const auto& [key, description] : help_table)
+                {
+                    ImGui::TableNextRow();
+                    ImGui::TableSetColumnIndex(0);
+                    ImGui::Text(key.c_str());
+                    
+                    ImGui::TableSetColumnIndex(1);
+                    ImGui::Text(description.c_str());
+                }
+                ImGui::EndTable();
             }
-            ImGui::EndTable();
-            ImGui::EndChild();
+            // ImGui::EndChild();
         }
         ImGui::EndChild();
     }
@@ -54,7 +79,7 @@ void InspectorWindow::_DefineWindowContent()
     // choosing object to be created
     ImGui::Combo("Choose object", &selected_object_item, objects_menu_items, IM_ARRAYSIZE(objects_menu_items));
     
-    ImGui::Dummy(ImVec2(0.0f, 7.0f));	// adds horizontal and vertical spacing by mentioned size
+    ImGui::Dummy(ImVec2(0.0f, 7.0f));
 
     // adding tabs for object manipulations
     ImGui::Columns(4);
@@ -116,4 +141,6 @@ void InspectorWindow::_DefineWindowContent()
         _eventHandler->underViewObjectId = "None";
         _eventHandler->updateObjectId = "None";
     }
+
+    ImGui::End();
 }
