@@ -98,6 +98,7 @@ public:
         {
             glEnable(GL_DEPTH_TEST);
             //glViewport(0, 0, 1024, 768);
+            // glViewport
 
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
         }
@@ -189,8 +190,7 @@ private:
     }
 
 private:
-
-    unsigned int texture_width = 1920;
-    unsigned int texture_height = 1080;
+    unsigned int texture_width = 1080;
+    unsigned int texture_height = 740;
     unsigned int max_depth = 2;
 };
