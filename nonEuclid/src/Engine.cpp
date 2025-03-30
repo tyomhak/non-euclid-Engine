@@ -13,7 +13,7 @@ Engine::Engine()
     , objectShader("./data/shaders/Object_Vertex.shader", "", "./data/shaders/Object_Fragment.shader")
     , portalShader("./data/shaders/Portal_Vertex.shader", "", "./data/shaders/Portal_Fragment.shader")
     , eventHandler(&player, &level, window.GetNativeWindow(), window.GetWidth() / 2, window.GetHeight() / 2, &objectShader, &portalShader)
-    , _ui_window(new ui::InspectorWindow(&window, &eventHandler))
+    , _ui_window(new ui::InspectorWindow(this, &window, &eventHandler))
 {
     SetupWindow();
     window.SetIcon("./data/icons/Euclid.jpg");
@@ -201,6 +201,7 @@ void Engine::CheckSave()
 
 void Engine::SaveWorld()
 {
+    std::cout << "Saving Scene\n";
     LevelHandler::WriteLevel("./Alternative", level, player.GetCamera());
 }
 

@@ -1,9 +1,12 @@
 #include "InspectorWindow.h"
 
+#include "Engine.h"
+
 using namespace ui;
 
-InspectorWindow::InspectorWindow(Window* window, EventHandler* eventHandler)
+InspectorWindow::InspectorWindow(Engine* engine, Window* window, EventHandler* eventHandler)
     : UIWindow(window)
+    , _engine(engine)
     , _eventHandler(eventHandler)
 {
     ImGui::StyleColorsDark();
@@ -14,18 +17,28 @@ void InspectorWindow::DefineWindow()
     static const std::string window_name{"Inspector"};
 
     auto window_flags = ImGuiWindowFlags_NoResize
-            | ImGuiWindowFlags_NoCollapse
+            // | ImGuiWindowFlags_NoCollapse
             | ImGuiWindowFlags_NoMove
             | ImGuiWindowFlags_MenuBar;
     ImGui::SetNextWindowPos({0,0});
-    ImGui::SetNextWindowSize({360.0f, (float)_parent_window->GetHeight()});
+    ImGui::SetNextWindowSize({375.0f, (float)_parent_window->GetHeight()});
     ImGui::Begin(window_name.c_str(), &tabs_active, window_flags);
 
     if (ImGui::BeginMenuBar())
     {
-        if (ImGui::BeginMenu("Menu"))
+        if (ImGui::BeginMenu("Scene"))
         {
-            ImGui::MenuItem("Console");
+            bool save_scene = false;
+            ImGui::MenuItem("Save", nullptr, &save_scene);
+            if (save_scene)
+                SaveScene();
+
+            bool load_scene = false;
+            ImGui::MenuItem("Load", nullptr, &load_scene);
+            if (load_scene)
+                LoadScene();
+
+            ImGui::EndMenu();
         }
 
         ImGui::EndMenuBar();
@@ -69,7 +82,6 @@ void InspectorWindow::DefineWindow()
                 }
                 ImGui::EndTable();
             }
-            // ImGui::EndChild();
         }
         ImGui::EndChild();
     }
@@ -143,4 +155,15 @@ void InspectorWindow::DefineWindow()
     }
 
     ImGui::End();
+}
+
+void InspectorWindow::SaveScene()
+{
+    if (_engine)
+        _engine->SaveWorld();
+}
+
+void InspectorWindow::LoadScene()
+{
+    std::cout << "Loading Scene (Not implemented yet)\n";
 }

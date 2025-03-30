@@ -6,19 +6,26 @@
 
 #include "UIWindow.h"
 
+class Engine;
+
 namespace ui
 {
 
 class InspectorWindow : public UIWindow
 {
 public:
-    InspectorWindow(Window* window, EventHandler* eventHandler);
+    InspectorWindow(Engine* engine, Window* window, EventHandler* eventHandler);
 
 protected:
     void DefineWindow() override;
 
 private:
-	EventHandler* _eventHandler;
+    void SaveScene();
+    void LoadScene();
+
+private:
+    Engine* _engine = nullptr;
+	EventHandler* _eventHandler = nullptr;
 
     const char* objects_menu_items[4]{ "", "cube", "backpack", "portal" };
 	int selected_object_item = 0;

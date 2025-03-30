@@ -26,6 +26,8 @@ public:
 	bool CheckCubeCollision(const std::string id1, const std::string id2);
 
 	void TempTest();
+	
+	void SaveWorld();
 private:
 
 	Object* FindObjectById(std::string id);
@@ -33,7 +35,6 @@ private:
 private:
 	void UpdateShaders();
 	void CheckSave();
-	void SaveWorld();
 	void SetupShaders();
 
 	void SetupWindow();
