@@ -128,7 +128,7 @@ private:
         glBindVertexArray(0);
     }
 
-private:
+public:
     std::vector<Texture> textures;
     Material material;
     unsigned int VBO, EBO;

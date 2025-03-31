@@ -40,7 +40,6 @@ public:
 	void Update()
 	{
 		glm::mat4 mvp = projection * view * model;
-		Bind();
 		SetMat4("mvp", mvp);
 	}
 
@@ -83,17 +82,17 @@ public:
 		glUniformMatrix4fv(glGetUniformLocation(_shader_program_id, name.c_str()), 1, GL_FALSE, &mat[0][0]);
 	}
 
-	void SetView(glm::mat4 _view)
+	void SetView(const glm::mat4& _view)
 	{
 		view = _view;
 	}
 
-	void SetModel(glm::mat4 _model)
+	void SetModel(const glm::mat4& _model)
 	{
 		model = _model;
 	}
 
-	void SetProjection(glm::mat4 _projection)
+	void SetProjection(const glm::mat4& _projection)
 	{
 		projection = _projection;
 	}
