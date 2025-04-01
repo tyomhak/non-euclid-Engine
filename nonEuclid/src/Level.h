@@ -12,8 +12,8 @@
 class Level
 {
 private:
-    std::map<std::string /* object ID */, Object> levelObjects;
-    std::map<std::string /* object ID */, Portal> levelPortals;
+    std::map<std::string, Object> levelObjects;
+    std::map<std::string, Portal> levelPortals;
     Shader *portalShader;
     Shader *objectShader; 
 
@@ -51,9 +51,6 @@ public:
         int size = levelPortals.size();
         levelPortals.find(first.GetId())->second.SetPair(&levelPortals.find(second.GetId())->second);
         levelPortals.find(second.GetId())->second.SetPair(&levelPortals.find(first.GetId())->second);
-
-        //levelPortals.at(size - 2).SetPair(&levelPortals.at(size - 1));
-        //levelPortals.at(size - 1).SetPair(&levelPortals.at(size - 2));
     }
 
 
@@ -78,20 +75,15 @@ public:
         AddPortalPair(first, second);
     }
 
-    std::map<std::string /* object Id */, Object>& GetObjects() { return levelObjects; }
+    std::map<std::string, Object>& GetObjects() { return levelObjects; }
 
     void DeleteObject(std::string id)
     {
-        if (levelObjects.find(id) != levelObjects.end())
+        levelObjects.erase(id);
+        if (auto portalIt = levelPortals.find(id); portalIt != levelPortals.end())
         {
-            levelObjects.erase(id);
-        }
-
-        if (levelPortals.find(id) != levelPortals.end())
-        {
-            std::string pairId = levelPortals.find(id)->second.GetPairPtr()->GetId();
+            levelPortals.erase(portalIt->second.GetPairPtr()->GetId());
             levelPortals.erase(id);
-            levelPortals.erase(pairId);
         }
     }
 
@@ -108,19 +100,8 @@ public:
 
     void DrawObjects(Shader *shader)
     {
-        for (auto it = levelObjects.begin(); it != levelObjects.end(); it++)
-        {
-            it->second.Draw(*objectShader);
-        }
-    }
-
-    void DrawPortalsObj()
-    {
-        std::cout << "Not implemented. Line 97, Level.h" << std::endl;
-        for (int i = 0; i < levelPortals.size(); ++i)
-        {
-           //  levelPortals.at(i).Draw(*objectShader);
-        }
+        for (auto& [id, obj] : levelObjects)
+            obj.Draw(*shader);
     }
 
     void Draw(Camera &mainCamera) 
@@ -129,45 +110,31 @@ public:
         DrawObjects(mainCamera, objectShader);
     }
 
-    std::map<std::string /* object ID */, Object> GetObjects() const
+    std::map<std::string, Object> GetObjects() const
     {
         return levelObjects;
     }
 
-    std::map<std::string /* object ID */, Portal> &GetPortals()
+    std::map<std::string, Portal> &GetPortals()
     {
         return levelPortals;
     }
 
     Object* GetObjectPointer(const std::string& id)
     {
-        std::map<std::string /* object ID */, Object>::iterator it = levelObjects.find(id);
-        if (it != levelObjects.end())
-        {
-            return &levelObjects.find(id)->second;
-        }
-
-        std::map<std::string /* object ID */, Portal>::iterator itPortal = levelPortals.find(id);
-        if (itPortal != levelPortals.end())
-        {
-            return &levelPortals.find(id)->second;
-        }
+        if (levelObjects.contains(id))
+            return &levelObjects.at(id);
+        if (levelPortals.contains(id))
+            return &levelPortals.at(id);
         return nullptr;
     }
 
     Object GetObject(const std::string& id)
     {
-        std::map<std::string /* object ID */, Object>::iterator it = levelObjects.find(id);
-        if (it != levelObjects.end())
-        {
-            return levelObjects.find(id)->second;
-        }
-
-        std::map<std::string /* object ID */, Portal>::iterator itPortal = levelPortals.find(id);
-        if (itPortal != levelPortals.end())
-        {
-            return levelPortals.find(id)->second;
-        }
+        if (levelObjects.contains(id))
+            return levelObjects.at(id);
+        if (levelPortals.contains(id))
+            return levelPortals.at(id);
 
         // TODO: temporary fix. Need to handle this case better.
         return levelObjects.begin()->second;
@@ -180,7 +147,6 @@ public:
             portal.second.Draw(*objectShader, *portalShader, camera, levelObjects, levelPortals);
         }
     }
-
 
     Camera GetCamera() const { return camera; }
     void SetCamera(Camera _camera) { camera = _camera; }
