@@ -8,6 +8,8 @@
 #include "Level.h"
 #include "UIWindow.h"
 
+#include "Skybox.h"
+
 class Engine {
 public:
 	Engine();
@@ -45,6 +47,7 @@ private:
 	
 	Level level;
 	Player player;
+	Skybox skybox{};
 	
 	EventHandler eventHandler;
 

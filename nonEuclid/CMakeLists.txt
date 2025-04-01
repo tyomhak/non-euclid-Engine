@@ -9,6 +9,7 @@ set(INCLUDE_DIRS
     src/ui
     src/components
     src/game_objects
+    src/skybox
 )
 
 set(SOURCES
@@ -31,6 +32,9 @@ set(SOURCES
 
     src/game_objects/GameObject.h
     src/game_objects/GameObject.cpp
+
+    src/skybox/Skybox.h
+    src/skybox/Skybox.cpp
 
     src/Camera.h
 

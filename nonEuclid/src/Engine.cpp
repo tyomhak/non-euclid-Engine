@@ -61,6 +61,9 @@ void Engine::Render()
         UpdateShaders();
 
         level.Draw(player.GetCamera());
+        skybox.Render(player.GetCamera().GetViewMatrix(), glm::perspective(glm::radians(90.0f), window.GetAspectRatio(), 0.1f, 100.0f));
+
+
         if (_ui_window)
             _ui_window->Render();
 
