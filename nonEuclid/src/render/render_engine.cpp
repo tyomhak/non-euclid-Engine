@@ -1,5 +1,9 @@
 #include "render_engine.h"
 
+#include <map>
+#include <vector>
+#include <string>
+
 #include <glad/gl.h>
 #include <glfw/glfw3.h>
 #include <assimp/Importer.hpp>
@@ -153,11 +157,54 @@ Model RenderEngine::load_model(const std::string& file_name, const std::string& 
         return;
     }
     
-#if 0
-    load_model_node(scene->mRootNode, scene, model.meshes);
-#else
     auto mesh_count = scene->mNumMeshes;
     auto material_count = scene->mNumMaterials;
+
+
+    std::map<int, std::vector<ID_TEX>> mat_textures_map{};
+    for (auto mat_ndx = 0; mat_ndx < material_count; ++mat_ndx)
+    {
+        mat_textures_map.insert({mat_ndx, {}});
+
+        auto material = scene->mMaterials[mat_ndx];
+        std::vector<aiTextureType> tex_types {
+            aiTextureType_DIFFUSE,
+            aiTextureType_SPECULAR,
+            aiTextureType_HEIGHT,
+            aiTextureType_AMBIENT
+        };
+
+        std::map<aiTextureType, TextureType> type_map {
+            { aiTextureType_DIFFUSE, TextureType::DIFFUSE },
+            { aiTextureType_SPECULAR, TextureType::SPECULAR },
+            { aiTextureType_HEIGHT, TextureType::NORMAL },
+            { aiTextureType_AMBIENT, TextureType::HEIGHT }
+        };
+
+        for (auto tex_type : tex_types)
+        {
+            auto tex_count = material->GetTextureCount(tex_type);
+            for (auto i = 0; i < tex_count; ++i)
+            {
+                aiString ai_tex_name;
+                material->GetTexture(tex_type, i, &ai_tex_name);
+
+                std::string tex_name = ai_tex_name.C_Str();
+                if (!_texture_ids.contains(tex_name))
+                {
+                    auto tex_id = ID_TEX::create();
+                    auto texture = load_texture(tex_name);
+                    texture.type = type_map.at(tex_type);
+                    
+                    _texture_ids.insert({tex_name, tex_id});
+                    _textures.insert({tex_id, texture});
+                }
+
+                auto tex_id = _texture_ids.at(tex_name);
+                mat_textures_map.at(mat_ndx).push_back(tex_id);
+            }
+        }
+    }
 
     for (auto mesh_ndx = 0;  mesh_ndx < mesh_count; ++mesh_ndx)
     {
@@ -214,57 +261,23 @@ Model RenderEngine::load_model(const std::string& file_name, const std::string& 
 
             my_mesh.vertices.push_back(vertex);
         }
-        
 
         for (auto i = 0; i < mesh->mNumFaces; ++i)
         {
             auto mesh_face = mesh->mFaces[i];
             my_mesh.indices.insert(my_mesh.indices.end(), mesh_face.mIndices, mesh_face.mIndices + mesh_face.mNumIndices);
         }
+
+        auto mat_ndx = mesh->mMaterialIndex;
+        if (mat_textures_map.contains(mat_ndx))
+        {
+            auto& textures = mat_textures_map.at(mat_ndx);
+            my_mesh.textures.insert(my_mesh.textures.end(), textures.begin(), textures.end());
+        }
     }
 
-
-
-#endif
-
-
-
+    return model;
 }
-
-std::vector<Texture> RenderEngine::get_material_textures(aiMaterial *mat, aiTextureType type)
-{
-    std::vector<Texture> textures{};
-    for (auto i = 0; i < mat->GetTextureCount(type); ++i)
-    {
-        
-    }
-}
-
-
-void RenderEngine::load_model_node(const aiNode* node, const aiScene* scene, std::vector<Mesh>& mesh_storage)
-{
-    for(auto i = 0; i < node->mNumMeshes; i++)
-    {
-        auto mesh = scene->mMeshes[node->mMeshes[i]];
-        mesh_storage.push_back(load_mesh(mesh, scene));
-    }
-
-    for (auto i = 0; i < node->mNumChildren; ++i)
-        load_model_node(node->mChildren[i], scene, mesh_storage);
-}
-
-Mesh RenderEngine::load_mesh(const aiMesh *mesh, const aiScene *scene)
-{
-    Mesh mesh{};
-    // for(unsigned int i = 0; i < node->mNumMeshes; i++)
-    // {
-    //     auto 
-    // }
-
-}
-
-
-
 
 Texture RenderEngine::load_texture(const std::string& path)
 {
@@ -297,6 +310,8 @@ Texture RenderEngine::load_texture(const std::string& path)
         stbi_image_free(data);
         texture.internal_id = textureID;
         texture.path = path;
+        texture.width = width;
+        texture.height = height;
     }
     else
     {

@@ -45,13 +45,8 @@ public:
     ID_OBJ create_new_obj();
     Obj get_obj(ID_OBJ);
 
-    // ID_MODEL get_model_id(const std::string& path);
     ID_MODEL create_model(const std::string& file_name, const std::string& path);
     Model& get_model(ID_MODEL);
-
-    // ID_MESH get_mesh_id(const std::string& path);
-    // ID_MESH create_mesh(const std::string& path);
-    // Mesh& get_mesh(ID_MESH);
 
     ID_TEX get_texture_id(const std::string& path);   
     ID_TEX create_texture(const std::string& path, TextureType type);
@@ -63,11 +58,7 @@ public:
 
 private:
     Model   load_model(const std::string& file_name, const std::string& path);
-    void    load_model_node(const aiNode* node, const aiScene* scene, std::vector<Mesh>& mesh_storage);
-    Mesh    load_mesh(const aiMesh *mesh, const aiScene *scene);
 
-    Material load_material();
-    std::vector<Texture> get_material_textures(aiMaterial *mat, aiTextureType type);
     Texture load_texture(const std::string& path);
     Shader  load_shader(const std::string& vert, const std::string& frag, const std::string& geom);
 

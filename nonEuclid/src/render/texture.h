@@ -18,6 +18,8 @@ struct Texture
     unsigned int internal_id;
     std::string path;
     TextureType type;
+
+    int width, height;
 };
 
 
