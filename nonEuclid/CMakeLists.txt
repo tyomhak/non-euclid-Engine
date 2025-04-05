@@ -7,9 +7,9 @@ set(INCLUDE_DIRS
     src
     src/physics
     src/ui
-    src/components
-    src/game_objects
     src/skybox
+    # src/components
+    # src/game_objects
 )
 
 set(SOURCES
@@ -25,13 +25,13 @@ set(SOURCES
     src/ui/InspectorWindow.h
     src/ui/InspectorWindow.cpp
 
-    src/components/Component.h
-    src/components/Component.cpp
-    src/components/Render3D.h
-    src/components/Render3D.cpp
+    # src/components/Component.h
+    # src/components/Component.cpp
+    # src/components/Render3D.h
+    # src/components/Render3D.cpp
 
-    src/game_objects/GameObject.h
-    src/game_objects/GameObject.cpp
+    # src/game_objects/GameObject.h
+    # src/game_objects/GameObject.cpp
 
     src/skybox/Skybox.h
     src/skybox/Skybox.cpp

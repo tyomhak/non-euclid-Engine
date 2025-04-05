@@ -130,7 +130,7 @@ private:
 
 public:
     std::vector<Texture> textures;
-    Material material;
+    // Material material;
     unsigned int VBO, EBO;
 
 public:

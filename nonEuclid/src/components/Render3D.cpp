@@ -1,10 +1,16 @@
 #include "Render3D.h"
 
+#include "GameObject.h"
 #include "Shader.h"
 #include "Model.h"
 
+#include "render/render_object.h"
+
 void Render3D::Update(float delta)
 {
+    UpdateTransformMat(Parent()->GetGlobalTransformMat());
+
+#if 0
     UpdateShaderData();
     _shader->Bind();
     _shader->SetModel(GlobalTransform());
@@ -46,4 +52,12 @@ void Render3D::Update(float delta)
         // always good practice to set everything back to defaults once configured.
         glActiveTexture(GL_TEXTURE0);
     }
+#endif
+}
+
+void Render3D::UpdateTransformMat(const glm::mat4& objWorldMat)
+{
+    auto& renderer = render::RenderEngine::singleton();
+    auto rend_obj = renderer.get_obj(_rend_obj_id);
+    rend_obj.SetWorldMat(objWorldMat);
 }

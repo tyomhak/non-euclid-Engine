@@ -179,7 +179,7 @@ Mesh Model::ProcessMesh(aiMesh *mesh, const aiScene *scene)
 
 // checks all material textures of a given type and loads the textures if they're not loaded yet.
 // the required info is returned as a Texture struct.
-std::vector<Texture> Model::LoadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName)
+std::vector<Texture> Model::LoadMaterialTextures(aiMaterial *mat, aiTextureType type, const std::string& typeName)
 {
     std::vector<Texture> textures;
     for(unsigned int i = 0; i < mat->GetTextureCount(type); i++)
@@ -210,23 +210,23 @@ std::vector<Texture> Model::LoadMaterialTextures(aiMaterial *mat, aiTextureType 
     return textures;
 }
 
-Material Model::LoadMaterial(aiMaterial *mat)
-{
-    Material myMaterial;
-    aiColor3D color(0.f, 0.f, 0.f);
-    float shininess;
+// Material Model::LoadMaterial(aiMaterial *mat)
+// {
+//     Material myMaterial;
+//     aiColor3D color(0.f, 0.f, 0.f);
+//     float shininess;
 
-    mat->Get(AI_MATKEY_COLOR_DIFFUSE, color);
-    myMaterial.Diffuse = glm::vec3(color.r, color.b, color.g);
+//     mat->Get(AI_MATKEY_COLOR_DIFFUSE, color);
+//     myMaterial.Diffuse = glm::vec3(color.r, color.b, color.g);
 
-    mat->Get(AI_MATKEY_COLOR_AMBIENT, color);
-    myMaterial.Ambient = glm::vec3(color.r, color.b, color.g);
+//     mat->Get(AI_MATKEY_COLOR_AMBIENT, color);
+//     myMaterial.Ambient = glm::vec3(color.r, color.b, color.g);
 
-    mat->Get(AI_MATKEY_COLOR_SPECULAR, color);
-    myMaterial.Specular = glm::vec3(color.r, color.b, color.g);
+//     mat->Get(AI_MATKEY_COLOR_SPECULAR, color);
+//     myMaterial.Specular = glm::vec3(color.r, color.b, color.g);
 
-    mat->Get(AI_MATKEY_SHININESS, shininess);
-    myMaterial.Shininess = shininess;
+//     mat->Get(AI_MATKEY_SHININESS, shininess);
+//     myMaterial.Shininess = shininess;
 
-    return myMaterial;
-}
+//     return myMaterial;
+// }

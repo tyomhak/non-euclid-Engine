@@ -13,7 +13,7 @@ public:
     virtual void OnStart() {}
     virtual void Update(float delta) {}
 
-    GameObject* parent() { return _parent; }
+    GameObject* Parent() { return _parent; }
 
     glm::mat4& Transform();
     glm::mat4 Transform() const;

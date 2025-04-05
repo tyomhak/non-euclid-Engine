@@ -16,21 +16,38 @@ void GameObject::OnStart()
         component->OnStart();
 }
 
-void GameObject::PreUpdate()
-{
-    
-}
-
 void GameObject::Update(float delta)
 {
     for (auto& component : _components)
         component->Update(delta);
 }
 
-void GameObject::UpdateGlobalTransform()
+void GameObject::Translate(const glm::vec3& vec)
 {
-    if (_parent)
-        _global_transform = _parent->GlobalTransform() * _global_transform;
-    else
-        _global_transform = _transform;
+    _local_transform.translate(vec);
+}
+void GameObject::SetPosition(const glm::vec3& pos)
+{
+    _local_transform.set_position(pos);
+}
+void GameObject::Rotate(float degree, const glm::vec3& axis)
+{
+    _local_transform.rotate(degree, axis);
+}
+void GameObject::SetScale(const glm::vec3& v_scale)
+{
+    _local_transform.set_scale(v_scale);
+}
+
+void GameObject::SetParentGlobalTransformMat(const glm::mat4& mat)
+{
+    _parent_global_transform = mat;
+    PropogateTransformChanged();
+}
+void GameObject::PropogateTransformChanged()
+{
+    for (auto& child : _children)
+    {
+        child.SetParentGlobalTransformMat(GetGlobalTransformMat());
+    }
 }
