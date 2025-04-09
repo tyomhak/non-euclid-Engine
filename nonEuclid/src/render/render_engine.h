@@ -1,10 +1,10 @@
 #pragma once
 
+#include <memory>
 #include <unordered_map>
 #include <string>
 
 #include <assimp/scene.h>
-
 
 #include "utils/id.h"
 #include "shader.h"
@@ -16,6 +16,7 @@ class RenderObject;
 class Mesh;
 class Model;
 class Camera;
+class RenderTarget;
 class Texture;
 class Shader;
 
@@ -24,6 +25,7 @@ typedef ID<Mesh>    ID_MESH;
 typedef ID<Model>   ID_MODEL;
 typedef ID<Obj>     ID_OBJ;
 typedef ID<Camera>  ID_CAM;
+typedef ID<RenderTarget> ID_REND_TARG;
 typedef ID<Texture> ID_TEX;
 typedef ID<Shader>  ID_SHADER;
 
@@ -38,6 +40,9 @@ public:
 
     void tick(); // update render delta time, render if refresh needed
     void render();
+
+    void set_render_target(ID_REND_TARG id);
+    void draw_render_target(ID_REND_TARG id);
 
     ID_CAM create_camera();
     Camera get_camera(ID_CAM);
@@ -64,6 +69,9 @@ private:
 
 private:
     std::unordered_map<ID_CAM, Camera>      _cameras{};
+    std::unordered_map<ID_REND_TARG, std::unique_ptr<RenderTarget>> _render_targets{};
+    WindowRenderTarget _window_render_target{};
+
     std::unordered_map<ID_OBJ, Obj>         _objects{};
     std::unordered_map<ID_MODEL, Model>     _models{};
     // std::unordered_map<ID_MESH, Mesh>       _meshes{};

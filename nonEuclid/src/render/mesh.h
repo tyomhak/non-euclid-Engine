@@ -22,13 +22,9 @@ struct Vertex
 
 struct Mesh
 {
-    std::vector<Mesh> children{};
-    
     std::vector<Vertex> vertices{};
     std::vector<unsigned int> indices{};
-    
     std::vector<ID<Texture>>    textures{};
-    std::vector<ID<Material>>   material{};
     
     unsigned int VAO, VBO, EBO;
 };

@@ -18,6 +18,7 @@
 #include "shader.h"
 #include "texture.h"
 #include "camera.h"
+#include "render_target.h"
 #include "asset_loader.h"
 
 
@@ -37,16 +38,61 @@ void RenderEngine::tick()
 }
 void RenderEngine::render()
 {
-    for (auto& [id, camera] : _cameras)
+    std::vector<Camera&> cameras{};
+    cameras.reserve(_cameras.size());
+    for (auto& [id, cam] : _cameras)
+        cameras.push_back(cam);
+
+    std::sort(cameras.begin(), cameras.end(), [](auto& l, auto& r) { return l.render_priority < r.render_priority; });
+
+    for (auto& camera : cameras)
     {
         // set current camera
+        auto projectionViewMat = camera.GetProjectionMat() * camera.GetViewMat();
 
         // set render target
+        auto render_target_id = camera.custom_render_target;
+        set_render_target(render_target_id);
+
         
         for (auto& [obj_id, obj] : _objects)
         {
+            auto modelMat = projectionViewMat * obj.GetWorldMat();
+            auto& model = get_model(obj.GetModelID());
+            
             // render obj
+            for (auto& mesh_id : model.meshes)
+            {
+                
+            }
         }
+
+        draw_render_target(render_target_id);
+    }
+}
+
+void RenderEngine::set_render_target(ID_REND_TARG id)
+{
+    if (!id.is_valid())
+    {
+        _window_render_target.SetActive();
+    }
+    {
+        auto& target_ptr = _render_targets.at(id);
+        target_ptr->SetActive();
+    }
+}
+
+void RenderEngine::draw_render_target(ID_REND_TARG id)
+{
+    if (!id.is_valid())
+    {
+        _window_render_target.Update();
+    }
+    else
+    {
+        auto& target_ptr = _render_targets.at(id);
+        target_ptr->Update();
     }
 }
 
@@ -234,20 +280,20 @@ Model RenderEngine::load_model(const std::string& file_name, const std::string& 
 
             if (mesh->HasTextureCoords(0))
             {
-                auto& mesh_tex_coords = mesh->mTextureCoords[0][i];
+                auto& mesh_tex_coords = mesh->mTextureCoords[0][vert_ndx];
                 vertex.texture_coords = {
                     mesh_tex_coords.x,
                     mesh_tex_coords.y
                 };
 
-                auto& mesh_tangent = mesh->mTangents[i];
+                auto& mesh_tangent = mesh->mTangents[vert_ndx];
                 vertex.tangent = {
                     mesh_tangent.x,
                     mesh_tangent.y,
                     mesh_tangent.z
                 };
 
-                auto& mesh_bitangent = mesh->mBitangents[i];
+                auto& mesh_bitangent = mesh->mBitangents[vert_ndx];
                 vertex.bitangent = {
                     mesh_bitangent.x,
                     mesh_bitangent.y,

@@ -49,6 +49,7 @@ public:
     void Draw(Shader &shader, glm::mat4 worldMatrix = glm::mat4(1.0f)) 
     {
         shader.Bind();
+        
         // bind appropriate textures
         unsigned int diffuseNr  = 1;
         unsigned int specularNr = 1;

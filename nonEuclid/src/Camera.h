@@ -150,11 +150,6 @@ public:
             Zoom = 45.0f;
     }
 
-    glm::mat4 GetInvertedCamera(float y) {
-        // returns the inverted camera matrix
-        return glm::mat4(1.0f);
-    }
-
 private:
     // calculates the front vector from the Camera's (updated) Euler Angles
     void UpdateCameraVectors()

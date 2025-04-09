@@ -18,9 +18,16 @@ public:
         _model_id = model_id;
     }
 
+    ID_MODEL GetModelID() const { return _model_id; }
+
     void SetWorldMat(const glm::mat4& worldMat)
     {
         _world_mat = worldMat;
+    }
+
+    glm::mat4 GetWorldMat() const 
+    {
+        return _world_mat;
     }
 
 private:
