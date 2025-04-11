@@ -32,7 +32,6 @@ private:
 	
     bool helper_window_active = false;
 
-	bool tabs_active = true;
 	short tabs_index = 0;
 
 	ImVec2 cursor_pos = { 0, 250 };
