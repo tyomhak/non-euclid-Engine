@@ -95,6 +95,16 @@ set_target_properties(assimp PROPERTIES FOLDER "Dependencies")
 #
 # Projects
 #
-add_subdirectory(external)
-add_subdirectory(nonEuclid)
+
+
+SET (NJIN TRUE)
+
+if (NJIN)
+	add_subdirectory(engine)
+else()
+	add_subdirectory(external)
+	add_subdirectory(nonEuclid)
+endif()
+
+
 
