@@ -53,7 +53,8 @@ public:
     virtual std::string ToString() const { return GetName(); }
 
     inline bool IsInCategory(EventCategory category) { return GetCategories() & category; }
-
+    
+    inline bool IsHandled() const { return _handled; }
 private:
     bool _handled{false};
 };

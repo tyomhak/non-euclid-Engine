@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "event.hpp"
-
+#include "layer_stack.hpp"
 
 namespace njin
 {
@@ -25,6 +25,7 @@ public:
 private:
     bool _is_running{true};
     std::unique_ptr<Window> _main_window{nullptr};
+    LayerStack _layer_stack{};
 };
 
 

@@ -10,6 +10,7 @@
 
 
 #include "window_event.hpp"
+#include "layer.hpp"
 
 
 namespace njin
@@ -33,6 +34,9 @@ void Application::Run()
         glClearColor(0, 0, 0, 1);
         glClear(GL_COLOR_BUFFER_BIT);   
         _main_window->OnUpdate();
+
+        for (auto layerPtr : _layer_stack)
+            layerPtr->OnUpdate();
     }
 }
 
@@ -43,6 +47,12 @@ void Application::OnEvent(Event& event)
     EventDispatcher dispatcher(event);
     dispatcher.Dispatch<WindowCloseEvent>([this](Event& e){ return OnWindowClose(e); });
 
+    for(auto it = _layer_stack.end(); it != _layer_stack.begin();)
+    {
+        (*--it)->OnEvent(event);
+        if (event.IsHandled())
+            break;
+    }
 }
 
 

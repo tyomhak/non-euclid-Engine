@@ -17,6 +17,10 @@ set(SOURCES
     src/application.hpp 
     src/core.hpp
     src/window.hpp
+    src/layer.hpp
+    src/layer.cpp
+    src/layer_stack.hpp
+    src/layer_stack.cpp
 
     src/events/event.hpp
     src/events/key_event.hpp
