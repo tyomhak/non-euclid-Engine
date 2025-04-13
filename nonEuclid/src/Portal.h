@@ -190,7 +190,7 @@ private:
     }
 
 private:
-    unsigned int texture_width = 1080;
+    unsigned int texture_width = 1280;
     unsigned int texture_height = 740;
     unsigned int max_depth = 2;
 };

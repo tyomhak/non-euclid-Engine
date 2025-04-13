@@ -33,7 +33,7 @@ void Window::InitializeWindow()
 	glfwSetWindowIcon(_glfwWindow, 1, images); 
 	stbi_image_free(images[0].pixels);
 
-	glfwSwapInterval(1);
+	glfwSwapInterval(0);
 	/* Make the window's context current */
 	glfwMakeContextCurrent(_glfwWindow);
 

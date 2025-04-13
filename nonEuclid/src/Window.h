@@ -9,7 +9,7 @@
 class Window
 {
 public:
-	Window() : Window(1080, 740)
+	Window() : Window(1280, 740)
 	{}
 
 	Window(float width, float height) 
