@@ -1,18 +1,17 @@
-include(ExternalProject)
+cmake_minimum_required(VERSION 3.28)
 
+project(NJIN)
 
-set(SOURCE_DIR "src")
+set(NJIN_SOURCE_DIR "src")
 
-set(INCLUDE_DIRS 
+set(NJIN_INCLUDE_DIRS 
     src
     src/events
     src/platform
     src/platform/OpenGL
 )
 
-set(SOURCES
-    src/main.cpp
-
+set(NJIN_SOURCES
     src/application.cpp
     src/application.hpp 
     src/core.hpp
@@ -38,10 +37,57 @@ set(SOURCES
 #     data/shaders/object.frag
 # )
 
-add_executable(njin ${SOURCES})
-target_include_directories(njin PRIVATE ${INCLUDE_DIRS})
-target_link_libraries(njin PRIVATE glad)
-target_link_libraries(njin PRIVATE glfw)
+
+# GLFW
+find_package(glfw3 3.4 QUIET)
+if (NOT glfw3_FOUND)
+	FetchContent_Declare(
+		glfw3
+		# DOWNLOAD_EXTRACT_TIMESTAMP OFF
+		URL https://github.com/glfw/glfw/archive/refs/tags/3.4.tar.gz
+	)
+	FetchContent_GetProperties(glfw3)
+	if (NOT glfw3_POPULATED)
+		set(FETCHCONTENT_QUIET NO)
+		FetchContent_MakeAvailable(glfw3)
+		# FetchContent_Populate(glfw3)
+		# add_subdirectory(${glfw3_SOURCE_DIR} ${glfw3_BINARY_DIR})
+	endif()
+endif()
+
+# OpenGL
+find_package(OpenGL REQUIRED)
+
+# GLAD
+FetchContent_Declare(
+    glad
+    GIT_REPOSITORY https://github.com/Dav1dde/glad
+    GIT_TAG        v2.0.6
+    GIT_SHALLOW    TRUE
+    GIT_PROGRESS   TRUE
+)
+
+FetchContent_GetProperties(glad)
+if(NOT glad_POPULATED)
+    message("Fetching glad")
+    FetchContent_MakeAvailable(glad)
+
+    add_subdirectory("${glad_SOURCE_DIR}/cmake" glad_cmake)
+    glad_add_library(glad REPRODUCIBLE EXCLUDE_FROM_ALL LOADER API gl:core=4.6 EXTENSIONS GL_ARB_bindless_texture GL_EXT_texture_compression_s3tc)
+endif()
+
+
+
+# add_executable(njin ${NJIN_SOURCES})
+add_library(NJIN ${NJIN_SOURCES})
+target_include_directories(NJIN PUBLIC ${NJIN_INCLUDE_DIRS})
+set_target_properties(NJIN PROPERTIES FOLDER "NJIN")
+
+target_link_libraries(NJIN PRIVATE glad)
+target_link_libraries(NJIN PRIVATE glfw)
+
+add_library(NJIN::NJIN ALIAS NJIN)
+
 
 # add_executable(nonEuclid ${IMGUI_SOURCES} ${SOURCES} )
 # target_include_directories(nonEuclid PRIVATE ${INCLUDE_DIRS})
@@ -50,17 +96,6 @@ target_link_libraries(njin PRIVATE glfw)
 # target_link_libraries(nonEuclid PRIVATE glm)
 # target_link_libraries(nonEuclid PRIVATE imgui_lib)
 # target_link_libraries(nonEuclid PRIVATE assimp)
- 
-
-set(RESOURCE_FILES
-  resourcefile.txt
-  appresourcedir/appres.txt)
-
-set_target_properties(njin PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "$<TARGET_FILE_DIR:njin>"
-                                               VS_DEBUGGER_COMMAND           "$<TARGET_FILE:njin>"
-                                               VS_DEBUGGER_ENVIRONMENT       "PATH=%PATH%;${CMAKE_PREFIX_PATH}/bin"
-                                               RESOURCE "${RESOURCE_FILES}"
-)
 
 
 

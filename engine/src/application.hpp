@@ -14,12 +14,11 @@ class Application
 {
 public:
     Application();
-    ~Application();
+    virtual ~Application();
     
     void Run();
 
     void OnEvent(Event& event);
-
     bool OnWindowClose(Event& event);
 
 private:
