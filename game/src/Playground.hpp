@@ -5,7 +5,6 @@
 class Playground : public njin::Application
 {
 public:
-
-private:
+    Playground();
 
 };
