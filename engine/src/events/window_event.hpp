@@ -57,6 +57,23 @@ class WindowMovedEvent : public Event
 public:
     EVENT_CLASS_TYPE(WindowMoved)
     EVENT_CLASS_CATEGORY(EventCategoryApplication)
+
+    WindowMovedEvent(int x_pos, int y_pos)
+        : _x_pos(x_pos), _y_pos(y_pos)
+    {}
+
+    std::string ToString() const 
+    { 
+        std::stringstream ss;
+        ss << GetName() << ": " << GetXPos() << ", " << GetYPos();
+        return ss.str();
+    }
+
+    inline unsigned GetXPos() const { return _x_pos; }
+    inline unsigned GetYPos() const { return _y_pos; }
+
+private:
+    int _x_pos, _y_pos;
 };
 
 }

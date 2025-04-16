@@ -55,6 +55,18 @@ void GLWindow::Init(const WindowProps& props)
     auto glad_load_success = gladLoaderLoadGL();
     assert(glad_load_success);
 
+    glfwSetWindowCloseCallback(_glfw_window, [](GLFWwindow* window){
+        auto& window_data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+        WindowCloseEvent event{};
+        window_data.event_callback(event);
+    });
+
+    glfwSetWindowPosCallback(_glfw_window, [](GLFWwindow* window, int x_pos, int y_pos){
+        auto& window_data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+        WindowMovedEvent event(x_pos, y_pos);
+        window_data.event_callback(event);
+    });
+
     glfwSetWindowSizeCallback(_glfw_window, [](GLFWwindow* window, int width, int height){
         auto& window_data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
         window_data.width = width;
@@ -64,10 +76,18 @@ void GLWindow::Init(const WindowProps& props)
         window_data.event_callback(event);
     });
 
-    glfwSetWindowCloseCallback(_glfw_window, [](GLFWwindow* window){
+    glfwSetWindowFocusCallback(_glfw_window, [](GLFWwindow* window, int focused){
         auto& window_data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
-        WindowCloseEvent event{};
-        window_data.event_callback(event);
+        if (focused == GLFW_TRUE)
+        {
+            WindowFocusEvent event{};
+            window_data.event_callback(event);
+        }
+        else
+        {
+            WindowLostFocusEvent event{};
+            window_data.event_callback(event);
+        }
     });
 }
 

@@ -46,6 +46,9 @@ void Application::OnEvent(Event& event)
     std::cout << event << std::endl;
     EventDispatcher dispatcher(event);
     dispatcher.Dispatch<WindowCloseEvent>([this](Event& e){ return OnWindowClose(e); });
+    dispatcher.Dispatch<WindowFocusEvent>([this](Event& e){ return OnWindowFocus(e); });
+    dispatcher.Dispatch<WindowLostFocusEvent>([this](Event& e){ return OnWindowLostFocus(e); });
+    dispatcher.Dispatch<WindowMovedEvent>([this](Event& e){ return OnWindowMoved(e); });
 
     for(auto it = _layer_stack.end(); it != _layer_stack.begin();)
     {

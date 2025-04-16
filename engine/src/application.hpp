@@ -19,7 +19,10 @@ public:
     void Run();
 
     void OnEvent(Event& event);
-    bool OnWindowClose(Event& event);
+    virtual bool OnWindowClose(Event& event);
+    virtual bool OnWindowFocus(Event& event) { return true; }
+    virtual bool OnWindowLostFocus(Event& event) { return true; }
+    virtual bool OnWindowMoved(Event& event) { return true; }
 
 private:
     bool _is_running{true};
