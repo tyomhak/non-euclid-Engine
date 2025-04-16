@@ -15,6 +15,13 @@ protected:
         : _key_code(key_code)
     {}
 
+    std::string ToString() const 
+    { 
+        std::stringstream ss;
+        ss << GetName() << ": button_" << _key_code;
+        return ss.str();
+    }
+
 private:
     int _key_code;
 };

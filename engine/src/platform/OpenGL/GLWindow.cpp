@@ -3,6 +3,7 @@
 #include <assert.h>
 
 #include "window_event.hpp"
+#include "mouse_event.hpp"
 
 
 namespace njin
@@ -88,6 +89,33 @@ void GLWindow::Init(const WindowProps& props)
             WindowLostFocusEvent event{};
             window_data.event_callback(event);
         }
+    });
+
+
+    glfwSetMouseButtonCallback(_glfw_window, [](GLFWwindow* window, int button, int action, int mods){
+        auto& window_data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+        if (action == GLFW_PRESS)
+        {
+            MouseKeyPressedEvent event(button);
+            window_data.event_callback(event);
+        }
+        else if (action == GLFW_RELEASE)
+        {
+            MouseKeyReleasedEvent event(button);
+            window_data.event_callback(event);
+        }
+    });
+
+    glfwSetCursorPosCallback(_glfw_window, [](GLFWwindow* window, double xpos, double ypos){
+        auto& window_data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+        MouseMovedEvent event((int)xpos, (int)ypos);
+        window_data.event_callback(event);
+    });
+
+    glfwSetScrollCallback(_glfw_window, [](GLFWwindow* window, double xoffset, double yoffset){
+        auto& window_data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+        MouseScrolledEvent event((int)yoffset);
+        window_data.event_callback(event);
     });
 }
 
