@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 
 
-set(NEW true)
+set(NEW false)
 if (NEW)
 	add_subdirectory(engine)
 	add_subdirectory(game)

@@ -2,6 +2,9 @@
 
 #include <assert.h>
 
+#include <glad/gl.h>
+#include <GLFW/glfw3.h>
+
 #include "window_event.hpp"
 #include "mouse_event.hpp"
 
@@ -50,11 +53,13 @@ void GLWindow::Init(const WindowProps& props)
 
     _glfw_window = glfwCreateWindow(_window_data.width, _window_data.height, _window_data.title.c_str(), nullptr, nullptr);
     glfwMakeContextCurrent(_glfw_window);
-    glfwSetWindowUserPointer(_glfw_window, &_window_data);
-    SetVSync(IsVSync());
 
     auto glad_load_success = gladLoaderLoadGL();
     assert(glad_load_success);
+
+    glfwSetWindowUserPointer(_glfw_window, &_window_data);
+    SetVSync(IsVSync());
+
 
     glfwSetWindowCloseCallback(_glfw_window, [](GLFWwindow* window){
         auto& window_data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
