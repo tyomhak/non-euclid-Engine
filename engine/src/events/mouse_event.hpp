@@ -79,19 +79,22 @@ public:
     EVENT_CLASS_TYPE(MouseScrolled)
     EVENT_CLASS_CATEGORY(EventCategoryInput | EventCategoryMouse)
 
-    MouseScrolledEvent(int scrolled_by)
-        : _scrolled_by(scrolled_by)
+    MouseScrolledEvent(int x_scroll, int y_scroll)
+        : _x_scroll(x_scroll), _y_scroll(y_scroll)
     {}
+
+    inline int GetXScroll() const { return _x_scroll; }
+    inline int GetYScroll() const { return _y_scroll; }
 
     std::string ToString() const override 
     {
         std::stringstream ss;
-        ss << GetName() << ": " << _scrolled_by;
+        ss << GetName() << "-- x:" << _x_scroll << ", y:" << _y_scroll;
         return ss.str();
     }
 
 private:
-    int _scrolled_by;
+    int _x_scroll, _y_scroll;
 };
     
 

@@ -119,7 +119,7 @@ void GLWindow::Init(const WindowProps& props)
 
     glfwSetScrollCallback(_glfw_window, [](GLFWwindow* window, double xoffset, double yoffset){
         auto& window_data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
-        MouseScrolledEvent event((int)yoffset);
+        MouseScrolledEvent event((int)xoffset, (int)yoffset);
         window_data.event_callback(event);
     });
 }
@@ -129,6 +129,11 @@ void GLWindow::Shutdown()
     glfwDestroyWindow(_glfw_window);
 }
 
+void GLWindow::Clear()
+{
+    glClearColor(0, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+}
 
 void GLWindow::OnUpdate()
 {
@@ -145,6 +150,11 @@ void GLWindow::SetVSync(bool enabled)
 {
     glfwSwapInterval( enabled ? 1 : 0);
     _window_data.vsync_enabled = enabled;
+}
+
+void* GLWindow::GetNativeWindow() const
+{
+    return _glfw_window;
 }
 
 

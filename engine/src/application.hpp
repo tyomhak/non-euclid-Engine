@@ -29,8 +29,10 @@ public:
 
     void AttachOverlay(Layer* overlay) { _layer_stack.PushOverlay(overlay); }
     void DetachOverlay(Layer* overlay) { _layer_stack.PopOverlay(overlay); }
+
+    inline Window* GetMainWindow() const { return _main_window.get(); }
     
-private:
+protected:
     bool _is_running{true};
     std::unique_ptr<Window> _main_window{nullptr};
     LayerStack _layer_stack{};

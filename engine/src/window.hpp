@@ -29,6 +29,7 @@ namespace njin
 
         virtual ~Window() = default;
 
+        virtual void Clear() = 0;
         virtual void OnUpdate() = 0;
 
         virtual int GetWidth() const = 0;
@@ -37,8 +38,10 @@ namespace njin
         virtual void SetEventCallback(const EventCallbackFn& callback) = 0;
         virtual void SetVSync(bool enabled) = 0;
         virtual bool IsVSync() const = 0;
-
-        static Window* Create(const WindowProps& window_props = WindowProps());
+        
+        virtual void* GetNativeWindow() const { return nullptr; }
+        
+        static Window* Create(const WindowProps& window_props = WindowProps()); 
     };
 
 

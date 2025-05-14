@@ -1,14 +1,6 @@
 #include "application.hpp"
 
 #include "window.hpp"
-
-
-#include <glad/gl.h>
-// #include <GLFW/glfw3.h>
-// #include <glfw/glfw3.h>
-
-
-
 #include "window_event.hpp"
 #include "layer.hpp"
 
@@ -31,12 +23,12 @@ void Application::Run()
 {
     while (_is_running)
     {
-        glClearColor(0, 0, 0, 1);
-        glClear(GL_COLOR_BUFFER_BIT);   
-        _main_window->OnUpdate();
+        _main_window->Clear();
 
         for (auto layerPtr : _layer_stack)
             layerPtr->OnUpdate();
+
+        _main_window->OnUpdate();
     }
 }
 

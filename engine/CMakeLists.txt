@@ -20,6 +20,8 @@ set(NJIN_SOURCES
     src/layer.cpp
     src/layer_stack.hpp
     src/layer_stack.cpp
+    src/ui_layer.hpp
+    src/ui_layer.cpp
 
     src/events/event.hpp
     src/events/key_event.hpp
@@ -85,6 +87,8 @@ set_target_properties(NJIN PROPERTIES FOLDER "NJIN")
 
 target_link_libraries(NJIN PRIVATE glad)
 target_link_libraries(NJIN PRIVATE glfw)
+target_link_libraries(NJIN PRIVATE imgui_lib)
+
 
 add_library(NJIN::NJIN ALIAS NJIN)
 

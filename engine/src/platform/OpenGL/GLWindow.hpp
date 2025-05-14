@@ -13,6 +13,7 @@ public:
     GLWindow(const WindowProps& props);
     ~GLWindow();
 
+    void Clear() override;
     void OnUpdate() override;
 
     inline int GetWidth() const override { return _window_data.width; }
@@ -21,6 +22,8 @@ public:
     void SetEventCallback(const EventCallbackFn& callback) override;
     void SetVSync(bool enabled) override;
     inline bool IsVSync() const override { return _window_data.vsync_enabled; }
+
+    void* GetNativeWindow() const override;
 
 private:
     virtual void Init(const WindowProps& props);

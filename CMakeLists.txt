@@ -6,9 +6,9 @@ project(nonEuclid)
 set(CMAKE_CXX_STANDARD 20)
 
 
-
-set(NEW false)
+set(NEW TRUE)
 if (NEW)
+	add_subdirectory(external)
 	add_subdirectory(engine)
 	add_subdirectory(game)
 
