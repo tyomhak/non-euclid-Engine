@@ -7,21 +7,24 @@
 
 #include "window_event.hpp"
 #include "mouse_event.hpp"
+#include "key_event.hpp"
 
 
 namespace njin
 {
+static bool s_glfw_initiated = false;
+
+
 
 Window* Window::Create(const WindowProps& props)
 {
     return new GLWindow(props);
 }
 
-
-
-static bool s_glfw_initiated = false;
-
 GLWindow::GLWindow(const WindowProps& props)
+	: Window()
+	, _glfw_window(nullptr)
+	, _window_data{}
 {
     Init(props);
 }
@@ -122,6 +125,35 @@ void GLWindow::Init(const WindowProps& props)
         MouseScrolledEvent event((int)xoffset, (int)yoffset);
         window_data.event_callback(event);
     });
+
+    glfwSetKeyCallback(_glfw_window, [](GLFWwindow* window, int key, int scancode, int action, int mods){
+        auto& window_data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+        
+        switch (action)
+        {
+            case GLFW_PRESS:
+            {
+                auto event = KeyPressedEvent(key, 0);
+                window_data.event_callback(event);
+                break;
+            }
+            case GLFW_RELEASE:
+            {
+                auto event = KeyReleasedEvent(key);
+                window_data.event_callback(event);
+                break;
+            }
+            case GLFW_REPEAT:
+            {
+                auto event = KeyPressedEvent(key, 0);
+                window_data.event_callback(event);
+                break;
+            }
+            default:
+                break;
+
+        }
+    });
 }
 
 void GLWindow::Shutdown()
@@ -135,9 +167,12 @@ void GLWindow::Clear()
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void GLWindow::OnUpdate()
+void GLWindow::PollEvents()
 {
     glfwPollEvents();
+}
+void GLWindow::Draw()
+{
     glfwSwapBuffers(_glfw_window);
 }
 

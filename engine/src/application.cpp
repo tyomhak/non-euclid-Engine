@@ -24,11 +24,12 @@ void Application::Run()
     while (_is_running)
     {
         _main_window->Clear();
+        _main_window->PollEvents();
 
         for (auto layerPtr : _layer_stack)
             layerPtr->OnUpdate();
 
-        _main_window->OnUpdate();
+        _main_window->Draw();
     }
 }
 

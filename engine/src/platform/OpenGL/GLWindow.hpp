@@ -14,7 +14,8 @@ public:
     ~GLWindow();
 
     void Clear() override;
-    void OnUpdate() override;
+    void PollEvents() override;
+    void Draw() override;
 
     inline int GetWidth() const override { return _window_data.width; }
     inline int GetHeight() const override { return _window_data.height;}

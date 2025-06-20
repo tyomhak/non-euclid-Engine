@@ -30,7 +30,8 @@ namespace njin
         virtual ~Window() = default;
 
         virtual void Clear() = 0;
-        virtual void OnUpdate() = 0;
+        virtual void PollEvents() = 0;
+        virtual void Draw() = 0;
 
         virtual int GetWidth() const = 0;
         virtual int GetHeight() const = 0;

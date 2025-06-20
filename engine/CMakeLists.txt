@@ -6,6 +6,7 @@ set(NJIN_SOURCE_DIR "src")
 
 set(NJIN_INCLUDE_DIRS 
     src
+    # src/ui
     src/events
     src/platform
     src/platform/OpenGL
@@ -20,8 +21,9 @@ set(NJIN_SOURCES
     src/layer.cpp
     src/layer_stack.hpp
     src/layer_stack.cpp
-    src/ui_layer.hpp
-    src/ui_layer.cpp
+
+    src/ui/ui_layer.hpp
+    src/ui/ui_layer.cpp
 
     src/events/event.hpp
     src/events/key_event.hpp
