@@ -21,6 +21,14 @@ Application::~Application()
 
 void Application::Run()
 {
+    {
+		// Necessary for capturing window size when the application starts.
+        int width = _main_window->GetWidth();
+        int height = _main_window->GetHeight();
+        WindowResizeEvent onStartWindowResizeEvent(width, height);
+        OnEvent(onStartWindowResizeEvent);
+    }
+
     while (_is_running)
     {
         _main_window->Clear();
@@ -36,7 +44,6 @@ void Application::Run()
 
 void Application::OnEvent(Event& event)
 {
-    std::cout << event << std::endl;
     EventDispatcher dispatcher(event);
     dispatcher.Dispatch<WindowCloseEvent>([this](Event& e){ return OnWindowClose(e); });
     dispatcher.Dispatch<WindowFocusEvent>([this](Event& e){ return OnWindowFocus(e); });
