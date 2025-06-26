@@ -1,6 +1,7 @@
 #pragma once
 
 #include "event.hpp"
+#include "key_codes.hpp"
 
 namespace njin
 {
@@ -8,22 +9,22 @@ namespace njin
 class MouseKeyEvent : public Event
 {
 public:
-    inline int GetKeyCode() const { return _key_code; }
+    inline MouseKeyCode GetKeyCode() const { return _key_code; }
 
 protected:
-    MouseKeyEvent(int key_code) 
+    MouseKeyEvent(MouseKeyCode key_code) 
         : _key_code(key_code)
     {}
 
     std::string ToString() const 
     { 
         std::stringstream ss;
-        ss << GetName() << ": button_" << _key_code;
+        ss << GetName() << ": button_" << static_cast<int>(_key_code);
         return ss.str();
     }
 
 private:
-    int _key_code;
+    MouseKeyCode _key_code{MouseKeyCode::UNDEFINED};
 };
 
 class MouseKeyPressedEvent : public MouseKeyEvent
@@ -32,7 +33,7 @@ public:
     EVENT_CLASS_TYPE(MouseKeyPressed)
     EVENT_CLASS_CATEGORY(EventCategoryInput | EventCategoryMouseButton)
 
-    MouseKeyPressedEvent(int key_code)
+    MouseKeyPressedEvent(MouseKeyCode key_code)
         : MouseKeyEvent(key_code)
     {}
 };
@@ -43,7 +44,7 @@ public:
     EVENT_CLASS_TYPE(MouseKeyReleased)
     EVENT_CLASS_CATEGORY(EventCategoryInput | EventCategoryMouseButton)
 
-    MouseKeyReleasedEvent(int key_code)
+    MouseKeyReleasedEvent(MouseKeyCode key_code)
         : MouseKeyEvent(key_code)
     {}
 };

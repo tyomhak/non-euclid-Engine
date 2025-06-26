@@ -9,12 +9,11 @@
 #include "window_event.hpp"
 #include "mouse_event.hpp"
 #include "key_event.hpp"
+#include "ImGuiConverter.hpp"
 
 
 // #include "glfw/glfw3.h"
 // #include "glad/gl.h"
-
-
 
 namespace njin
 {
@@ -84,8 +83,6 @@ void UILayer::OnUpdate()
 
 void UILayer::OnEvent(Event& e)
 {
-    std::cout << e << std::endl;
-
     EventDispatcher dispatcher(e);
     dispatcher.Dispatch<MouseMovedEvent>([this](auto& event){ return OnMouseMovedEvent(event);});
     dispatcher.Dispatch<MouseKeyPressedEvent>([this](auto& event){ return OnMouseKeyPressedEvent(event);});
@@ -111,14 +108,14 @@ bool UILayer::OnMouseMovedEvent(MouseMovedEvent& event)
 bool UILayer::OnMouseKeyPressedEvent(MouseKeyPressedEvent& event)
 {
     auto& io = ImGui::GetIO();
-    io.AddMouseButtonEvent(event.GetKeyCode(), true);
+    io.AddMouseButtonEvent(static_cast<int>(imgui::ToImGuiMouseKey(event.GetKeyCode())), true);
     return false;
 }
 
 bool UILayer::OnMouseKeyReleasedEvent(MouseKeyReleasedEvent& event)
 {
     auto& io = ImGui::GetIO();
-    io.AddMouseButtonEvent(event.GetKeyCode(), false);
+    io.AddMouseButtonEvent((int)imgui::ToImGuiMouseKey(event.GetKeyCode()), false);
     return false;
 }
 
@@ -163,14 +160,14 @@ bool UILayer::OnWindowResizeEvent(WindowResizeEvent& event)
 bool UILayer::OnKeyPressedEvent(KeyPressedEvent& event)
 {
     auto& io = ImGui::GetIO();
-    io.AddKeyEvent((ImGuiKey)event.GetKeyCode(), true);
+    io.AddKeyEvent(imgui::ToImGuiKey(event.GetKeyCode()), true);
     return false;
 }
 
 bool UILayer::OnKeyReleasedEvent(KeyReleasedEvent& event)
 {
     auto& io = ImGui::GetIO();
-    io.AddKeyEvent((ImGuiKey)event.GetKeyCode(), false);
+    io.AddKeyEvent(imgui::ToImGuiKey(event.GetKeyCode()), false);
     return false;
 }
 

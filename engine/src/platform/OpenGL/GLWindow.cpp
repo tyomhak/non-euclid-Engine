@@ -8,10 +8,14 @@
 #include "window_event.hpp"
 #include "mouse_event.hpp"
 #include "key_event.hpp"
+#include "GLKeyConverter.hpp"
 
 
 namespace njin
 {
+
+using namespace open_gl;
+    
 static bool s_glfw_initiated = false;
 
 
@@ -104,12 +108,12 @@ void GLWindow::Init(const WindowProps& props)
         auto& window_data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
         if (action == GLFW_PRESS)
         {
-            MouseKeyPressedEvent event(button);
+            MouseKeyPressedEvent event(ToMouseKey(button));
             window_data.event_callback(event);
         }
         else if (action == GLFW_RELEASE)
         {
-            MouseKeyReleasedEvent event(button);
+            MouseKeyReleasedEvent event(ToMouseKey(button));
             window_data.event_callback(event);
         }
     });
@@ -128,30 +132,30 @@ void GLWindow::Init(const WindowProps& props)
 
     glfwSetKeyCallback(_glfw_window, [](GLFWwindow* window, int key, int scancode, int action, int mods){
         auto& window_data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
-        
+        auto modsMask = glfwModsToKeyModifierMask(mods);
+
         switch (action)
         {
             case GLFW_PRESS:
             {
-                auto event = KeyPressedEvent(key, 0);
+                auto event = KeyPressedEvent(ToKeyCode(key), 0, modsMask);
                 window_data.event_callback(event);
                 break;
             }
             case GLFW_RELEASE:
             {
-                auto event = KeyReleasedEvent(key);
+                auto event = KeyReleasedEvent(ToKeyCode(key), modsMask);
                 window_data.event_callback(event);
                 break;
             }
             case GLFW_REPEAT:
             {
-                auto event = KeyPressedEvent(key, 0);
+                auto event = KeyPressedEvent(ToKeyCode(key), 0, modsMask);
                 window_data.event_callback(event);
                 break;
             }
             default:
                 break;
-
         }
     });
 }
@@ -192,8 +196,4 @@ void* GLWindow::GetNativeWindow() const
     return _glfw_window;
 }
 
-
-
-
-    
-}
+};

@@ -13,8 +13,8 @@ set(NJIN_INCLUDE_DIRS
 )
 
 set(NJIN_SOURCES
-    src/application.cpp
-    src/application.hpp 
+    src/application.hpp
+    src/application.cpp  
     src/core.hpp
     src/window.hpp
     src/layer.hpp
@@ -24,15 +24,20 @@ set(NJIN_SOURCES
 
     src/ui/ui_layer.hpp
     src/ui/ui_layer.cpp
+    src/ui/ImGuiConverter.hpp
+    
 
     src/events/event.hpp
     src/events/key_event.hpp
+    src/events/key_codes.hpp
     src/events/mouse_event.hpp
     src/events/window_event.hpp
+
 
     
     src/platform/OpenGL/GLWindow.cpp
     src/platform/OpenGL/GLWindow.hpp
+    src/platform/OpenGL/GLKeyConverter.hpp
     
     )
 
