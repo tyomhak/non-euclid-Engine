@@ -5,13 +5,16 @@ project(nonEuclid)
 
 set(CMAKE_CXX_STANDARD 20)
 
+set(USE_NJIN TRUE)
+set(PLAYGROUND TRUE)
 
-set(NEW TRUE)
-if (NEW)
+if (USE_NJIN)
 	add_subdirectory(external)
-	add_subdirectory(engine)
-	add_subdirectory(game)
+	add_subdirectory(njin)
 
+	if (PLAYGROUND)
+		add_subdirectory(examples/Playground)
+	endif()
 else()
 	#
 	# Dependencies
