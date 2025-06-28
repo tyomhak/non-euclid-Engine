@@ -14,6 +14,12 @@ Application::Application()
     _main_window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
 }
 
+Application* Application::Get()
+{
+    static Application app{};
+    return &app;
+}
+
 Application::~Application()
 {
     

@@ -12,17 +12,20 @@ class Window;
 
 class Application
 {
-public:
+protected:
     Application();
-    virtual ~Application();
+
+public:
+    static Application* Get();
+    ~Application();
     
     void Run();
 
     void OnEvent(Event& event);
-    virtual bool OnWindowClose(Event& event);
-    virtual bool OnWindowFocus(Event& event) { return true; }
-    virtual bool OnWindowLostFocus(Event& event) { return true; }
-    virtual bool OnWindowMoved(Event& event) { return true; }
+    bool OnWindowClose(Event& event);
+    bool OnWindowFocus(Event& event) { return true; }
+    bool OnWindowLostFocus(Event& event) { return true; }
+    bool OnWindowMoved(Event& event) { return true; }
 
     void AttachLayer(Layer* layer) { _layer_stack.PushLayer(layer); }
     void DetachLayer(Layer* layer) { _layer_stack.PopLayer(layer); }

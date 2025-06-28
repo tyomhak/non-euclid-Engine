@@ -9,8 +9,6 @@ set(GAME_INCLUDE_DIRS
 
 set(GAME_SOURCES
     src/main.cpp
-    src/Playground.hpp
-    src/Playground.cpp
 )
 
 add_executable(game ${GAME_SOURCES})

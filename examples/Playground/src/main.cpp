@@ -1,8 +1,10 @@
 
-#include "Playground.hpp"
+#include "application.hpp"
+#include "ui/ui_layer.hpp"
 
 int main()
 {
-    Playground game{};
-    game.Run();
+    auto appPtr = njin::Application::Get();
+    appPtr->AttachLayer(new njin::UILayer(appPtr->GetMainWindow()));
+    appPtr->Run();
 }
