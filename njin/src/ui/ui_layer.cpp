@@ -11,10 +11,6 @@
 #include "key_event.hpp"
 #include "ImGuiConverter.hpp"
 
-
-// #include "glfw/glfw3.h"
-// #include "glad/gl.h"
-
 namespace njin
 {
 
