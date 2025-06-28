@@ -46,6 +46,7 @@ set_target_properties(NJIN PROPERTIES FOLDER "NJIN")
 target_link_libraries(NJIN PRIVATE glad)
 target_link_libraries(NJIN PRIVATE glfw)
 target_link_libraries(NJIN PRIVATE imgui_lib)
+target_link_libraries(NJIN PUBLIC glm)
 
 
 add_library(NJIN::NJIN ALIAS NJIN)

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "core.hpp"
 #include "event.hpp"
 #include "key_codes.hpp"
 
@@ -56,22 +57,23 @@ public:
     EVENT_CLASS_CATEGORY(EventCategoryInput | EventCategoryMouse)
 
     MouseMovedEvent(int x_position, int y_position)
-        : _x_position(x_position)
-        , _y_position(y_position)
+        : _position({x_position, y_position})
+        // _x_position(x_position)
+        // , _y_position(y_position)
     {}
 
-    int GetXPosition() const { return _x_position; }
-    int GetYPosition() const { return _y_position; }
+    int GetXPosition() const { return _position.x; }
+    int GetYPosition() const { return _position.y; }
 
     std::string ToString() const override 
     {
         std::stringstream ss;
-        ss << GetName() << ": " << _x_position << ", " << _y_position;
+        ss << GetName() << ": " << _position.x << ", " << _position.y;
         return ss.str();
     }
 
 private:
-    int _x_position, _y_position;
+    Point _position{};
 };
 
 class MouseScrolledEvent : public Event
