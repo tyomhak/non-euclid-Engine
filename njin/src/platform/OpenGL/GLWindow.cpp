@@ -8,22 +8,24 @@
 #include "window_event.hpp"
 #include "mouse_event.hpp"
 #include "key_event.hpp"
+
 #include "GLKeyConverter.hpp"
+#include "GLInput.hpp"
 
 
 namespace njin
 {
+    Window* Window::Create(const WindowProps& props)
+    {
+        return new open_gl::GLWindow(props);
+    }
+}
 
-using namespace open_gl;
+
+namespace njin::open_gl
+{
     
 static bool s_glfw_initiated = false;
-
-
-
-Window* Window::Create(const WindowProps& props)
-{
-    return new GLWindow(props);
-}
 
 GLWindow::GLWindow(const WindowProps& props)
 	: Window()
@@ -31,6 +33,7 @@ GLWindow::GLWindow(const WindowProps& props)
 	, _window_data{}
 {
     Init(props);
+    _input.reset(new GLInputPoller(this));
 }
 
 GLWindow::~GLWindow()

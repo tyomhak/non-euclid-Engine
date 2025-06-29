@@ -17,6 +17,8 @@ set(NJIN_SOURCES
     src/application.cpp  
     src/core.hpp
     src/window.hpp
+    src/input.hpp
+    src/input.cpp
     src/layer.hpp
     src/layer.cpp
     src/layer_stack.hpp
@@ -32,9 +34,12 @@ set(NJIN_SOURCES
     src/events/mouse_event.hpp
     src/events/window_event.hpp
 
+    src/platform/OpenGL/GLKeyConverter.hpp
+    src/platform/OpenGL/GLKeyConverter.cpp
     src/platform/OpenGL/GLWindow.cpp
     src/platform/OpenGL/GLWindow.hpp
-    src/platform/OpenGL/GLKeyConverter.hpp
+    src/platform/OpenGL/GLInput.hpp
+    src/platform/OpenGL/GLInput.cpp
 )
 
 add_subdirectory(libs)

@@ -2,8 +2,10 @@
 
 #include <string>
 #include <functional>
+#include <memory>
 
 #include "event.hpp"
+#include "input_poller.hpp"
 
 namespace njin
 {
@@ -41,8 +43,12 @@ namespace njin
         virtual bool IsVSync() const = 0;
         
         virtual void* GetNativeWindow() const { return nullptr; }
+        InputPoller* GetInputPoller() const { return _input.get(); }
         
         static Window* Create(const WindowProps& window_props = WindowProps()); 
+
+    protected:
+        std::unique_ptr<InputPoller> _input{nullptr};
     };
 
 

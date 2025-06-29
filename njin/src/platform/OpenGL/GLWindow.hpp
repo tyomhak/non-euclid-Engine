@@ -4,11 +4,7 @@
 
 class GLFWwindow;
 
-namespace njin
-{
-
-namespace open_gl
-{
+namespace njin::open_gl {
 
 class GLWindow : public Window
 {
@@ -46,8 +42,6 @@ private:
 
     GLFWwindow* _glfw_window;
     WindowData _window_data;
-};
-
 };
 
 };
