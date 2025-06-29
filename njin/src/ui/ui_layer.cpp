@@ -11,6 +11,8 @@
 #include "key_event.hpp"
 #include "ImGuiConverter.hpp"
 
+#include "input.hpp"
+
 namespace njin
 {
 
@@ -56,22 +58,23 @@ void UILayer::OnUpdate()
     ImGui_ImplOpenGL3_NewFrame();
     ImGui::NewFrame();
 
-    static const std::string window_name{"Inspector"};
-    auto window_flags = ImGuiWindowFlags_NoResize
-            // | ImGuiWindowFlags_NoCollapse
-            | ImGuiWindowFlags_NoMove
-            | ImGuiWindowFlags_MenuBar;
-    ImGui::SetNextWindowPos({0,0});
-    ImGui::SetNextWindowSize({375.0f, 375.0f * 2.f});
-    ImGui::Begin(window_name.c_str(), nullptr, window_flags);
-
-    if (ImGui::Button("Temp", {100, 100}))
+    if (Input::IsKeyPressed(KeyCode::Key_TAB))
     {
-        std::cout << "Something Clicked" << std::endl;
-    }
+        static const std::string window_name{"Inspector"};
+        auto window_flags = ImGuiWindowFlags_NoResize
+                // | ImGuiWindowFlags_NoCollapse
+                | ImGuiWindowFlags_NoMove
+                | ImGuiWindowFlags_MenuBar;
+        ImGui::SetNextWindowPos({0,0});
+        ImGui::SetNextWindowSize({375.0f, 375.0f * 2.f});
+        ImGui::Begin(window_name.c_str(), nullptr, window_flags);
 
-    ImGui::End();
-    
+        if (ImGui::Button("Temp", {100, 35}))
+        {
+            std::cout << "Something Clicked" << std::endl;
+        }
+        ImGui::End();
+    }
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
