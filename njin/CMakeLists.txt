@@ -6,7 +6,7 @@ set(NJIN_SOURCE_DIR "src")
 
 set(NJIN_INCLUDE_DIRS 
     src
-    # src/ui
+    src/ui
     src/events
     src/platform
     src/platform/OpenGL
@@ -17,6 +17,7 @@ set(NJIN_SOURCES
     src/application.cpp  
     src/core.hpp
     src/window.hpp
+    src/window.cpp
     src/input.hpp
     src/input.cpp
     src/layer.hpp
@@ -34,12 +35,18 @@ set(NJIN_SOURCES
     src/events/mouse_event.hpp
     src/events/window_event.hpp
 
+    # src/render/render_context.hpp
+
     src/platform/OpenGL/GLKeyConverter.hpp
     src/platform/OpenGL/GLKeyConverter.cpp
     src/platform/OpenGL/GLWindow.cpp
     src/platform/OpenGL/GLWindow.hpp
     src/platform/OpenGL/GLInput.hpp
     src/platform/OpenGL/GLInput.cpp
+
+    src/platform/OpenGL/Render/GLRenderContext.hpp
+    src/platform/OpenGL/Render/GLRenderContext.cpp
+
 )
 
 add_subdirectory(libs)
@@ -52,6 +59,5 @@ target_link_libraries(NJIN PRIVATE glad)
 target_link_libraries(NJIN PRIVATE glfw)
 target_link_libraries(NJIN PRIVATE imgui_lib)
 target_link_libraries(NJIN PUBLIC glm)
-
 
 add_library(NJIN::NJIN ALIAS NJIN)

@@ -2,7 +2,7 @@
 
 #include <assert.h>
 
-#include <glad/gl.h>
+// #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 
 #include "window_event.hpp"
@@ -12,6 +12,8 @@
 #include "GLKeyConverter.hpp"
 #include "GLInput.hpp"
 
+#include "render/render_context.hpp"
+#include "Render/GLRenderContext.hpp"
 
 namespace njin
 {
@@ -62,10 +64,9 @@ void GLWindow::Init(const WindowProps& props)
     };
 
     _glfw_window = glfwCreateWindow(_window_data.width, _window_data.height, _window_data.title.c_str(), nullptr, nullptr);
-    glfwMakeContextCurrent(_glfw_window);
 
-    auto glad_load_success = gladLoaderLoadGL();
-    assert(glad_load_success);
+    _render_context = std::make_unique<njin::render::open_gl::GLRenderContext>(_glfw_window);
+    _render_context->Init();
 
     glfwSetWindowUserPointer(_glfw_window, &_window_data);
     SetVSync(IsVSync());
@@ -170,8 +171,7 @@ void GLWindow::Shutdown()
 
 void GLWindow::Clear()
 {
-    glClearColor(0, 0, 0, 1);
-    glClear(GL_COLOR_BUFFER_BIT);
+    _render_context->Clear();
 }
 
 void GLWindow::PollEvents()
@@ -180,7 +180,7 @@ void GLWindow::PollEvents()
 }
 void GLWindow::Draw()
 {
-    glfwSwapBuffers(_glfw_window);
+    _render_context->SwapBuffers();
 }
 
 void GLWindow::SetEventCallback(const EventCallbackFn& callback)

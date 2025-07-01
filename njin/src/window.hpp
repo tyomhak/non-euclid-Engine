@@ -7,6 +7,7 @@
 #include "event.hpp"
 #include "input_poller.hpp"
 
+
 namespace njin
 {
     struct WindowProps
@@ -29,7 +30,7 @@ namespace njin
     public:
         using EventCallbackFn = std::function<void(Event&)>;
 
-        virtual ~Window() = default;
+        virtual ~Window();
 
         virtual void Clear() = 0;
         virtual void PollEvents() = 0;

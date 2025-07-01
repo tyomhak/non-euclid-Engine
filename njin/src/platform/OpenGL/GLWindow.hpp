@@ -4,13 +4,18 @@
 
 class GLFWwindow;
 
+namespace njin::render
+{
+    class RenderContext;
+}
+
 namespace njin::open_gl {
 
 class GLWindow : public Window
 {
 public:
     GLWindow(const WindowProps& props);
-    ~GLWindow();
+    ~GLWindow() override;
 
     void Clear() override;
     void PollEvents() override;
@@ -42,6 +47,7 @@ private:
 
     GLFWwindow* _glfw_window;
     WindowData _window_data;
+    std::unique_ptr<njin::render::RenderContext> _render_context{nullptr};
 };
 
 };
