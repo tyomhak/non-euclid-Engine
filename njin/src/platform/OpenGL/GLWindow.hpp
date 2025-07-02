@@ -21,6 +21,9 @@ public:
     void PollEvents() override;
     void Draw() override;
 
+    virtual bool OnEvent(Event& event) override;
+
+
     inline int GetWidth() const override { return _window_data.width; }
     inline int GetHeight() const override { return _window_data.height;}
 

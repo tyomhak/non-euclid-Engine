@@ -36,6 +36,8 @@ namespace njin
         virtual void PollEvents() = 0;
         virtual void Draw() = 0;
 
+        virtual bool OnEvent(Event& event) = 0;
+
         virtual int GetWidth() const = 0;
         virtual int GetHeight() const = 0;
 

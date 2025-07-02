@@ -183,6 +183,12 @@ void GLWindow::Draw()
     _render_context->SwapBuffers();
 }
 
+bool GLWindow::OnEvent(Event& event)
+{
+    return _render_context->OnEvent(event);
+}
+
+
 void GLWindow::SetEventCallback(const EventCallbackFn& callback)
 {
     _window_data.event_callback = callback;

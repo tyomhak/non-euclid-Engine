@@ -56,6 +56,7 @@ void Application::OnEvent(Event& event)
     dispatcher.Dispatch<WindowLostFocusEvent>([this](Event& e){ return OnWindowLostFocus(e); });
     dispatcher.Dispatch<WindowMovedEvent>([this](Event& e){ return OnWindowMoved(e); });
 
+    _main_window->OnEvent(event);
     for(auto it = _layer_stack.end(); it != _layer_stack.begin();)
     {
         (*--it)->OnEvent(event);

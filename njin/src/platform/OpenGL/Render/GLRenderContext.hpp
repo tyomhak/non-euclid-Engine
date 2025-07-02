@@ -15,6 +15,8 @@ namespace njin::render::open_gl
         void Init() override;
         void SwapBuffers() override;
         void Clear() override;
+
+        bool OnResize(WindowResizeEvent& event) override;
     
     
     private:

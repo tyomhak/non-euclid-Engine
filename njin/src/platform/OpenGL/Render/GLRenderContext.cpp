@@ -30,4 +30,11 @@ void GLRenderContext::Clear()
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
+bool GLRenderContext::OnResize(WindowResizeEvent& event)
+{
+    glViewport(0, 0, event.GetWidth(), event.GetHeight());
+    return true;
+}
+
+
 };
