@@ -22,10 +22,6 @@ public:
     void Run();
 
     void OnEvent(Event& event);
-    bool OnWindowClose(Event& event);
-    bool OnWindowFocus(Event& event) { return true; }
-    bool OnWindowLostFocus(Event& event) { return true; }
-    bool OnWindowMoved(Event& event) { return true; }
 
     void AttachLayer(Layer* layer) { _layer_stack.PushLayer(layer); }
     void DetachLayer(Layer* layer) { _layer_stack.PopLayer(layer); }
@@ -34,6 +30,12 @@ public:
     void DetachOverlay(Layer* overlay) { _layer_stack.PopOverlay(overlay); }
 
     inline Window* GetMainWindow() const { return _main_window.get(); }
+
+private:
+    bool OnWindowClose(Event& event);
+    bool OnWindowFocus(Event& event) { return true; }
+    bool OnWindowLostFocus(Event& event) { return true; }
+    bool OnWindowMoved(Event& event) { return true; }
     
 protected:
     bool _is_running{true};
