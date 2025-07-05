@@ -71,7 +71,7 @@ void UILayer::OnUpdate()
 
         if (ImGui::Button("Temp", {100, 35}))
         {
-            std::cout << "Something Clicked" << std::endl;
+            Logger::Log("Something Clicked");
         }
         ImGui::End();
     }

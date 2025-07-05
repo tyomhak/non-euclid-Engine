@@ -1,4 +1,5 @@
 #include "platform/OpenGL/Render/GLRenderContext.hpp"
+#include "core.hpp"
 
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
@@ -17,6 +18,15 @@ void GLRenderContext::Init()
     glfwMakeContextCurrent(_window_handle);
     auto glad_load_success = gladLoaderLoadGL();
     assert(glad_load_success);
+
+    auto vendor = reinterpret_cast<const char*>(glGetString(GL_VENDOR));
+    auto renderer = reinterpret_cast<const char*>(glGetString(GL_RENDERER));
+    auto version = reinterpret_cast<const char*>(glGetString(GL_VERSION));
+
+
+    Logger::Log("Render Info: ");
+    Logger::Log("\tVendor: {}", vendor);
+    Logger::Log("\tVersion: {}", version);
 }
 
 void GLRenderContext::SwapBuffers()
