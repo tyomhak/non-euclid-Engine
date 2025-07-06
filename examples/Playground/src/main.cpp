@@ -5,6 +5,7 @@
 int main()
 {
     auto appPtr = njin::Application::Get();
-    appPtr->AttachLayer(new njin::UILayer(appPtr->GetMainWindow()));
+
+    appPtr->AttachOverlay(new njin::UILayer(appPtr->GetMainWindow()));
     appPtr->Run();
 }
