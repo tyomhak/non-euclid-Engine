@@ -13,6 +13,8 @@ namespace njin::render::open_gl
         GLRenderContext(GLFWwindow* window);
 
         void Init() override;
+
+        void SetCurrent() override;
         void SwapBuffers() override;
         void Clear() override;
 

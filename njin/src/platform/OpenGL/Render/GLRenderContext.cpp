@@ -15,7 +15,8 @@ GLRenderContext::GLRenderContext(GLFWwindow* window)
 
 void GLRenderContext::Init()
 {
-    glfwMakeContextCurrent(_window_handle);
+    SetCurrent();
+    
     auto glad_load_success = gladLoaderLoadGL();
     assert(glad_load_success);
 
@@ -23,11 +24,24 @@ void GLRenderContext::Init()
     auto renderer = reinterpret_cast<const char*>(glGetString(GL_RENDERER));
     auto version = reinterpret_cast<const char*>(glGetString(GL_VERSION));
 
+    _info = {
+        vendor,
+        renderer,
+        version
+    };
 
     Logger::Log("Render Info: ");
     Logger::Log("\tVendor: {}", vendor);
+    Logger::Log("\tRenderer: {}", renderer);
     Logger::Log("\tVersion: {}", version);
 }
+
+
+void GLRenderContext::SetCurrent()
+{
+    glfwMakeContextCurrent(_window_handle);
+}
+
 
 void GLRenderContext::SwapBuffers()
 {

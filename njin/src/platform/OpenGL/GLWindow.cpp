@@ -2,7 +2,7 @@
 
 #include <assert.h>
 
-// #include <glad/gl.h>
+#include <glad/gl.h>
 #include <GLFW/glfw3.h>
 
 #include "window_event.hpp"
@@ -50,10 +50,10 @@ void GLWindow::Init(const WindowProps& props)
         auto success = glfwInit() == GLFW_TRUE;
         assert(success);
 
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
+        // glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        // glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        // glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        
         s_glfw_initiated = success;
     }
 
@@ -64,14 +64,28 @@ void GLWindow::Init(const WindowProps& props)
     };
 
     _glfw_window = glfwCreateWindow(_window_data.width, _window_data.height, _window_data.title.c_str(), nullptr, nullptr);
+    glfwSetWindowUserPointer(_glfw_window, &_window_data);
 
     _render_context = std::make_unique<njin::render::open_gl::GLRenderContext>(_glfw_window);
     _render_context->Init();
 
-    glfwSetWindowUserPointer(_glfw_window, &_window_data);
+    int major = 0, minor = 0;
+    glGetIntegerv(GL_MAJOR_VERSION, &major);
+    glGetIntegerv(GL_MINOR_VERSION, &minor);
+    Logger::Log("OpenGL Info:");
+    Logger::Log("\tVersion: {}.{}", major, minor);
+    
+    InitCallbacks();
     SetVSync(IsVSync());
+}
 
+void GLWindow::Shutdown()
+{
+    glfwDestroyWindow(_glfw_window);
+}
 
+void GLWindow::InitCallbacks()
+{
     glfwSetWindowCloseCallback(_glfw_window, [](GLFWwindow* window){
         auto& window_data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
         WindowCloseEvent event{};
@@ -162,11 +176,6 @@ void GLWindow::Init(const WindowProps& props)
                 break;
         }
     });
-}
-
-void GLWindow::Shutdown()
-{
-    glfwDestroyWindow(_glfw_window);
 }
 
 void GLWindow::Clear()

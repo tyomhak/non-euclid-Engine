@@ -6,7 +6,7 @@
 
 #include "event.hpp"
 #include "input_poller.hpp"
-
+#include "render/render_context.hpp"
 
 namespace njin
 {
@@ -27,6 +27,8 @@ namespace njin
 
     class Window
     {
+        using RenderContext = render::RenderContext;
+
     public:
         using EventCallbackFn = std::function<void(Event&)>;
 
@@ -52,6 +54,7 @@ namespace njin
 
     protected:
         std::unique_ptr<InputPoller> _input{nullptr};
+        std::unique_ptr<RenderContext> _render_context{nullptr};
     };
 
 

@@ -4,11 +4,6 @@
 
 class GLFWwindow;
 
-namespace njin::render
-{
-    class RenderContext;
-}
-
 namespace njin::open_gl {
 
 class GLWindow : public Window
@@ -34,8 +29,11 @@ public:
     void* GetNativeWindow() const override;
 
 private:
-    virtual void Init(const WindowProps& props);
-    virtual void Shutdown();
+    void Init(const WindowProps& props);
+    void Shutdown();
+
+    void InitCallbacks();
+    
 
 private:
     struct WindowData
@@ -50,7 +48,6 @@ private:
 
     GLFWwindow* _glfw_window;
     WindowData _window_data;
-    std::unique_ptr<njin::render::RenderContext> _render_context{nullptr};
 };
 
 };
