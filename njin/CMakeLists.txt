@@ -11,6 +11,7 @@ set(NJIN_INCLUDE_DIRS
     src/platform
     src/platform/OpenGL
     src/render
+    src/utils
 )
 
 set(NJIN_SOURCES
@@ -53,6 +54,8 @@ set(NJIN_SOURCES
     src/render/GL/GLShader.hpp
     src/render/GL/GLShader.cpp
     
+    src/utils/logging.hpp
+    src/utils/duration.hpp
 
 )
 

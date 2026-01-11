@@ -7,6 +7,8 @@
 // #include "OpenGL/Render/GLShader.hpp"
 #include "render/renderer.hpp"
 
+#include "duration.hpp"
+
 namespace njin
 {
 
@@ -89,6 +91,7 @@ void Application::Run()
 
     while (_is_running)
     {
+        DurationLogger frameDuration("Time per Frame: ");
         _main_window->Clear();
         _main_window->PollEvents();
 
