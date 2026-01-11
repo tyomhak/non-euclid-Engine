@@ -11,25 +11,44 @@ using clock = std::chrono::steady_clock;
 
 public:
     DurationLogger(const std::string& message)
-    : _start(now())
+    : _start(clock::now())
     , _message(message)
     {}
 
     ~DurationLogger()
     {
-        auto end = now();
+        auto end = clock::now();
         auto duration = end - _start;
-        auto durationTime = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
-        Logger::Log(_message + "{}ms", durationTime);
+        auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
+        Logger::Log(_message + "{}ms", duration_ms);
     }
-
-
-private:
-    static auto now() -> clock::time_point { return clock::now(); }
 
 private:
     clock::time_point _start;
     std::string _message{};
+};
+
+
+class Timer
+{
+using clock = std::chrono::steady_clock;
+public:
+    Timer() : _start(clock::now()){}
+
+    auto get_ms() const
+    {
+        auto end = clock::now();
+        auto duration = end - _start;
+        return std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
+    }
+
+    auto reset()
+    {
+        _start = clock::now();
+    }
+
+private:
+    clock::time_point _start;
 };
 
 
