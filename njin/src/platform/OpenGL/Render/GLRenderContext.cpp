@@ -6,7 +6,7 @@
 
 #include <assert.h>
 
-namespace njin::render::open_gl
+namespace njin
 {
 
 GLRenderContext::GLRenderContext(GLFWwindow* window)

@@ -27,8 +27,6 @@ namespace njin
 
     class Window
     {
-        using RenderContext = render::RenderContext;
-
     public:
         using EventCallbackFn = std::function<void(Event&)>;
 

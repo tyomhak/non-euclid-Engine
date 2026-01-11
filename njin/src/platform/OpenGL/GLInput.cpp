@@ -8,8 +8,8 @@
 #include <cassert>
 
 
-namespace njin {
-    namespace open_gl {
+namespace njin::open_gl 
+{
 
 
 GLInputPoller::GLInputPoller(GLWindow* window)
@@ -34,6 +34,4 @@ Point GLInputPoller::GetMousePosition() const
     return Point{ static_cast<int>(xpos), static_cast<int>(ypos) };
 }
 
-
-    }
-}
+} // namespace njin::open_gl

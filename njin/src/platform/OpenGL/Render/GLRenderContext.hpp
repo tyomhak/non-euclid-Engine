@@ -4,7 +4,7 @@
 
 class GLFWwindow;
 
-namespace njin::render::open_gl
+namespace njin
 {
 
     class GLRenderContext : public RenderContext

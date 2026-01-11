@@ -10,6 +10,7 @@ set(NJIN_INCLUDE_DIRS
     src/events
     src/platform
     src/platform/OpenGL
+    src/render
 )
 
 set(NJIN_SOURCES
@@ -35,6 +36,7 @@ set(NJIN_SOURCES
     src/events/mouse_event.hpp
     src/events/window_event.hpp
 
+    
     # src/render/render_context.hpp
 
     src/platform/OpenGL/GLKeyConverter.hpp
@@ -46,6 +48,11 @@ set(NJIN_SOURCES
 
     src/platform/OpenGL/Render/GLRenderContext.hpp
     src/platform/OpenGL/Render/GLRenderContext.cpp
+    src/platform/OpenGL/Render/GLShader.hpp
+    src/platform/OpenGL/Render/GLShader.cpp
+
+    src/render/renderer.hpp
+
 
 )
 
@@ -55,7 +62,7 @@ add_library(NJIN ${NJIN_SOURCES})
 target_include_directories(NJIN PUBLIC ${NJIN_INCLUDE_DIRS})
 set_target_properties(NJIN PROPERTIES FOLDER "NJIN")
 
-target_link_libraries(NJIN PRIVATE glad)
+target_link_libraries(NJIN PUBLIC glad)
 target_link_libraries(NJIN PRIVATE glfw)
 target_link_libraries(NJIN PRIVATE imgui_lib)
 target_link_libraries(NJIN PUBLIC glm)

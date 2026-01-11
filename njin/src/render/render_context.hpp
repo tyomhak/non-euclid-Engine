@@ -3,7 +3,7 @@
 #include "event.hpp"
 #include "window_event.hpp"
 
-namespace njin::render
+namespace njin
 {
     class RenderContext
     {

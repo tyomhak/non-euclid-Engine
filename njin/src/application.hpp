@@ -5,6 +5,11 @@
 #include "event.hpp"
 #include "layer_stack.hpp"
 
+#include <glad/gl.h>
+
+
+#include "shader.hpp"
+
 namespace njin
 {
 
@@ -41,6 +46,11 @@ protected:
     bool _is_running{true};
     std::unique_ptr<Window> _main_window{nullptr};
     LayerStack _layer_stack{};
+
+    std::unique_ptr<njin::Shader> _default_shader{nullptr};
+
+    GLuint _vbo{0};
+    GLuint _vao{0};
 };
 
 

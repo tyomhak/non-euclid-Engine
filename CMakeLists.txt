@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.28)
 include(FetchContent)
 
-project(nonEuclid)
+project(nonEuclid 	VERSION 1.1
+	LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 

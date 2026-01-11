@@ -50,8 +50,8 @@ void GLWindow::Init(const WindowProps& props)
         auto success = glfwInit() == GLFW_TRUE;
         assert(success);
 
-        // glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        // glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        // glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+        // glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
         // glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         
         s_glfw_initiated = success;
@@ -66,7 +66,7 @@ void GLWindow::Init(const WindowProps& props)
     _glfw_window = glfwCreateWindow(_window_data.width, _window_data.height, _window_data.title.c_str(), nullptr, nullptr);
     glfwSetWindowUserPointer(_glfw_window, &_window_data);
 
-    _render_context = std::make_unique<njin::render::open_gl::GLRenderContext>(_glfw_window);
+    _render_context = std::make_unique<njin::GLRenderContext>(_glfw_window);
     _render_context->Init();
 
     int major = 0, minor = 0;
