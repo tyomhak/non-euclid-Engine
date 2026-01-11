@@ -1,6 +1,6 @@
 #pragma once
 
-#include "platform/OpenGL/Render/GLShader.hpp"
+#include "GL/GLShader.hpp"
 
 namespace njin
 {

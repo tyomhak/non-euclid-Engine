@@ -13,7 +13,7 @@
 #include "GLInput.hpp"
 
 #include "render/render_context.hpp"
-#include "Render/GLRenderContext.hpp"
+#include "render/GL/GLRenderContext.hpp"
 
 namespace njin
 {

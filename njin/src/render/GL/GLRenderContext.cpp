@@ -1,4 +1,5 @@
-#include "platform/OpenGL/Render/GLRenderContext.hpp"
+// #include "platform/OpenGL/Render/GLRenderContext.hpp"
+#include "GLRenderContext.hpp"
 #include "core.hpp"
 
 #include <glad/gl.h>

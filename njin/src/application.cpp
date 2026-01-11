@@ -4,7 +4,7 @@
 #include "window_event.hpp"
 #include "layer.hpp"
 
-#include "OpenGL/Render/GLShader.hpp"
+// #include "OpenGL/Render/GLShader.hpp"
 #include "render/renderer.hpp"
 
 namespace njin

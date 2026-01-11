@@ -46,13 +46,13 @@ set(NJIN_SOURCES
     src/platform/OpenGL/GLInput.hpp
     src/platform/OpenGL/GLInput.cpp
 
-    src/platform/OpenGL/Render/GLRenderContext.hpp
-    src/platform/OpenGL/Render/GLRenderContext.cpp
-    src/platform/OpenGL/Render/GLShader.hpp
-    src/platform/OpenGL/Render/GLShader.cpp
-
+    
     src/render/renderer.hpp
-
+    src/render/GL/GLRenderContext.hpp
+    src/render/GL/GLRenderContext.cpp
+    src/render/GL/GLShader.hpp
+    src/render/GL/GLShader.cpp
+    
 
 )
 
