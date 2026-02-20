@@ -40,12 +40,12 @@ if (NOT glad_FOUND)
 endif()
 
 
-find_package(glm 1.0.1 QUIET)
+find_package(glm 1.0.3 QUIET)
 if (NOT glm_FOUND)
 	FetchContent_Declare(
 		glm
 		GIT_REPOSITORY 	https://github.com/g-truc/glm
-		GIT_TAG			1.0.1
+		GIT_TAG			1.0.3
 		GIT_SHALLOW		TRUE
 		GIT_PROGRESS	TRUE
 	)
