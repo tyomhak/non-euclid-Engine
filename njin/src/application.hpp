@@ -53,10 +53,10 @@ protected:
     std::unique_ptr<Window> _main_window{nullptr};
     LayerStack _layer_stack{};
 
-    // Renderer, Scene & Physics
+    // Renderer, Physics & Scene
     std::unique_ptr<rend::Renderer> _renderer{nullptr};
-    Scene _scene{};
     PhysicsWorld _physics{};
+    Scene _scene{};
 
     // Fixed timestep
     static constexpr float FIXED_DT = 1.0f / 60.0f;
