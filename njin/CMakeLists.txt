@@ -21,6 +21,7 @@ target_sources(NJIN PRIVATE
 target_include_directories(NJIN PUBLIC
     src
     src/core
+    src/scene
     src/ui
     src/events
     src/platform

@@ -7,6 +7,9 @@
 #include "key_codes.hpp"
 
 #include "render/renderer.hpp"
+#include "scene/scene.hpp"
+#include "scene/camera.hpp"
+#include "scene/mesh_renderer.hpp"
 
 #include "duration.hpp"
 
@@ -24,10 +27,16 @@ Application::Application()
     _main_window = std::unique_ptr<Window>(Window::Create());
     _main_window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
 
-    // --- Renderer ---
     _renderer = std::make_unique<rend::Renderer>(rend::RendererAPI::OpenGL);
 
-    // --- Demo shader (MVP + texture) ---
+    BuildDemoScene();
+
+    _last_frame_time = std::chrono::steady_clock::now();
+}
+
+void Application::BuildDemoScene()
+{
+    // --- Shared shader ---
     rend::ShaderDesc shader_desc;
     shader_desc.vert_src = R"glsl(
         #version 450 core
@@ -63,37 +72,31 @@ Application::Application()
         }
     )glsl";
 
-    _demo_shader = _renderer->create_shader(shader_desc);
+    auto shader = _renderer->create_shader(shader_desc);
 
-    // --- Cube geometry (position vec3 + texcoord vec2 per vertex) ---
+    // --- Cube geometry ---
     // clang-format off
     const std::array<float, 120> cube_verts = {
-        // Front face (z = +0.5)
         -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
          0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
          0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
         -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-        // Back face (z = -0.5)
          0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
         -0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
         -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
          0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        // Top face (y = +0.5)
         -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
          0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
          0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
         -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        // Bottom face (y = -0.5)
         -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
          0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
          0.5f, -0.5f,  0.5f,  1.0f, 1.0f,
         -0.5f, -0.5f,  0.5f,  0.0f, 1.0f,
-        // Right face (x = +0.5)
          0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
          0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
          0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
          0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-        // Left face (x = -0.5)
         -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
         -0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
         -0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
@@ -101,12 +104,12 @@ Application::Application()
     };
 
     const std::array<uint32_t, 36> cube_indices = {
-         0,  1,  2,   2,  3,  0,  // front
-         4,  5,  6,   6,  7,  4,  // back
-         8,  9, 10,  10, 11,  8,  // top
-        12, 13, 14,  14, 15, 12,  // bottom
-        16, 17, 18,  18, 19, 16,  // right
-        20, 21, 22,  22, 23, 20,  // left
+         0,  1,  2,   2,  3,  0,
+         4,  5,  6,   6,  7,  4,
+         8,  9, 10,  10, 11,  8,
+        12, 13, 14,  14, 15, 12,
+        16, 17, 18,  18, 19, 16,
+        20, 21, 22,  22, 23, 20,
     };
     // clang-format on
 
@@ -114,25 +117,24 @@ Application::Application()
     vbo_desc.size = static_cast<uint32_t>(cube_verts.size() * sizeof(float));
     vbo_desc.usage = rend::BufferUsage::Vertex;
     vbo_desc.data = const_cast<float*>(cube_verts.data());
-    _demo_vbo = _renderer->create_buffer(vbo_desc);
+    auto vbo = _renderer->create_buffer(vbo_desc);
 
     rend::BufferDesc ibo_desc{};
     ibo_desc.size = static_cast<uint32_t>(cube_indices.size() * sizeof(uint32_t));
     ibo_desc.usage = rend::BufferUsage::Index;
     ibo_desc.data = const_cast<uint32_t*>(cube_indices.data());
-    _demo_ibo = _renderer->create_buffer(ibo_desc);
+    auto ibo = _renderer->create_buffer(ibo_desc);
 
-    // --- Pipeline (vertex layout + depth) ---
     rend::PipelineDesc pipeline_desc{};
-    pipeline_desc.shader = _demo_shader;
+    pipeline_desc.shader = shader;
     pipeline_desc.depthTest = true;
     pipeline_desc.depthWrite = true;
-    pipeline_desc.vertex_layout.stride = 5 * sizeof(float); // pos(3) + uv(2)
+    pipeline_desc.vertex_layout.stride = 5 * sizeof(float);
     pipeline_desc.vertex_layout.attributes = {
-        { 0, rend::VertexAttribType::Float3, 0 },                    // aPosition
-        { 1, rend::VertexAttribType::Float2, 3 * sizeof(float) },    // aTexCoord
+        { 0, rend::VertexAttribType::Float3, 0 },
+        { 1, rend::VertexAttribType::Float2, 3 * sizeof(float) },
     };
-    _demo_pipeline = _renderer->create_pipeline(pipeline_desc);
+    auto pipeline = _renderer->create_pipeline(pipeline_desc);
 
     // --- Procedural checker texture ---
     constexpr uint32_t tex_size = 64;
@@ -157,7 +159,35 @@ Application::Application()
     tex_desc.format = rend::Format::RGBA8;
     tex_desc.usage = rend::TextureUsage::Sampled;
     tex_desc.data = checker.data();
-    _demo_texture = _renderer->create_texture(tex_desc);
+    auto texture = _renderer->create_texture(tex_desc);
+
+    // --- Entities ---
+
+    // Camera entity
+    auto& cam_entity = _scene.spawn("Camera");
+    cam_entity.transform.position = glm::vec3(0.0f, 0.0f, 3.0f);
+    cam_entity.add_component<Camera>();
+    _scene.set_active_camera(&cam_entity);
+
+    // Cube entity
+    auto& cube = _scene.spawn("Cube");
+    auto& mr = cube.add_component<MeshRenderer>();
+    mr.vbo = vbo;
+    mr.ibo = ibo;
+    mr.pipeline = pipeline;
+    mr.texture = texture;
+    mr.index_count = static_cast<uint32_t>(cube_indices.size());
+
+    // Second cube offset to the side
+    auto& cube2 = _scene.spawn("Cube2");
+    cube2.transform.position = glm::vec3(2.0f, 0.0f, 0.0f);
+    cube2.transform.rotation = glm::vec3(0.0f, 45.0f, 0.0f);
+    auto& mr2 = cube2.add_component<MeshRenderer>();
+    mr2.vbo = vbo;
+    mr2.ibo = ibo;
+    mr2.pipeline = pipeline;
+    mr2.texture = texture;
+    mr2.index_count = static_cast<uint32_t>(cube_indices.size());
 }
 
 Application* Application::Get()
@@ -174,7 +204,6 @@ Application::~Application()
 void Application::Run()
 {
     {
-		// Necessary for capturing window size when the application starts.
         int width = _main_window->GetWidth();
         int height = _main_window->GetHeight();
         WindowResizeEvent onStartWindowResizeEvent(width, height);
@@ -183,53 +212,54 @@ void Application::Run()
 
     while (_is_running)
     {
-        DurationLogger frameDuration("Time per Frame: ");
+        // --- Delta time ---
+        auto now = std::chrono::steady_clock::now();
+        float dt = std::chrono::duration<float>(now - _last_frame_time).count();
+        _last_frame_time = now;
+
+        // Cap dt to avoid spiral of death after breakpoints / alt-tab.
+        if (dt > 0.25f)
+            dt = 0.25f;
+
         _main_window->PollEvents();
 
-        // --- Camera input (temporary — replaced by PlayerController in Phase 2) ---
-        const float speed = 0.05f;
-        const float look_speed = 1.0f;
+        // --- Fixed timestep update ---
+        _accumulator += dt;
+        while (_accumulator >= FIXED_DT)
+        {
+            _scene.update(FIXED_DT);
+            _accumulator -= FIXED_DT;
+        }
 
-        glm::vec3 front;
-        front.x = cos(glm::radians(_camera_yaw)) * cos(glm::radians(_camera_pitch));
-        front.y = sin(glm::radians(_camera_pitch));
-        front.z = sin(glm::radians(_camera_yaw)) * cos(glm::radians(_camera_pitch));
-        front = glm::normalize(front);
-        glm::vec3 right = glm::normalize(glm::cross(front, glm::vec3(0.0f, 1.0f, 0.0f)));
+        // --- Camera input (temporary — replaced by PlayerController in Phase 5) ---
+        auto* cam_entity = _scene.active_camera();
+        if (cam_entity)
+        {
+            auto* cam = cam_entity->get_component<Camera>();
+            if (cam)
+            {
+                const float speed = 3.0f * dt;
+                const float look_speed = 90.0f * dt;
 
-        if (Input::IsKeyPressed(KeyCode::Key_W)) _camera_pos += front * speed;
-        if (Input::IsKeyPressed(KeyCode::Key_S)) _camera_pos -= front * speed;
-        if (Input::IsKeyPressed(KeyCode::Key_A)) _camera_pos -= right * speed;
-        if (Input::IsKeyPressed(KeyCode::Key_D)) _camera_pos += right * speed;
-        if (Input::IsKeyPressed(KeyCode::Key_UP))    _camera_pitch += look_speed;
-        if (Input::IsKeyPressed(KeyCode::Key_DOWN))  _camera_pitch -= look_speed;
-        if (Input::IsKeyPressed(KeyCode::Key_LEFT))  _camera_yaw -= look_speed;
-        if (Input::IsKeyPressed(KeyCode::Key_RIGHT)) _camera_yaw += look_speed;
-        _camera_pitch = glm::clamp(_camera_pitch, -89.0f, 89.0f);
+                auto front = cam->front();
+                auto right = cam->right();
 
-        // --- Frame data ---
+                if (Input::IsKeyPressed(KeyCode::Key_W)) cam_entity->transform.position += front * speed;
+                if (Input::IsKeyPressed(KeyCode::Key_S)) cam_entity->transform.position -= front * speed;
+                if (Input::IsKeyPressed(KeyCode::Key_A)) cam_entity->transform.position -= right * speed;
+                if (Input::IsKeyPressed(KeyCode::Key_D)) cam_entity->transform.position += right * speed;
+                if (Input::IsKeyPressed(KeyCode::Key_UP))    cam->pitch += look_speed;
+                if (Input::IsKeyPressed(KeyCode::Key_DOWN))  cam->pitch -= look_speed;
+                if (Input::IsKeyPressed(KeyCode::Key_LEFT))  cam->yaw -= look_speed;
+                if (Input::IsKeyPressed(KeyCode::Key_RIGHT)) cam->yaw += look_speed;
+                cam->pitch = glm::clamp(cam->pitch, -89.0f, 89.0f);
+            }
+        }
+
+        // --- Render ---
         float aspect = static_cast<float>(_main_window->GetWidth())
                      / static_cast<float>(_main_window->GetHeight());
-        rend::FrameData frame;
-        frame.view = glm::lookAt(_camera_pos, _camera_pos + front, glm::vec3(0.0f, 1.0f, 0.0f));
-        frame.projection = glm::perspective(glm::radians(60.0f), aspect, 0.1f, 100.0f);
-
-        _renderer->begin_frame(frame);
-
-        // --- Submit demo cube ---
-        rend::DrawCommand cmd{};
-        cmd.vertex_buffer_info.id = _demo_vbo;
-        cmd.vertex_buffer_info.offset = 0;
-        cmd.vertex_buffer_info.count = 24;
-        cmd.index_buffer_info.id = _demo_ibo;
-        cmd.index_buffer_info.offset = 0;
-        cmd.index_buffer_info.count = 36;
-        cmd.pipeline = _demo_pipeline;
-        cmd.model_matrix = glm::mat4(1.0f);
-        cmd.texture = _demo_texture;
-        _renderer->submit(cmd);
-
-        _renderer->end_frame();
+        _scene.render(*_renderer, aspect);
 
         // --- Layers (UI) ---
         for (auto layerPtr : _layer_stack)
