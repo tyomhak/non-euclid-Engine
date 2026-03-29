@@ -9,19 +9,23 @@ template<typename Tag>
 struct ID
 {
     using value_type = uint32_t;
-    value_type value = invalid();
+    value_type value = invalid_value();
 
     constexpr ID() noexcept = default;
     constexpr explicit ID(value_type v) noexcept : value(v) {}
+    
+    static constexpr ID Invalid() noexcept { return ID(); }
 
-    static constexpr value_type invalid() noexcept { return std::numeric_limits<value_type>::max(); }
-    constexpr bool is_valid() const noexcept { return value != invalid(); }
+    constexpr bool is_valid() const noexcept { return value != invalid_value(); }
     constexpr explicit operator bool() const noexcept { return is_valid(); }
     constexpr value_type to_raw() const noexcept { return value; }
 
     friend constexpr bool operator==(ID a, ID b) noexcept { return a.value == b.value; }
     friend constexpr bool operator!=(ID a, ID b) noexcept { return a.value != b.value; }
     friend constexpr bool operator<(ID a, ID b) noexcept { return a.value < b.value; }
+
+private:
+    static constexpr value_type invalid_value() noexcept { return std::numeric_limits<value_type>::max(); }
 };
 
 } // namespace njin

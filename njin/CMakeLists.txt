@@ -14,10 +14,13 @@ target_sources(NJIN PRIVATE
     src/platform/OpenGL/GLInput.cpp
     src/render/GL/GLRenderContext.cpp
     src/render/GL/GLShader.cpp
+
+    src/render/GL/gl_render_backend.cpp
 )
 
 target_include_directories(NJIN PUBLIC
     src
+    src/core
     src/ui
     src/events
     src/platform

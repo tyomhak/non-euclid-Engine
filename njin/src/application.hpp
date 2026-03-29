@@ -5,10 +5,9 @@
 #include "event.hpp"
 #include "layer_stack.hpp"
 
-#include <glad/gl.h>
+#include "render/renderer.hpp"
 
-
-#include "shader.hpp"
+#include <glm/glm.hpp>
 
 namespace njin
 {
@@ -47,10 +46,20 @@ protected:
     std::unique_ptr<Window> _main_window{nullptr};
     LayerStack _layer_stack{};
 
-    std::unique_ptr<njin::Shader> _default_shader{nullptr};
+    // Renderer
+    std::unique_ptr<rend::Renderer> _renderer{nullptr};
 
-    GLuint _vbo{0};
-    GLuint _vao{0};
+    // Demo scene resources (temporary — replaced by Scene in Phase 2)
+    rend::ShaderID _demo_shader{};
+    rend::BufferID _demo_vbo{};
+    rend::BufferID _demo_ibo{};
+    rend::PipelineID _demo_pipeline{};
+    rend::TextureID _demo_texture{};
+
+    // Demo camera (temporary — replaced by Camera component in Phase 2)
+    glm::vec3 _camera_pos{0.0f, 0.0f, 3.0f};
+    float _camera_yaw{-90.0f};
+    float _camera_pitch{0.0f};
 };
 
 

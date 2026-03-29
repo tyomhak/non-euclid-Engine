@@ -7,6 +7,27 @@
 
 #include <assert.h>
 
+namespace
+{
+
+void APIENTRY gl_debug_callback(
+    GLenum source, GLenum type, GLuint id, GLenum severity,
+    GLsizei /*length*/, const GLchar* message, const void* /*userParam*/)
+{
+    if (severity == GL_DEBUG_SEVERITY_NOTIFICATION)
+        return;
+
+    const char* severity_str =
+        severity == GL_DEBUG_SEVERITY_HIGH   ? "HIGH" :
+        severity == GL_DEBUG_SEVERITY_MEDIUM ? "MEDIUM" :
+        severity == GL_DEBUG_SEVERITY_LOW    ? "LOW" : "NOTIFICATION";
+
+    njin::Logger::Error("GL Debug [{}] (source={} type={} id={}): {}",
+                        severity_str, source, type, id, message);
+}
+
+} // anonymous namespace
+
 namespace njin
 {
 
@@ -35,6 +56,17 @@ void GLRenderContext::Init()
     Logger::Log("\tVendor: {}", vendor);
     Logger::Log("\tRenderer: {}", renderer);
     Logger::Log("\tVersion: {}", version);
+
+    // Enable debug output in debug builds
+#ifndef NDEBUG
+    glEnable(GL_DEBUG_OUTPUT);
+    glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+    glDebugMessageCallback(gl_debug_callback, nullptr);
+    // Suppress notification-level messages
+    glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION,
+                          0, nullptr, GL_FALSE);
+    Logger::Log("GL debug output enabled");
+#endif
 }
 
 
