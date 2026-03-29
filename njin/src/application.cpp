@@ -11,6 +11,10 @@
 #include "scene/camera.hpp"
 #include "scene/mesh_renderer.hpp"
 
+#include "physics/physics_world.hpp"
+#include "physics/collider.hpp"
+#include "physics/rigid_body.hpp"
+
 #include "duration.hpp"
 
 #include <glm/glm.hpp>
@@ -165,29 +169,60 @@ void Application::BuildDemoScene()
 
     // Camera entity
     auto& cam_entity = _scene.spawn("Camera");
-    cam_entity.transform.position = glm::vec3(0.0f, 0.0f, 3.0f);
+    cam_entity.transform.position = glm::vec3(0.0f, 3.0f, 8.0f);
     cam_entity.add_component<Camera>();
     _scene.set_active_camera(&cam_entity);
 
-    // Cube entity
+    // Floor (static box)
+    auto& floor = _scene.spawn("Floor");
+    floor.transform.position = glm::vec3(0.0f, -0.5f, 0.0f);
+    floor.transform.scale = glm::vec3(10.0f, 1.0f, 10.0f);
+    auto& floor_mr = floor.add_component<MeshRenderer>();
+    floor_mr.vbo = vbo;
+    floor_mr.ibo = ibo;
+    floor_mr.pipeline = pipeline;
+    floor_mr.texture = texture;
+    floor_mr.index_count = static_cast<uint32_t>(cube_indices.size());
+    auto& floor_col = floor.add_component<Collider>();
+    floor_col.shape = Collider::Box{ glm::vec3(5.0f, 0.5f, 5.0f) };
+    auto& floor_rb = floor.add_component<RigidBody>();
+    floor_rb.body_type = BodyType::Static;
+    floor_rb.init(_physics);
+
+    // Dynamic cube (falls onto floor)
     auto& cube = _scene.spawn("Cube");
+    cube.transform.position = glm::vec3(0.0f, 5.0f, 0.0f);
     auto& mr = cube.add_component<MeshRenderer>();
     mr.vbo = vbo;
     mr.ibo = ibo;
     mr.pipeline = pipeline;
     mr.texture = texture;
     mr.index_count = static_cast<uint32_t>(cube_indices.size());
+    auto& cube_col = cube.add_component<Collider>();
+    cube_col.shape = Collider::Box{ glm::vec3(0.5f) };
+    auto& cube_rb = cube.add_component<RigidBody>();
+    cube_rb.body_type = BodyType::Dynamic;
+    cube_rb.mass = 1.0f;
+    cube_rb.restitution = 0.4f;
+    cube_rb.init(_physics);
 
-    // Second cube offset to the side
+    // Second dynamic cube offset and rotated
     auto& cube2 = _scene.spawn("Cube2");
-    cube2.transform.position = glm::vec3(2.0f, 0.0f, 0.0f);
-    cube2.transform.rotation = glm::vec3(0.0f, 45.0f, 0.0f);
+    cube2.transform.position = glm::vec3(0.3f, 8.0f, 0.0f);
+    cube2.transform.rotation = glm::vec3(0.0f, 45.0f, 20.0f);
     auto& mr2 = cube2.add_component<MeshRenderer>();
     mr2.vbo = vbo;
     mr2.ibo = ibo;
     mr2.pipeline = pipeline;
     mr2.texture = texture;
     mr2.index_count = static_cast<uint32_t>(cube_indices.size());
+    auto& cube2_col = cube2.add_component<Collider>();
+    cube2_col.shape = Collider::Box{ glm::vec3(0.5f) };
+    auto& cube2_rb = cube2.add_component<RigidBody>();
+    cube2_rb.body_type = BodyType::Dynamic;
+    cube2_rb.mass = 1.0f;
+    cube2_rb.restitution = 0.4f;
+    cube2_rb.init(_physics);
 }
 
 Application* Application::Get()
@@ -227,8 +262,16 @@ void Application::Run()
         _accumulator += dt;
         while (_accumulator >= FIXED_DT)
         {
+            _physics.step(FIXED_DT);
             _scene.update(FIXED_DT);
             _accumulator -= FIXED_DT;
+        }
+
+        // --- Sync physics → transforms ---
+        for (const auto& entity : _scene.entities())
+        {
+            auto* rb = entity->get_component<RigidBody>();
+            if (rb) rb->sync_from_physics();
         }
 
         // --- Camera input (temporary — replaced by PlayerController in Phase 5) ---

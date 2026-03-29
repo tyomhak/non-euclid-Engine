@@ -8,6 +8,7 @@
 
 #include "render/renderer.hpp"
 #include "scene/scene.hpp"
+#include "physics/physics_world.hpp"
 
 namespace njin
 {
@@ -37,6 +38,7 @@ public:
 
     rend::Renderer& GetRenderer() { return *_renderer; }
     Scene& GetScene() { return _scene; }
+    PhysicsWorld& GetPhysics() { return _physics; }
 
 private:
     bool OnWindowClose(Event& event);
@@ -51,9 +53,10 @@ protected:
     std::unique_ptr<Window> _main_window{nullptr};
     LayerStack _layer_stack{};
 
-    // Renderer & Scene
+    // Renderer, Scene & Physics
     std::unique_ptr<rend::Renderer> _renderer{nullptr};
     Scene _scene{};
+    PhysicsWorld _physics{};
 
     // Fixed timestep
     static constexpr float FIXED_DT = 1.0f / 60.0f;

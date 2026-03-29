@@ -16,12 +16,16 @@ target_sources(NJIN PRIVATE
     src/render/GL/GLShader.cpp
 
     src/render/GL/gl_render_backend.cpp
+
+    src/physics/physics_world.cpp
 )
 
 target_include_directories(NJIN PUBLIC
     src
     src/core
     src/scene
+    src/assets
+    src/physics
     src/ui
     src/events
     src/platform
@@ -35,6 +39,9 @@ target_link_libraries(NJIN
     PRIVATE glfw
     PUBLIC imgui_lib
     PUBLIC glm::glm
+    PUBLIC stb_image
+    PUBLIC assimp::assimp
+    PUBLIC Jolt
 )
 
 # set_target_properties(NJIN PROPERTIES FOLDER "NJIN_TEST_DIRECTORY")
